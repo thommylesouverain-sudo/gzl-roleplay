@@ -974,7 +974,6 @@
         <right name="general.ModifyOtherObjects.gzl_animations" access="true"/>
         <right name="general.ModifyOtherObjects.gzl_anticheat" access="true"/>
         <right name="general.ModifyOtherObjects.gzl_atm" access="true"/>
-        <right name="general.ModifyOtherObjects.gzl_atmosphere" access="true"/>
         <right name="general.ModifyOtherObjects.gzl_auth" access="true"/>
         <right name="general.ModifyOtherObjects.gzl_blackjack" access="true"/>
         <right name="general.ModifyOtherObjects.gzl_characters" access="true"/>

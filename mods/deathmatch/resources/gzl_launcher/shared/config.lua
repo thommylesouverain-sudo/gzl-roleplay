@@ -41,7 +41,6 @@ Config.Phases = {
         description = "Liquid Glass DX Framework, SVG & Font Kütüphaneleri",
         resources = {
             { name = "gzl_ui", desc = "Liquid Glass DX Arayüz & Bildirim Motoru" },
-            { name = "gzl_atmosphere", desc = "Gerçek Zamanlı Atmosfer & Görsel Render Motoru" },
         }
     },
     {
