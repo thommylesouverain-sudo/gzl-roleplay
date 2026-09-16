@@ -1,25 +1,16 @@
-# ==========================================
-# MTA:SA Server Git Ignore
-# ==========================================
-
-# Runtime Client Cache (Boyutu birkaç GB'ı bulur, repoya atılmamalıdır)
 mods/deathmatch/resource-cache/
 
-# Server Identity & Cryptographic Keys (Sunucunun benzersiz gizli anahtarı)
 mods/deathmatch/server-id.keys
 
-# Sunucu Logları
 logs/
 mods/deathmatch/logs/
 *.log
 
-# Crash Dumps & Yedekler
 dumps/
 backups/
 mods/deathmatch/backups/
 *.dmp
 
-# Geçici Dosyalar & İşletim Sistemi Kalıntıları
 *.bak
 *.tmp
 *.old
@@ -27,13 +18,11 @@ desktop.ini
 Thumbs.db
 .DS_Store
 
-# Dahili Test ve Optimizasyon Yedekleri
 mods/deathmatch/resources/.admin-backup/
 mods/deathmatch/resources/.anticheat-backup/
 mods/deathmatch/resources/.optimization-backup/
 mods/deathmatch/resources/.performance/audit.json
 
-# IDE & Editör Ayarları
 .vscode/
 .idea/
 *.sublime-project
@@ -41,3 +30,16 @@ mods/deathmatch/resources/.performance/audit.json
 
 *.rar
 *.zip
+/mods/deathmatch/databases/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+/MTA Server64.exe
+/x64/
+
+project_docs/
+mods/deathmatch/resources/gzl_inventory/data/player_inventories.json
+mods/deathmatch/resources/gzl_inventory/data/world_drops.json
