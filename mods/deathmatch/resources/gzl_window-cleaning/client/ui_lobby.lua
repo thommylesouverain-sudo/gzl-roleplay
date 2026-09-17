@@ -1,40 +1,31 @@
 LobbyUI = {}
 
-local isLobbyOpen = false
-local currentTab = "contracts"
-local selectedBuildingIndex = 1
-local nearbyPlayersList = {}
+local ui = exports.aura_ui
+local rootPanel = nil
 local activeLobbyData = nil
+local nearbyPlayersList = {}
+local selectedBuildingIndex = 1
+local currentTabIndex = 1
 
-local panelW = 860
-local panelH = 540
-local panelX = 0
-local panelY = 0
+local contractsContainer = nil
+local groupContainer = nil
+local detailsCard = nil
 
-function LobbyUI.open(lobbyData, nearbyPlayers)
-    if isLobbyOpen then return end
-    local sw, sh = guiGetScreenSize()
-    panelW = math.min(900, sw * 0.70)
-    panelH = math.min(560, sh * 0.75)
-    panelX = (sw - panelW) / 2
-    panelY = (sh - panelH) / 2
-
-    activeLobbyData = lobbyData
-    nearbyPlayersList = nearbyPlayers or {}
-    selectedBuildingIndex = 1
-    currentTab = "contracts"
-    isLobbyOpen = true
-    showCursor(true)
-end
-
-function LobbyUI.close()
-    if not isLobbyOpen then return end
-    isLobbyOpen = false
-    showCursor(false)
+local function isLeader()
+    if not activeLobbyData or not activeLobbyData.isGroup then return true end
+    return activeLobbyData.leader == localPlayer
 end
 
 function LobbyUI.isOpen()
-    return isLobbyOpen
+    return rootPanel and isElement(rootPanel)
+end
+
+function LobbyUI.close()
+    if rootPanel and isElement(rootPanel) then
+        ui:uiDestroy(rootPanel)
+        rootPanel = nil
+        showCursor(false)
+    end
 end
 
 function LobbyUI.updateData(lobbyData, nearbyPlayers)
@@ -42,265 +33,349 @@ function LobbyUI.updateData(lobbyData, nearbyPlayers)
     if nearbyPlayers then
         nearbyPlayersList = nearbyPlayers
     end
-end
-
-local function isLeader()
-    if not activeLobbyData or not activeLobbyData.isGroup then return true end
-    return activeLobbyData.leader == localPlayer
-end
-
-local function drawHeader()
-    local title = "CAM TEMİZLEME ŞİRKETİ MERKEZİ"
-    dxDrawText(title, panelX + 24, panelY + 16, panelX + 400, panelY + 54, tocolor(255, 255, 255, 240), 1.25, "default-bold", "left", "center")
-
-    local closeHover = isCursorWithin(panelX + panelW - 50, panelY + 16, 34, 34)
-    local closeCol = closeHover and tocolor(239, 68, 68, 240) or tocolor(71, 85, 105, 180)
-    drawRoundedRectangle(panelX + panelW - 50, panelY + 16, 34, 34, 8, closeCol)
-    dxDrawText("✕", panelX + panelW - 50, panelY + 16, panelX + panelW - 16, panelY + 50, tocolor(255, 255, 255, 255), 1.1, "default-bold", "center", "center")
-end
-
-local function drawTabs()
-    local tabY = panelY + 62
-    local tabW = (panelW - 48) / 2
-
-    local contractHover = isCursorWithin(panelX + 24, tabY, tabW - 4, 38)
-    local contractActive = (currentTab == "contracts")
-    local contractBg = contractActive and tocolor(14, 165, 233, 230) or (contractHover and tocolor(30, 41, 59, 220) or tocolor(15, 23, 42, 180))
-    drawRoundedRectangle(panelX + 24, tabY, tabW - 4, 38, 8, contractBg)
-    dxDrawText("🏢 Görevler & Binalar", panelX + 24, tabY, panelX + 24 + tabW - 4, tabY + 38, tocolor(255, 255, 255, 255), 1.0, "default-bold", "center", "center")
-
-    local groupHover = isCursorWithin(panelX + 24 + tabW + 4, tabY, tabW - 4, 38)
-    local groupActive = (currentTab == "group")
-    local groupBg = groupActive and tocolor(14, 165, 233, 230) or (groupHover and tocolor(30, 41, 59, 220) or tocolor(15, 23, 42, 180))
-    drawRoundedRectangle(panelX + 24 + tabW + 4, tabY, tabW - 4, 38, 8, groupBg)
-
-    local groupTitle = "👥 Takım & Lobi"
-    if activeLobbyData and activeLobbyData.isGroup then
-        groupTitle = string.format("👥 Takım (%d/%d)", #activeLobbyData.members, Config.MaxGroupMembers)
+    if LobbyUI.isOpen() then
+        local savedBuild = selectedBuildingIndex
+        LobbyUI.close()
+        LobbyUI.open(activeLobbyData, nearbyPlayersList)
+        selectedBuildingIndex = savedBuild
     end
-    dxDrawText(groupTitle, panelX + 24 + tabW + 4, tabY, panelX + 24 + tabW * 2, tabY + 38, tocolor(255, 255, 255, 255), 1.0, "default-bold", "center", "center")
 end
 
-local function drawContractsTab()
-    local contentY = panelY + 115
-    local listW = (panelW - 60) * 0.46
-    local detailsW = (panelW - 60) * 0.54
-    local contentH = panelH - 195
+function LobbyUI.open(lobbyData, nearbyPlayers)
+    if LobbyUI.isOpen() then return end
 
-    for i, building in ipairs(Config.Buildings) do
-        local cardY = contentY + (i - 1) * 82
-        local isSelected = (selectedBuildingIndex == i)
-        local isHover = isCursorWithin(panelX + 24, cardY, listW, 74)
-        local cardBg = isSelected and tocolor(30, 58, 138, 220) or (isHover and tocolor(30, 41, 59, 200) or tocolor(15, 23, 42, 160))
+    activeLobbyData = lobbyData
+    nearbyPlayersList = nearbyPlayers or {}
+    local sw,sh=guiGetScreenSize()
 
-        drawRoundedRectangle(panelX + 24, cardY, listW, 74, 10, cardBg)
-        if isSelected then
-            drawRoundedRectangle(panelX + 24, cardY, 4, 74, 2, tocolor(56, 189, 248, 255))
+    -- Ana AURA Penceresi (Geniş & Ferah)
+    rootPanel = ui:uiCreate("panel", {
+        w = 880, h = 560, centered = true, scale=math.min(1.15,(sw-64)/880,(sh-64)/560), radius = 14, color={15,17,20}, modal=true
+    })
+    if not rootPanel then return end
+
+    -- Başlık ve Şirket Tanıtımı
+    ui:uiCreate("label", {
+        x = 24, y = 12, w = 100, h = 44, text = "aura", size = 26, textColor = {239,242,244}
+    }, rootPanel)
+
+    ui:uiCreate("label", {
+        x = 112, y = 24, w = 600, h = 20, text = "TEMİZLİK / SÖZLEŞMELER VE EKİP", textColor={143,153,164}, size = 9
+    }, rootPanel)
+
+    -- Kapat Butonu (X)
+    local closeBtn = ui:uiCreate("button", {
+        x = 880 - 24 - 40, y = 14, w = 40, h = 34, text = "✕", variant = "ghost", size = 11
+    }, rootPanel)
+    addEventHandler("onAuraClick", closeBtn, function()
+        LobbyUI.close()
+    end, false)
+
+    -- Sekme Değiştirici (Tabs)
+    local tabSwitcher = ui:uiCreate("tabs", {
+        x = 24, y = 68, w = 832, h = 40,
+        items = { "Temizlik Sözleşmeleri", "Takım ve Lobi" },
+        value = currentTabIndex, size = 11
+    }, rootPanel)
+
+    -- 1. SEKME: SÖZLEŞMELER
+    contractsContainer = ui:uiCreate("panel", {
+        x = 24, y = 118, w = 832, h = 422, color = {0, 0, 0, 0}, border = false, visible=currentTabIndex==1
+    }, rootPanel)
+
+    -- Sol Panel: Sözleşme Butonları
+    local listPanel = ui:uiCreate("panel", {
+        x = 0, y = 0, w = 370, h = 422, color = {22,25,29}, radius = 10
+    }, contractsContainer)
+
+    ui:uiCreate("label", {
+        x = 16, y = 12, w = 330, h = 22, text = "MEVCUT SÖZLEŞMELER", bold = true, size = 11, textColor = {143,153,164}
+    }, listPanel)
+
+    local buttonRefs = {}
+    for idx, building in ipairs(Config.Buildings) do
+        local btnY = 38 + (idx - 1) * 72
+        local isSel = (idx == selectedBuildingIndex)
+
+        local bBtn = ui:uiCreate("button", {
+            x = 12, y = btnY, w = 346, h = 64,
+            text = building.name,
+            variant = "secondary", color=isSel and {38,46,34} or {30,34,39}, borderColor=isSel and {201,244,111} or {48,54,61}, textColor=isSel and {201,244,111} or {239,242,244},
+            size = 11
+        }, listPanel)
+        buttonRefs[idx] = bBtn
+
+        addEventHandler("onAuraClick", bBtn, function()
+            selectedBuildingIndex = idx
+            for bIdx, btn in ipairs(buttonRefs) do
+                ui:uiSet(btn,"color",bIdx==selectedBuildingIndex and {38,46,34} or {30,34,39})
+                ui:uiSet(btn,"borderColor",bIdx==selectedBuildingIndex and {201,244,111} or {48,54,61})
+                ui:uiSet(btn,"textColor",bIdx==selectedBuildingIndex and {201,244,111} or {239,242,244})
+            end
+            LobbyUI.renderDetailsContent()
+        end, false)
+    end
+
+    -- Lüks Butik'in Altına Kıyafeti Bırak Butonu
+    local leaveOutfitBtn = ui:uiCreate("button", {
+        x = 12, y = 330, w = 346, h = 56,
+        text = "Sivil kıyafete dön",
+        variant = "secondary",
+        color = {35, 42, 54, 240},
+        borderColor = {239, 68, 68, 160},
+        size = 11
+    }, listPanel)
+
+    addEventHandler("onAuraClick", leaveOutfitBtn, function()
+        Audio.playButtonClick()
+        triggerServerEvent("windowCleaning:leaveOutfit", localPlayer)
+        exports.aura_ui:uiToast("Kıyafet Bırakıldı", "Temizlikçi üniforması çıkarıldı, sivil kıyafetlerinize döndünüz.", "success", 4000)
+    end, false)
+
+    -- Sağ Panel: Detay Kartı
+    detailsCard = ui:uiCreate("panel", {
+        x = 384, y = 0, w = 448, h = 422, color = {22,25,29}, radius = 10
+    }, contractsContainer)
+
+    LobbyUI.renderDetailsContent()
+
+    -- 2. SEKME: TAKIM & LOBİ
+    groupContainer = ui:uiCreate("panel", {
+        x = 24, y = 118, w = 832, h = 422, color = {0, 0, 0, 0}, border = false,
+        visible = currentTabIndex==2
+    }, rootPanel)
+
+    LobbyUI.renderGroupContent()
+
+    -- Tab Değişim Olayı
+    addEventHandler("onAuraChange", tabSwitcher, function(val)
+        currentTabIndex = tonumber(val) or 1
+        if currentTabIndex == 1 then
+            ui:uiSet(contractsContainer, "visible", true)
+            ui:uiSet(groupContainer, "visible", false)
+        else
+            ui:uiSet(contractsContainer, "visible", false)
+            ui:uiSet(groupContainer, "visible", true)
         end
+    end, false)
 
-        dxDrawText(building.name, panelX + 36, cardY + 10, panelX + 20 + listW, cardY + 32, tocolor(255, 255, 255, 255), 1.05, "default-bold", "left", "center")
+    showCursor(true)
+end
 
-        local diffColor = (building.difficulty == "Kolay") and tocolor(34, 197, 94, 255) or ((building.difficulty == "Orta") and tocolor(234, 179, 8, 255) or tocolor(239, 68, 68, 255))
-        dxDrawText("Zorluk: " .. building.difficulty, panelX + 36, cardY + 36, panelX + 180, cardY + 56, diffColor, 0.9, "default-bold", "left", "center")
+function LobbyUI.renderDetailsContent()
+    if not detailsCard or not isElement(detailsCard) then return end
 
-        local winCountStr = string.format("🪟 %d Cam", #building.windows)
-        dxDrawText(winCountStr, panelX + listW - 80, cardY + 36, panelX + 20 + listW, cardY + 56, tocolor(148, 163, 184, 255), 0.9, "default-bold", "right", "center")
+    local children = getElementChildren(detailsCard)
+    for _, child in ipairs(children) do
+        ui:uiDestroy(child)
     end
-
-    local detailX = panelX + 36 + listW
-    drawRoundedRectangle(detailX, contentY, detailsW, contentH, 12, tocolor(15, 23, 42, 180))
 
     local b = Config.Buildings[selectedBuildingIndex]
-    if b then
-        dxDrawText(b.name, detailX + 20, contentY + 16, detailX + detailsW - 20, contentY + 44, tocolor(56, 189, 248, 255), 1.2, "default-bold", "left", "center")
-        dxDrawText(b.description, detailX + 20, contentY + 48, detailX + detailsW - 20, contentY + 110, tocolor(203, 213, 225, 220), 0.95, "default", "left", "top", true)
+    if not b then return end
 
-        local statY = contentY + 120
-        drawRoundedRectangle(detailX + 20, statY, detailsW - 40, 36, 6, tocolor(30, 41, 59, 180))
-        dxDrawText("Toplam Cam Sayısı:", detailX + 32, statY, detailX + 200, statY + 36, tocolor(148, 163, 184, 255), 0.95, "default", "left", "center")
-        dxDrawText(tostring(#b.windows) .. " Adet", detailX + detailsW - 120, statY, detailX + detailsW - 52, statY + 36, tocolor(255, 255, 255, 255), 1.0, "default-bold", "right", "center")
+    -- Bina Başlığı (Geniş w değeri verildi)
+    ui:uiCreate("label", {
+        x = 20, y = 14, w = 408, h = 26, text = b.name, bold = true, size = 11, textColor = {239,242,244}
+    }, detailsCard)
 
-        local statY2 = statY + 44
-        drawRoundedRectangle(detailX + 20, statY2, detailsW - 40, 36, 6, tocolor(30, 41, 59, 180))
-        dxDrawText("Tahmini Ödül:", detailX + 32, statY2, detailX + 200, statY2 + 36, tocolor(148, 163, 184, 255), 0.95, "default", "left", "center")
-        local totalReward = (#b.windows * Config.Economy.basePayPerWindow) + Config.Economy.completionBonus
-        dxDrawText("$" .. tostring(totalReward), detailX + detailsW - 120, statY2, detailX + detailsW - 52, statY2 + 36, tocolor(34, 197, 94, 255), 1.05, "default-bold", "right", "center")
+    -- Konum & Bölge (Geniş w değeri verildi)
+    ui:uiCreate("label", {
+        x = 20, y = 40, w = 310, h = 20, text = "Bölge: " .. (b.zone or "Los Santos"), size = 11, textColor = {143,153,164}
+    }, detailsCard)
 
-        local statY3 = statY2 + 44
-        drawRoundedRectangle(detailX + 20, statY3, detailsW - 40, 36, 6, tocolor(30, 41, 59, 180))
-        dxDrawText("Vinç / Platform:", detailX + 32, statY3, detailX + 200, statY3 + 36, tocolor(148, 163, 184, 255), 0.95, "default", "left", "center")
-        local liftText = b.hasLift and "Mevcut (Gökdelen İskelesi)" or "Gerekmiyor (Zemin/Teras)"
-        local liftColor = b.hasLift and tocolor(56, 189, 248, 255) or tocolor(148, 163, 184, 255)
-        dxDrawText(liftText, detailX + detailsW - 240, statY3, detailX + detailsW - 52, statY3 + 36, liftColor, 0.9, "default-bold", "right", "center")
+    -- Zorluk Rozeti
+    local toneMap = {
+        ["Kolay"] = "success",
+        ["Orta"] = "warning",
+        ["Zor"] = "danger",
+        ["Uzman"] = "accent"
+    }
+    ui:uiCreate("badge", {
+        x = 448 - 20 - 85, y = 40, w = 85, h = 24,
+        text = b.difficulty, tone = toneMap[b.difficulty] or "accent", size = 11
+    }, detailsCard)
+
+    -- Açıklama (İki satırlık net yerleşim - Kesilmeyi önler)
+    if b.description1 then
+        ui:uiCreate("label", {
+            x = 20, y = 66, w = 408, h = 20, text = b.description1, textColor = {143,153,164}, size = 11
+        }, detailsCard)
+        ui:uiCreate("label", {
+            x = 20, y = 88, w = 408, h = 20, text = b.description2 or "", textColor = {143,153,164}, size = 11
+        }, detailsCard)
+    else
+        ui:uiCreate("label", {
+            x = 20, y = 70, w = 408, h = 22, text = b.description or "", textColor = {143,153,164}, size = 11
+        }, detailsCard)
     end
 
-    local actionBtnY = panelY + panelH - 64
-    local actionBtnW = panelW - 48
-    local actionBtnHover = isCursorWithin(panelX + 24, actionBtnY, actionBtnW, 46)
+    -- İstatistikler
+    local statY = 126
+    local stats = {
+        { label = "Temizlenecek Vitrin Sayısı:", val = tostring(#b.windows) .. " Adet" },
+        { label = "Cam Başına Ücret:", val = "$" .. tostring(Config.Economy.basePayPerWindow) },
+        { label = "Sözleşme Tamamlama Primi:", val = "$" .. tostring(Config.Economy.completionBonus) },
+        { label = "Tahmini Toplam Kazanç:", val = "$" .. tostring((#b.windows * Config.Economy.basePayPerWindow) + Config.Economy.completionBonus), color = {201,244,111} },
+        { label = "Tahsis Edilen Şirket Aracı:", val = "Utility Van (552)" }
+    }
 
+    for idx, stat in ipairs(stats) do
+        local rowY = statY + (idx - 1) * 40
+        local rowBox = ui:uiCreate("panel", {
+            x = 20, y = rowY, w = 408, h = 34, color = {30,34,39}, radius = 6
+        }, detailsCard)
+
+        ui:uiCreate("label", {
+            x = 12, y = 0, w = 240, h = 34, text = stat.label, textColor = {143,153,164}, size = 11
+        }, rowBox)
+
+        local valColor = stat.color or {255, 255, 255}
+        ui:uiCreate("label", {
+            x = 408 - 12 - 150, y = 0, w = 150, h = 34, text = stat.val,
+            bold = true, size = 11, textColor = valColor, align = "right"
+        }, rowBox)
+    end
+
+    -- İşe Başla Butonu
     local canStart = isLeader()
-    local btnBg = canStart and (actionBtnHover and tocolor(16, 185, 129, 255) or tocolor(5, 150, 105, 240)) or tocolor(71, 85, 105, 180)
-    drawRoundedRectangle(panelX + 24, actionBtnY, actionBtnW, 46, 10, btnBg)
+    local btnText = canStart and "Sözleşmeyi imzala ve başla" or "Liderin İşi Başlatması Bekleniyor..."
+    local startBtn = ui:uiCreate("button", {
+        x = 20, y = 358, w = 408, h = 48,
+        text = btnText, variant = canStart and "primary" or "secondary",
+        disabled = not canStart, size = 11
+    }, detailsCard)
 
-    local btnText = canStart and "İŞE BAŞLA & ARACI ÇIKAR" or "Liderin İşi Başlatması Bekleniyor..."
-    dxDrawText(btnText, panelX + 24, actionBtnY, panelX + 24 + actionBtnW, actionBtnY + 46, tocolor(255, 255, 255, 255), 1.1, "default-bold", "center", "center")
+    if canStart then
+        addEventHandler("onAuraClick", startBtn, function()
+            triggerServerEvent("windowCleaning:startJob", localPlayer, b.id)
+            LobbyUI.close()
+        end, false)
+    end
 end
 
-local function drawGroupTab()
-    local contentY = panelY + 115
-    local leftW = (panelW - 60) * 0.50
-    local rightW = (panelW - 60) * 0.50
-    local contentH = panelH - 195
+function LobbyUI.renderGroupContent()
+    if not groupContainer or not isElement(groupContainer) then return end
 
-    drawRoundedRectangle(panelX + 24, contentY, leftW, contentH, 12, tocolor(15, 23, 42, 180))
-    dxDrawText("Takım Üyeleri", panelX + 40, contentY + 14, panelX + leftW, contentY + 38, tocolor(56, 189, 248, 255), 1.05, "default-bold", "left", "center")
-
-    if activeLobbyData and activeLobbyData.isGroup then
-        for i, member in ipairs(activeLobbyData.members) do
-            local itemY = contentY + 44 + (i - 1) * 54
-            drawRoundedRectangle(panelX + 36, itemY, leftW - 24, 46, 8, tocolor(30, 41, 59, 200))
-
-            local pName = getPlayerName(member.element) or "Bilinmeyen"
-            local isMLeader = (member.element == activeLobbyData.leader)
-            local roleTag = isMLeader and "👑 Lider" or "Üye"
-
-            dxDrawText(pName, panelX + 48, itemY + 8, panelX + 240, itemY + 38, tocolor(255, 255, 255, 255), 1.0, "default-bold", "left", "center")
-            dxDrawText(roleTag, panelX + leftW - 90, itemY + 8, panelX + leftW + 20, itemY + 38, isMLeader and tocolor(234, 179, 8, 255) or tocolor(148, 163, 184, 255), 0.9, "default-bold", "right", "center")
-        end
-    else
-        dxDrawText("Henüz bir takım oluşturmadınız.\nTek başınıza çalışabilir veya takım kurabilirsiniz.", panelX + 40, contentY + 60, panelX + leftW, contentY + 160, tocolor(148, 163, 184, 220), 0.95, "default", "left", "top")
-
-        local createTeamHover = isCursorWithin(panelX + 40, contentY + 150, leftW - 32, 42)
-        local createTeamBg = createTeamHover and tocolor(14, 165, 233, 255) or tocolor(2, 132, 199, 230)
-        drawRoundedRectangle(panelX + 40, contentY + 150, leftW - 32, 42, 8, createTeamBg)
-        dxDrawText("Takım Oluştur", panelX + 40, contentY + 150, panelX + leftW + 8, contentY + 192, tocolor(255, 255, 255, 255), 1.0, "default-bold", "center", "center")
+    local children = getElementChildren(groupContainer)
+    for _, child in ipairs(children) do
+        ui:uiDestroy(child)
     end
 
-    local rightX = panelX + 36 + leftW
-    drawRoundedRectangle(rightX, contentY, rightW, contentH, 12, tocolor(15, 23, 42, 180))
-    dxDrawText("Yakındaki Oyuncular (Davet Et)", rightX + 16, contentY + 14, rightX + rightW, contentY + 38, tocolor(56, 189, 248, 255), 1.05, "default-bold", "left", "center")
+    -- Sol Taraf: Takım Listesi
+    local teamPanel = ui:uiCreate("panel", {
+        x = 0, y = 0, w = 406, h = 422, color = {22,25,29}, radius = 10
+    }, groupContainer)
+
+    ui:uiCreate("label", {
+        x = 16, y = 14, w = 370, h = 24, text = "TAKIM ÜYELERİ", bold = true, size = 11, textColor = {201,244,111}
+    }, teamPanel)
+
+    if activeLobbyData and activeLobbyData.isGroup then
+        for idx, member in ipairs(activeLobbyData.members) do
+            local itemY = 48 + (idx - 1) * 54
+            local mBox = ui:uiCreate("panel", {
+                x = 14, y = itemY, w = 378, h = 46, color = {30,34,39}, radius = 6
+            }, teamPanel)
+
+            local isMLeader = (member.element == activeLobbyData.leader)
+            local pName = member.name or getPlayerName(member.element) or "Bilinmeyen"
+
+            ui:uiCreate("label", {
+                x = 14, y = 0, w = 260, h = 46, text = pName, bold = true, size = 11
+            }, mBox)
+
+            ui:uiCreate("badge", {
+                x = 378 - 14 - 84, y = 10, w = 84, h = 26,
+                text = isMLeader and "Lider" or "Üye",
+                tone = isMLeader and "warning" or "accent", size = 10
+            }, mBox)
+        end
+
+        local leaveBtn = ui:uiCreate("button", {
+            x = 14, y = 358, w = 378, h = 48,
+            text = isLeader() and "TAKIMI DAĞIT" or "TAKIMDAN AYRIL",
+            variant = "primary", tone = "danger", size = 11
+        }, teamPanel)
+
+        addEventHandler("onAuraClick", leaveBtn, function()
+            triggerServerEvent("windowCleaning:leaveTeam", localPlayer)
+        end, false)
+    else
+        ui:uiCreate("label", {
+            x = 16, y = 50, w = 374, h = 22,
+            text = "Henüz bir takım oluşturmadınız.",
+            bold = true, size = 11, textColor = {240, 245, 250}
+        }, teamPanel)
+
+        ui:uiCreate("label", {
+            x = 16, y = 78, w = 374, h = 22,
+            text = "Tek başınıza çalışabilir veya arkadaşlarınızla",
+            textColor = {143,153,164}, size = 11
+        }, teamPanel)
+
+        ui:uiCreate("label", {
+            x = 16, y = 102, w = 374, h = 22,
+            text = "takım kurup kişi başı +%20 prim kazanabilirsiniz!",
+            textColor = {143,153,164}, size = 11
+        }, teamPanel)
+
+        local createBtn = ui:uiCreate("button", {
+            x = 16, y = 160, w = 374, h = 46,
+            text = "Takım oluştur", variant = "primary", size = 11
+        }, teamPanel)
+
+        addEventHandler("onAuraClick", createBtn, function()
+            triggerServerEvent("windowCleaning:createTeam", localPlayer)
+        end, false)
+    end
+
+    -- Sağ Taraf: Yakındaki Oyuncular (Davet Et)
+    local invitePanel = ui:uiCreate("panel", {
+        x = 422, y = 0, w = 410, h = 422, color = {22,25,29}, radius = 10
+    }, groupContainer)
+
+    ui:uiCreate("label", {
+        x = 16, y = 14, w = 378, h = 24, text = "YAKINDAKİ OYUNCULAR", bold = true, size = 11, textColor = {201,244,111}
+    }, invitePanel)
 
     if #nearbyPlayersList == 0 then
-        dxDrawText("Yakınınızda davet edilecek oyuncu yok.", rightX + 16, contentY + 54, rightX + rightW - 16, contentY + 120, tocolor(148, 163, 184, 200), 0.95, "default", "left", "top")
+        ui:uiCreate("label", {
+            x = 16, y = 50, w = 378, h = 22, text = "30 metre yakınınızda oyuncu bulunamadı.", textColor = {143,153,164}, size = 11
+        }, invitePanel)
+        ui:uiCreate("label", {
+            x = 16, y = 74, w = 378, h = 22, text = "Arkadaşınız yanınıza geldiğinde burada listelenir.", textColor = {143,153,164}, size = 10
+        }, invitePanel)
     else
-        for i, ply in ipairs(nearbyPlayersList) do
-            if i <= 5 then
-                local pItemY = contentY + 44 + (i - 1) * 54
-                drawRoundedRectangle(rightX + 12, pItemY, rightW - 24, 46, 8, tocolor(30, 41, 59, 200))
+        for idx, ply in ipairs(nearbyPlayersList) do
+            if idx <= 5 and isElement(ply) then
+                local itemY = 48 + (idx - 1) * 54
+                local pBox = ui:uiCreate("panel", {
+                    x = 14, y = itemY, w = 382, h = 46, color = {30,34,39}, radius = 6
+                }, invitePanel)
 
-                local pName = getPlayerName(ply)
-                dxDrawText(pName, rightX + 24, pItemY + 8, rightX + 180, pItemY + 38, tocolor(255, 255, 255, 255), 0.95, "default-bold", "left", "center")
+                ui:uiCreate("label", {
+                    x = 14, y = 0, w = 260, h = 46, text = getPlayerName(ply), bold = true, size = 11
+                }, pBox)
 
                 if activeLobbyData and activeLobbyData.isGroup and isLeader() then
-                    local invHover = isCursorWithin(rightX + rightW - 100, pItemY + 8, 80, 30)
-                    local invBg = invHover and tocolor(34, 197, 94, 255) or tocolor(22, 163, 74, 230)
-                    drawRoundedRectangle(rightX + rightW - 100, pItemY + 8, 80, 30, 6, invBg)
-                    dxDrawText("Davet Et", rightX + rightW - 100, pItemY + 8, rightX + rightW - 20, pItemY + 38, tocolor(255, 255, 255, 255), 0.85, "default-bold", "center", "center")
-                end
-            end
-        end
-    end
+                    local invBtn = ui:uiCreate("button", {
+                        x = 382 - 14 - 90, y = 8, w = 90, h = 30,
+                        text = "Davet Et", variant = "primary", tone = "success", size = 11
+                    }, pBox)
 
-    local actionBtnY = panelY + panelH - 64
-    local actionBtnW = panelW - 48
-    if activeLobbyData and activeLobbyData.isGroup then
-        local leaveHover = isCursorWithin(panelX + 24, actionBtnY, actionBtnW, 46)
-        local leaveBg = leaveHover and tocolor(239, 68, 68, 255) or tocolor(220, 38, 38, 230)
-        drawRoundedRectangle(panelX + 24, actionBtnY, actionBtnW, 46, 10, leaveBg)
-        local leaveText = isLeader() and "TAKIMI DAĞIT" or "TAKIMDAN AYRIL"
-        dxDrawText(leaveText, panelX + 24, actionBtnY, panelX + 24 + actionBtnW, actionBtnY + 46, tocolor(255, 255, 255, 255), 1.1, "default-bold", "center", "center")
-    end
-end
-
-function LobbyUI.render()
-    if not isLobbyOpen then return end
-
-    drawGlassPanel(panelX, panelY, panelW, panelH, 16, 0.96)
-    drawHeader()
-    drawTabs()
-
-    if currentTab == "contracts" then
-        drawContractsTab()
-    elseif currentTab == "group" then
-        drawGroupTab()
-    end
-end
-
-addEventHandler("onClientClick", root, function(button, state, absX, absY)
-    if not isLobbyOpen or button ~= "left" or state ~= "down" then return end
-
-    if isCursorWithin(panelX + panelW - 50, panelY + 16, 34, 34) then
-        Audio.playButtonClick()
-        LobbyUI.close()
-        return
-    end
-
-    local tabY = panelY + 62
-    local tabW = (panelW - 48) / 2
-    if isCursorWithin(panelX + 24, tabY, tabW - 4, 38) then
-        Audio.playButtonClick()
-        currentTab = "contracts"
-        return
-    elseif isCursorWithin(panelX + 24 + tabW + 4, tabY, tabW - 4, 38) then
-        Audio.playButtonClick()
-        currentTab = "group"
-        return
-    end
-
-    if currentTab == "contracts" then
-        local contentY = panelY + 115
-        local listW = (panelW - 60) * 0.46
-        for i = 1, #Config.Buildings do
-            local cardY = contentY + (i - 1) * 82
-            if isCursorWithin(panelX + 24, cardY, listW, 74) then
-                Audio.playButtonClick()
-                selectedBuildingIndex = i
-                return
-            end
-        end
-
-        local actionBtnY = panelY + panelH - 64
-        local actionBtnW = panelW - 48
-        if isCursorWithin(panelX + 24, actionBtnY, actionBtnW, 46) then
-            if isLeader() then
-                Audio.playButtonClick()
-                LobbyUI.close()
-                local b = Config.Buildings[selectedBuildingIndex]
-                triggerServerEvent("windowCleaning:startJob", localPlayer, b.id)
-            end
-            return
-        end
-    elseif currentTab == "group" then
-        local contentY = panelY + 115
-        local leftW = (panelW - 60) * 0.50
-        local rightW = (panelW - 60) * 0.50
-
-        if (not activeLobbyData or not activeLobbyData.isGroup) and isCursorWithin(panelX + 40, contentY + 150, leftW - 32, 42) then
-            Audio.playButtonClick()
-            triggerServerEvent("windowCleaning:createTeam", localPlayer)
-            return
-        end
-
-        if activeLobbyData and activeLobbyData.isGroup and isLeader() then
-            local rightX = panelX + 36 + leftW
-            for i, ply in ipairs(nearbyPlayersList) do
-                if i <= 5 and isElement(ply) then
-                    local pItemY = contentY + 44 + (i - 1) * 54
-                    if isCursorWithin(rightX + rightW - 100, pItemY + 8, 80, 30) then
-                        Audio.playButtonClick()
+                    addEventHandler("onAuraClick", invBtn, function()
                         triggerServerEvent("windowCleaning:invitePlayer", localPlayer, ply)
-                        return
-                    end
+                        exports.aura_ui:uiToast("Davet Gönderildi", getPlayerName(ply) .. " adlı oyuncuya iş daveti iletildi.", "info")
+                    end, false)
                 end
             end
         end
+    end
+end
 
-        local actionBtnY = panelY + panelH - 64
-        local actionBtnW = panelW - 48
-        if activeLobbyData and activeLobbyData.isGroup and isCursorWithin(panelX + 24, actionBtnY, actionBtnW, 46) then
-            Audio.playButtonClick()
-            triggerServerEvent("windowCleaning:leaveTeam", localPlayer)
-            return
-        end
+addEventHandler("onClientKey", root, function(button, press)
+    if press and button == "escape" and LobbyUI.isOpen() then
+        LobbyUI.close()
+        cancelEvent()
     end
 end)

@@ -1,378 +1,83 @@
-addEvent("ox_inventory:syncInventory", true)
-addEvent("ox_inventory:refreshSlots", true)
-addEvent("ox_inventory:nuiReady", true)
-addEvent("ox_inventory:onNuiCallback", true)
-
-local sw, sh = guiGetScreenSize()
-local invBrowser = nil
-local invGuiBrowser = nil
-local isBrowserReady = false
-local isInventoryOpen = false
-local leftInventory = nil
-local rightInventory = nil
-local hotbarTimer = nil
-local hotbarRequested = false
-
-local isRenderingPaused = false
-local restoreResumeTimer = nil
-local isWindowMinimized = false
-
-local function pauseBrowserRendering()
-    if invBrowser and isElement(invBrowser) and not isRenderingPaused then
-        isRenderingPaused = true
-        setBrowserRenderingPaused(invBrowser, true)
-    end
-end
-
-local function wakeBrowserRendering()
-    if isWindowMinimized or (isMTAWindowFocused and not isMTAWindowFocused()) then return end
-    if isTimer(restoreResumeTimer) then return end
-    if invBrowser and isElement(invBrowser) and isRenderingPaused then
-        isRenderingPaused = false
-        setBrowserRenderingPaused(invBrowser, false)
-    end
-end
-
-local function sendNuiMessage(action, data)
-    if not isBrowserReady or not invBrowser or not isElement(invBrowser) then return end
-    if isInventoryOpen then
-        wakeBrowserRendering(500)
-    end
-    local payload = { action = action, data = data }
-    local success, jsonStr = pcall(toJSON, payload, true)
-    if not success or not jsonStr then return end
-
-    if jsonStr:sub(1, 1) == "[" and jsonStr:sub(-1) == "]" then
-        jsonStr = jsonStr:sub(2, -2)
-    end
-    executeBrowserJavascript(invBrowser, string.format("if(window.sendNuiMessage){window.sendNuiMessage(%s);}", jsonStr))
-end
-
-local function closeHotbar()
-    hotbarRequested = false
-    if isTimer(hotbarTimer) then killTimer(hotbarTimer) end
-    hotbarTimer = nil
-    sendNuiMessage("toggleHotbar", false)
-    if not isInventoryOpen then
-        if invGuiBrowser and isElement(invGuiBrowser) then guiSetVisible(invGuiBrowser, false) end
-
-        if isBrowserReady then pauseBrowserRendering() end
-    end
-end
-
-local function showPendingHotbar()
-    if not hotbarRequested or isInventoryOpen or not isBrowserReady or not leftInventory then return end
-    if isTimer(hotbarTimer) then return end
-    wakeBrowserRendering()
-    sendNuiMessage("setupInventory", { leftInventory = leftInventory, rightInventory = rightInventory })
-    sendNuiMessage("toggleHotbar", true)
-    guiSetVisible(invGuiBrowser, true)
-    guiBringToFront(invGuiBrowser)
-
-    hotbarTimer = setTimer(closeHotbar, 3000, 1)
-end
-
-local function onInventoryUIReady()
-    if isBrowserReady then return end
-    isBrowserReady = true
-    sendNuiMessage("init", {
-        locale = { ui_use = "Kullan", ui_give = "Ver", ui_close = "Kapat", ui_drop = "Dünya", ui_usefulcontrols = "Kullanışlı Tuşlar" },
-        items = ItemsList or {}, leftInventory = leftInventory, imagepath = "images"
-    })
-    if isInventoryOpen then
-        wakeBrowserRendering()
-        guiSetVisible(invGuiBrowser, true)
-        guiBringToFront(invGuiBrowser)
-        focusBrowser(invBrowser)
-        if leftInventory then
-            sendNuiMessage("setupInventory", { leftInventory = leftInventory, rightInventory = rightInventory })
-            sendNuiMessage("setInventoryVisible", true)
-        end
-    elseif hotbarRequested then
-        showPendingHotbar()
-    else
-        guiSetVisible(invGuiBrowser, false)
-        pauseBrowserRendering()
-    end
-end
-
-local function sameValue(a, b)
-    if type(a) ~= type(b) then return false end
-    if type(a) ~= "table" then return a == b end
-    for key, value in pairs(a) do
-        if not sameValue(value, b[key]) then return false end
-    end
-    for key in pairs(b) do
-        if a[key] == nil then return false end
-    end
-    return true
-end
-
-local function getInventorySlotDeltas(oldInv, newInv, invType)
-    if not oldInv or not newInv or oldInv.id ~= newInv.id
-        or oldInv.type ~= newInv.type or oldInv.slots ~= newInv.slots
-        or oldInv.maxWeight ~= newInv.maxWeight or oldInv.label ~= newInv.label
-        or not sameValue(oldInv.groups, newInv.groups) then return nil end
-    local deltas = {}
-    local maxSlots = math.max(oldInv.slots or 40, newInv.slots or 40)
-    local diffCount = 0
-
-    local oldItems = oldInv.items or {}
-    local newItems = newInv.items or {}
-
-    for slot = 1, maxSlots do
-        local oldItem = oldItems[slot] or oldItems[tostring(slot)]
-        local newItem = newItems[slot] or newItems[tostring(slot)]
-        local changed = not sameValue(oldItem, newItem)
-
-        if changed then
-            diffCount = diffCount + 1
-            if newItem then
-                table.insert(deltas, {
-                    inventory = invType,
-                    item = newItem
-                })
-            else
-                table.insert(deltas, {
-                    inventory = invType,
-                    item = { slot = slot }
-                })
-            end
-        end
-    end
-
-    return deltas, diffCount
-end
-
-local function initInventoryBrowser()
-    if invGuiBrowser and isElement(invGuiBrowser) then return end
-
-    invGuiBrowser = guiCreateBrowser(0, 0, sw, sh, true, true, false)
-    if not invGuiBrowser then return end
-    isBrowserReady = false
-    isRenderingPaused = false
-
-    guiSetVisible(invGuiBrowser, false)
-    pcall(guiSetInputMode, "allow_binds")
-
-    invBrowser = guiGetBrowser(invGuiBrowser)
-    if invBrowser and isElement(invBrowser) then
-        addEventHandler("onClientBrowserCreated", invBrowser, function()
-
-            loadBrowserURL(source, "http://mta/local/web/build/index.html")
-        end)
-
-    end
-end
+-- Browser-free presentation; server-authoritative inventory actions stay unchanged.
+addEvent("ox_inventory:syncInventory",true)
+addEvent("ox_inventory:refreshSlots",true)
+local isInventoryOpen=false
+local leftInventory,rightInventory
+local hotbarTimer,hotbarRequested=nil,false
+local previousInputMode,previousInputEnabled
+local openedTick=0
 
 local function isPlayerInGame()
-    return (getElementData(localPlayer, "character:id") or getElementData(localPlayer, "char:id") or getElementData(localPlayer, "loggedin_character")) and not isMainMenuActive()
+    return (getElementData(localPlayer,"character:id") or getElementData(localPlayer,"char:id") or getElementData(localPlayer,"loggedin_character")) and not isMainMenuActive()
 end
-
 local function isUIProgressBarActive()
-    local ok, active = pcall(function()
-        return exports.gzl_ui and exports.gzl_ui:isProgressBarActive()
-    end)
-    return ok and active == true
+    local ok,active=pcall(function() return exports.gzl_ui:isProgressBarActive() end)
+    return ok and active==true
 end
-
-local function showUINotification(nType, msg)
-    pcall(function()
-        if exports.gzl_ui and exports.gzl_ui.showNotification then
-            exports.gzl_ui:showNotification(nType, msg)
-        end
-    end)
+local function showUINotification(kind,message)
+    pcall(function() exports.gzl_ui:showNotification(kind,message) end)
 end
-
-local function showUIToast(msg, toastType, duration)
-    pcall(function()
-        if exports.gzl_ui and exports.gzl_ui.showToast then
-            exports.gzl_ui:showToast(msg, toastType, duration)
-        end
-    end)
+local function showUIToast(message,kind,duration)
+    pcall(function() exports.gzl_ui:showToast(message,kind,duration) end)
 end
-
 local function startUIProgressBar(options)
-    local ok, res = pcall(function()
-        return exports.gzl_ui and exports.gzl_ui:startProgressBar(options)
-    end)
-    return ok and res == true
+    local ok,result=pcall(function() return exports.gzl_ui:startProgressBar(options) end)
+    return ok and result==true
 end
-
-local isListenersAttached = false
-
-local function onInventoryKey(button, press)
-    if isInventoryOpen then
-        wakeBrowserRendering()
-
-        if press and button == "escape" then
-            cancelEvent()
-            toggleInventory(false)
-        end
-    end
+local function closeHotbar()
+    hotbarRequested=false
+    if isTimer(hotbarTimer) then killTimer(hotbarTimer) end
+    hotbarTimer=nil
+    InventoryDX.setHotbar(false)
 end
-
-local function attachInventoryListeners()
-    if isListenersAttached then return end
-    isListenersAttached = true
-    addEventHandler("onClientKey", root, onInventoryKey)
+local function showPendingHotbar()
+    if not hotbarRequested or isInventoryOpen or not leftInventory or isTimer(hotbarTimer) then return end
+    InventoryDX.setData(leftInventory,rightInventory)
+    InventoryDX.setHotbar(true)
+    hotbarTimer=setTimer(closeHotbar,3000,1)
 end
-
-local function detachInventoryListeners()
-    if not isListenersAttached then return end
-    isListenersAttached = false
-    removeEventHandler("onClientKey", root, onInventoryKey)
-end
-
 function toggleInventory(state)
-    local willOpen = (state == nil and not isInventoryOpen) or (state == true)
-    if willOpen and isUIProgressBarActive() then
-        showUINotification("error", "Şu anda envanterinizi açamazsınız")
-        return
-    end
-
-    if not isPlayerInGame() then
-        closeHotbar()
-        if isInventoryOpen then
-            isInventoryOpen = false
-            setElementData(localPlayer, "ox_inventory:isOpen", false, false)
-            showCursor(false)
-            detachInventoryListeners()
-            if invGuiBrowser and isElement(invGuiBrowser) then guiSetVisible(invGuiBrowser, false) end
-            if invBrowser and isElement(invBrowser) then
-                if isBrowserReady then pauseBrowserRendering() end
-                focusBrowser(nil)
-            end
-        end
-        return
-    end
-
-    if state == nil then
-        isInventoryOpen = not isInventoryOpen
-    else
-        isInventoryOpen = state
-    end
-
-    if not invGuiBrowser or not isElement(invGuiBrowser) then
-        initInventoryBrowser()
-    end
-
+    local willOpen=(state==nil and not isInventoryOpen) or state==true
+    if willOpen and not isPlayerInGame() then return end
+    if willOpen and isUIProgressBarActive() then showUINotification("error","Şu anda envanterinizi açamazsınız"); return end
     closeHotbar()
-
-    if isInventoryOpen then
-        setElementData(localPlayer, "ox_inventory:isOpen", true, false)
-        if invGuiBrowser and isElement(invGuiBrowser) then
-            guiSetVisible(invGuiBrowser, true)
-            guiBringToFront(invGuiBrowser)
-        end
-        if invBrowser and isElement(invBrowser) then
-            wakeBrowserRendering()
-            focusBrowser(invBrowser)
-        end
+    if willOpen==isInventoryOpen then return end
+    if willOpen then
+        openedTick=getTickCount()
+        triggerEvent("onAuraInputClaim",resourceRoot)
+        previousInputMode,previousInputEnabled=guiGetInputMode(),guiGetInputEnabled()
+        guiSetInputMode("no_binds"); guiSetInputEnabled(false)
         showCursor(true)
-
-        attachInventoryListeners()
-
-        triggerServerEvent("ox_inventory:requestInventory", resourceRoot)
-
-        if leftInventory then
-            sendNuiMessage("setupInventory", {
-                leftInventory = leftInventory,
-                rightInventory = rightInventory
-            })
-            sendNuiMessage("setInventoryVisible", true)
-        end
     else
-        setElementData(localPlayer, "ox_inventory:isOpen", false, false)
-        setElementData(localPlayer, "ox_inventory:lastClosedTick", getTickCount(), false)
         showCursor(false)
-        pcall(guiSetInputMode, "allow_binds")
-
-        detachInventoryListeners()
-
-        sendNuiMessage("closeInventory", {})
-        sendNuiMessage("setInventoryVisible", false)
-
-        if invGuiBrowser and isElement(invGuiBrowser) then
-            guiSetVisible(invGuiBrowser, false)
-        end
-        if invBrowser and isElement(invBrowser) then
-            if isBrowserReady then pauseBrowserRendering() end
-            focusBrowser(nil)
-        end
+        if previousInputMode then guiSetInputMode(previousInputMode) end
+        guiSetInputEnabled(previousInputEnabled==true)
+        previousInputMode,previousInputEnabled=nil,nil
+        setElementData(localPlayer,"ox_inventory:lastClosedTick",getTickCount(),false)
+    end
+    isInventoryOpen=willOpen
+    setElementData(localPlayer,"ox_inventory:isOpen",willOpen,false)
+    InventoryDX.setVisible(willOpen)
+    if willOpen then
+        InventoryDX.setData(leftInventory,rightInventory)
+        triggerServerEvent("ox_inventory:requestInventory",resourceRoot)
     end
 end
-
-function isInventoryOpenState()
-    return isInventoryOpen == true
-end
-isInventoryOpenFunc = isInventoryOpenState
-
+function isInventoryOpenState() return isInventoryOpen end
+isInventoryOpenFunc=isInventoryOpenState
 function toggleHotbarDisplay()
     if not isPlayerInGame() or isInventoryOpen then return end
-    if hotbarRequested then closeHotbar() return end
-    hotbarRequested = true
-    initInventoryBrowser()
-
-    triggerServerEvent("ox_inventory:requestInventory", resourceRoot)
+    if hotbarRequested then closeHotbar(); return end
+    hotbarRequested=true
+    triggerServerEvent("ox_inventory:requestInventory",resourceRoot)
     showPendingHotbar()
 end
-
-addEventHandler("ox_inventory:syncInventory", root, function(leftData, rightData)
-    if not isPlayerInGame() or type(leftData) ~= "table" then return end
-    local oldLeft = leftInventory
-    local oldRight = rightInventory
-
-    leftInventory = leftData
-    rightInventory = rightData
-
-    if not isBrowserReady then return end
-    if hotbarRequested and not isTimer(hotbarTimer) then
-        showPendingHotbar()
-        return
-    end
-
-    if not isInventoryOpen and not isTimer(hotbarTimer) then return end
-    if isInventoryOpen then sendNuiMessage("setInventoryVisible", true) end
-
-    local canDelta = false
-    local changedItems = {}
-
-    if oldLeft and leftData and oldLeft.id == leftData.id and oldRight and rightData and oldRight.id == rightData.id then
-        local leftDeltas, leftDiffCount = getInventorySlotDeltas(oldLeft, leftData, "player")
-        local rightDeltas, rightDiffCount = getInventorySlotDeltas(oldRight, rightData, rightData.type or "drop")
-
-        if leftDeltas and rightDeltas then
-            local totalDiff = leftDiffCount + rightDiffCount
-            if totalDiff == 0 then
-                if leftData.weight ~= oldLeft.weight then
-                    sendNuiMessage("refreshSlots", {
-                        items = {},
-                        weightData = { inventoryId = leftData.id, maxWeight = leftData.maxWeight }
-                    })
-                end
-                return
-            elseif totalDiff <= 12 then
-                canDelta = true
-                for _, d in ipairs(leftDeltas) do table.insert(changedItems, d) end
-                for _, d in ipairs(rightDeltas) do table.insert(changedItems, d) end
-            end
-        end
-    end
-
-    if canDelta and #changedItems > 0 then
-        sendNuiMessage("refreshSlots", {
-            items = changedItems,
-            weightData = { inventoryId = leftData.id, maxWeight = leftData.maxWeight }
-        })
-    else
-        sendNuiMessage("setupInventory", {
-            leftInventory = leftData,
-            rightInventory = rightData
-        })
-    end
+addEventHandler("ox_inventory:syncInventory",root,function(left,right)
+    if not isPlayerInGame() or type(left)~="table" then return end
+    leftInventory,rightInventory=left,right
+    InventoryDX.setData(left,right)
+    showPendingHotbar()
 end)
-
 addEventHandler("ox_inventory:refreshSlots", root, function(payload)
     if type(payload) ~= "table" or not isPlayerInGame() then return end
 
@@ -402,7 +107,7 @@ addEventHandler("ox_inventory:refreshSlots", root, function(payload)
             end
         end
     end
-    if isInventoryOpen or isTimer(hotbarTimer) then sendNuiMessage("refreshSlots", payload) end
+    InventoryDX.setData(leftInventory,rightInventory)
 end)
 
 local UI_ITEM_HANDLERS = {
@@ -901,8 +606,7 @@ local function performUseItem(slot, count)
     triggerServerEvent("ox_inventory:useItem", localPlayer, slot, count)
 end
 
-addEventHandler("ox_inventory:onNuiCallback", root, function(eventName, payloadJson)
-    if isInventoryOpen or isTimer(hotbarTimer) then wakeBrowserRendering() end
+InventoryDX.action=function(eventName, payloadJson)
     local data = nil
     if type(payloadJson) == "string" then
         local success, parsed = pcall(fromJSON, payloadJson)
@@ -915,9 +619,7 @@ addEventHandler("ox_inventory:onNuiCallback", root, function(eventName, payloadJ
         data = payloadJson
     end
 
-    if eventName == "uiLoaded" then
-        onInventoryUIReady()
-    elseif eventName == "closeInventory" or eventName == "exit" then
+    if eventName == "closeInventory" or eventName == "exit" then
         toggleInventory(false)
     elseif eventName == "useItem" then
         local slot = nil
@@ -979,8 +681,7 @@ addEventHandler("ox_inventory:onNuiCallback", root, function(eventName, payloadJ
             triggerServerEvent("ox_inventory:dropItem", localPlayer, slot, count)
         end
     end
-end)
-
+end
 
 local function isResRunning(name)
     local res = getResourceFromName(name)
@@ -1064,63 +765,24 @@ addEventHandler("onClientElementDataChange", localPlayer, function(dataName)
     end
 end)
 
-addEventHandler("onClientResourceStart", resourceRoot, function()
-    initInventoryBrowser()
-    if isPlayerInGame() then
-        triggerServerEvent("ox_inventory:requestInventory", resourceRoot)
-    end
+addEventHandler("onClientResourceStart",resourceRoot,function()
+    if isPlayerInGame() then triggerServerEvent("ox_inventory:requestInventory",resourceRoot) end
 end)
-
-addEventHandler("onClientMinimize", root, function()
-    isWindowMinimized = true
-    if isTimer(restoreResumeTimer) then
-        killTimer(restoreResumeTimer)
-        restoreResumeTimer = nil
-    end
-    if invBrowser and isElement(invBrowser) then
-        isRenderingPaused = true
-        setBrowserRenderingPaused(invBrowser, true)
-    end
-end)
-
-addEventHandler("onClientRestore", root, function()
-    sw, sh = guiGetScreenSize()
-    isWindowMinimized = false
-    if isTimer(restoreResumeTimer) then
-        killTimer(restoreResumeTimer)
-        restoreResumeTimer = nil
-    end
-    restoreResumeTimer = setTimer(function()
-        restoreResumeTimer = nil
-        if isWindowMinimized then return end
-        if isInventoryOpen and invBrowser and isElement(invBrowser) then
-            isRenderingPaused = false
-            setBrowserRenderingPaused(invBrowser, false)
-        end
-    end, 500, 1)
-end)
-
-addEventHandler("onClientResourceStop", resourceRoot, function()
-    hotbarRequested = false
+addEventHandler("onClientResourceStop",resourceRoot,function()
+    toggleInventory(false)
+    closeHotbar()
     clearActiveItemUse()
-    setElementData(localPlayer, "ox_inventory:isOpen", false, false)
-    if isTimer(hotbarTimer) then
-        killTimer(hotbarTimer)
-        hotbarTimer = nil
+end)
+-- no_binds protects gameplay while typing; close keys therefore use raw events.
+addEventHandler("onClientKey",root,function(key,press)
+    if press and isInventoryOpen and (key=="f2" or key=="i") then
+        cancelEvent()
+        if getTickCount()-openedTick>150 then toggleInventory(false) end
     end
-    if isTimer(restoreResumeTimer) then
-        killTimer(restoreResumeTimer)
-        restoreResumeTimer = nil
-    end
-    detachInventoryListeners()
-    if isInventoryOpen then
-        isInventoryOpen = false
-        showCursor(false)
-        focusBrowser(nil)
-    end
-    if invGuiBrowser and isElement(invGuiBrowser) then
-        destroyElement(invGuiBrowser)
-        invGuiBrowser = nil
-        invBrowser = nil
-    end
+end)
+addEventHandler("onAuraInputClaim",root,function()
+    if source~=resourceRoot and isInventoryOpen then toggleInventory(false) end
+end)
+addEventHandler("onClientResourceStop",root,function(stopped)
+    if stopped and getResourceName(stopped)=="aura_ui" then toggleInventory(false); closeHotbar() end
 end)

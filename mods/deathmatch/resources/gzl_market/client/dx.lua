@@ -49,9 +49,7 @@ local function notify(message, kind)
 end
 
 local function rounded(x, y, w, h, radius, color)
-    if hasUiExport("drawRoundedRectangle") then
-        exports.gzl_ui:drawRoundedRectangle(x, y, w, h, radius, color)
-    end
+    return exports.aura_ui:uiDrawSurface(x,y,w,h,{color=color,radius=radius},false)
 end
 
 local function glass(x, y, w, h, radius)
@@ -229,11 +227,11 @@ end
 
 local function fitText(text, maxWidth, font)
     text = tostring(text or "")
-    if dxGetTextWidth(text, 1, font) <= maxWidth then return text end
+    if exports.aura_ui:uiTextWidth(text, 1, font) <= maxWidth then return text end
     local length = utf8.len(text) or string.len(text)
     while length > 1 do
         local candidate = utf8.sub(text, 1, length) .. "..."
-        if dxGetTextWidth(candidate, 1, font) <= maxWidth then return candidate end
+        if exports.aura_ui:uiTextWidth(candidate, 1, font) <= maxWidth then return candidate end
         length = length - 1
     end
     return "..."
@@ -263,42 +261,36 @@ local function drawButton(id, label, x, y, w, h, theme, buttonIcon, disabled)
     local hovered = state.hovered == id and not disabled
     local color
     if disabled then
-        color = tocolor(31, 31, 33, 220)
+        color = tocolor(30, 34, 39, 255)
     elseif theme == "danger" then
-        color = hovered and tocolor(122, 35, 50, 245) or tocolor(72, 25, 34, 225)
+        color = hovered and tocolor(62, 38, 43, 255) or tocolor(30, 34, 39, 255)
     elseif theme == "accent" then
-        local r, g, b = parseThemeColor(state.shop and state.shop.themeColor)
-        color = hovered and tocolor(r, g, b, 245) or tocolor(r, g, b, 205)
+        color = hovered and tocolor(216, 250, 153, 255) or tocolor(201, 244, 111, 255)
     else
-        color = hovered and tocolor(57, 57, 60, 245) or tocolor(40, 40, 42, 235)
+        color = hovered and tocolor(42, 48, 55, 255) or tocolor(30, 34, 39, 255)
     end
     rounded(x, y, w, h, 8, color)
     local textColor = disabled and tocolor(119, 129, 143, 180) or tocolor(244, 247, 250, 250)
+    if theme == "accent" and not disabled then textColor=tocolor(24,32,17,255) end
     if buttonIcon then
         local size = 16
         if label == "" then
             icon(buttonIcon, x + (w - size) / 2, y + (h - size) / 2, size, textColor)
         else
-            local textWidth = dxGetTextWidth(label, 1, fonts.button)
+            local textWidth = exports.aura_ui:uiTextWidth(label, 1, fonts.button)
             local totalWidth = size + 7 + textWidth
             local startX = x + (w - totalWidth) / 2
             icon(buttonIcon, startX, y + (h - size) / 2, size, textColor)
-            dxDrawText(label, startX + size + 7, y, x + w, y + h, textColor, 1, fonts.button, "left", "center")
+            exports.aura_ui:uiDrawText(label, startX + size + 7, y, x + w, y + h, textColor, 1, fonts.button, "left", "center")
         end
     else
-        dxDrawText(label, x, y, x + w, y + h, textColor, 1, fonts.button, "center", "center")
+        exports.aura_ui:uiDrawText(label, x, y, x + w, y + h, textColor, 1, fonts.button, "center", "center")
     end
 end
 
 local function drawBackdropDetail(r, g, b)
-    rounded(0, 0, 560, 190, 16, tocolor(r, g, b, 8))
-    rounded(1020, 690, 476, 200, 16, tocolor(r, g, b, 7))
-    for x = 40, 1012, 74 do
-        dxDrawLine(x, 92, x, 286, tocolor(255, 255, 255, 8), 1)
-    end
-    for y = 100, 284, 46 do
-        dxDrawLine(40, y, 1012, y, tocolor(255, 255, 255, 7), 1)
-    end
+    rounded(1028, 28, 440, 840, 12, tocolor(22,25,29,255))
+    dxDrawLine(40,120,998,120,tocolor(48,54,61,255),1)
 end
 
 local function drawCategories(accent)
@@ -320,7 +312,7 @@ local function drawCategories(accent)
         if visibleW > 0 then
         local selected = index == state.category
         local hovered = state.hovered == "category:" .. index
-        local color = selected and tocolor(25, 26, 28, 242) or hovered and tocolor(23, 24, 27, 238) or tocolor(16, 17, 19, 225)
+        local color = selected and tocolor(38, 46, 34, 255) or hovered and tocolor(30, 34, 39, 255) or tocolor(22, 25, 29, 255)
         rounded(x, y, visibleW, h, 7, color)
         rounded(x + 1, y + 1, visibleW - 2, h - 2, 7, tocolor(255, 255, 255, selected and 5 or 2))
         if selected then
@@ -333,17 +325,15 @@ local function drawCategories(accent)
         if texture then
             dxDrawImage(centerX - iconSize / 2, y + 20, iconSize, iconSize, texture, 0, 0, 0, selected and tocolor(255, 255, 255, 255) or tocolor(190, 190, 190, 165))
         end
-        dxDrawText(fitText(category.label, visibleW - 12, fonts.button), x + 6, y + 83, x + visibleW - 6, y + 116, selected and tocolor(250, 250, 247, 255) or tocolor(142, 142, 144, 205), 1, fonts.button, "center", "center", true)
+        exports.aura_ui:uiDrawText(fitText(category.label, visibleW - 12, fonts.button), x + 6, y + 83, x + visibleW - 6, y + 116, selected and tocolor(250, 250, 247, 255) or tocolor(142, 142, 144, 205), 1, fonts.button, "center", "center", true)
         addHitbox("category:" .. index, "category", x, y, visibleW, h, index)
         end
     end
 end
 
 local function drawProductCard(item, index, x, y, w, h, accent)
-    rounded(x, y, w, h, 10, tocolor(15, 16, 18, 238))
-    rounded(x + 10, y + 10, w - 20, 145, 8, tocolor(24, 25, 27, 232))
-    local r, g, b = parseThemeColor(state.shop.themeColor)
-    rounded(x + 20, y + 20, w - 40, 125, 62, tocolor(r, g, b, 7))
+    exports.aura_ui:uiDrawSurface(x,y,w,h,{color={22,25,29},radius=10,borderColor={48,54,61}},false)
+    rounded(x + 10, y + 10, w - 20, 145, 8, tocolor(30,34,39,255))
     local texture = getTexture(item.image)
     local imageSize = 125
     local centerX = x + w / 2
@@ -352,18 +342,18 @@ local function drawProductCard(item, index, x, y, w, h, accent)
     end
 
     local priceLabel = formatMoney(item.price)
-    local priceW = math.max(45, dxGetTextWidth(priceLabel, 1, fonts.badge) + 12)
+    local priceW = math.max(45, exports.aura_ui:uiTextWidth(priceLabel, 1, fonts.badge) + 12)
     local priceX = x + w - priceW - 12
-    dxDrawText(fitText(item.name, priceX - x - 20, fonts.card), x + 12, y + 162, priceX - 6, y + 186, tocolor(247, 248, 250, 255), 1, fonts.card, "left", "center", true)
-    rounded(priceX, y + 164, priceW, 20, 3, tocolor(17, 76, 55, 220))
-    dxDrawText(priceLabel, priceX + 2, y + 164, priceX + priceW - 2, y + 184, tocolor(55, 210, 119, 255), 1, fonts.badge, "center", "center", true)
-    dxDrawText(item.desc or "", x + 12, y + 188, x + w - 12, y + 224, tocolor(139, 139, 143, 220), 1, fonts.small, "left", "top", true, true)
+    exports.aura_ui:uiDrawText(fitText(item.name, priceX - x - 20, fonts.card), x + 12, y + 162, priceX - 6, y + 186, tocolor(247, 248, 250, 255), 1, fonts.card, "left", "center", true)
+    rounded(priceX, y + 164, priceW, 20, 3, tocolor(38, 46, 34, 255))
+    exports.aura_ui:uiDrawText(priceLabel, priceX + 2, y + 164, priceX + priceW - 2, y + 184, tocolor(201, 244, 111, 255), 1, fonts.badge, "center", "center", true)
+    exports.aura_ui:uiDrawText(item.desc or "", x + 12, y + 188, x + w - 12, y + 224, tocolor(139, 139, 143, 220), 1, fonts.small, "left", "top", true, true)
 
     local quantity = state.quantities[item.id] or 1
     local controlsY = y + h - 38
     rounded(x + 12, controlsY, 54, 30, 5, tocolor(35, 36, 38, 238))
-    dxDrawText(tostring(quantity), x + 20, controlsY, x + 54, controlsY + 30, tocolor(140, 140, 143, 230), 1, fonts.button, "left", "center")
-    drawButton("product-buy:" .. item.id, "Satın Al", x + 72, controlsY, w - 84, 30, "neutral")
+    exports.aura_ui:uiDrawText(tostring(quantity), x + 20, controlsY, x + 54, controlsY + 30, tocolor(140, 140, 143, 230), 1, fonts.button, "left", "center")
+    drawButton("product-buy:" .. item.id, "Sepete Ekle", x + 72, controlsY, w - 84, 30, "accent")
     addHitbox("product-buy:" .. item.id, "product-buy", x + 72, controlsY, w - 84, 30, item)
 end
 
@@ -407,14 +397,14 @@ local function drawCartItem(entry, index, x, y, w, h, accent)
     if texture then
         dxDrawImage(x + 8, y + 8, 56, 56, texture)
     end
-    dxDrawText(fitText(item.name, 145, fonts.card), x + 86, y + 5, x + 231, y + 28, tocolor(245, 247, 250, 255), 1, fonts.card, "left", "center", true)
-    rounded(x + 235, y + 7, 42, 18, 3, tocolor(17, 76, 55, 220))
-    dxDrawText(formatMoney(item.price), x + 237, y + 7, x + 275, y + 25, tocolor(55, 210, 119, 255), 1, fonts.badge, "center", "center", true)
-    dxDrawText(item.desc or "", x + 86, y + 30, x + 245, y + 68, tocolor(134, 134, 138, 220), 1, fonts.small, "left", "top", true, true)
+    exports.aura_ui:uiDrawText(fitText(item.name, 145, fonts.card), x + 86, y + 5, x + 231, y + 28, tocolor(245, 247, 250, 255), 1, fonts.card, "left", "center", true)
+    rounded(x + 235, y + 7, 42, 18, 3, tocolor(38, 46, 34, 255))
+    exports.aura_ui:uiDrawText(formatMoney(item.price), x + 237, y + 7, x + 275, y + 25, tocolor(201, 244, 111, 255), 1, fonts.badge, "center", "center", true)
+    exports.aura_ui:uiDrawText(item.desc or "", x + 86, y + 30, x + 245, y + 68, tocolor(134, 134, 138, 220), 1, fonts.small, "left", "top", true, true)
     local controlY = y + 22
     drawButton("cart-delete:" .. item.id, "", x + w - 126, controlY, 28, 30, "danger", "cross")
     drawButton("cart-minus:" .. item.id, "<", x + w - 92, controlY, 28, 30, "neutral")
-    dxDrawText(tostring(entry.quantity), x + w - 61, controlY, x + w - 33, controlY + 30, tocolor(235, 237, 240, 245), 1, fonts.badge, "center", "center")
+    exports.aura_ui:uiDrawText(tostring(entry.quantity), x + w - 61, controlY, x + w - 33, controlY + 30, tocolor(235, 237, 240, 245), 1, fonts.badge, "center", "center")
     drawButton("cart-plus:" .. item.id, ">", x + w - 28, controlY, 28, 30, "neutral")
     addHitbox("cart-delete:" .. item.id, "cart-delete", x + w - 126, controlY, 28, 30, index)
     addHitbox("cart-minus:" .. item.id, "cart-minus", x + w - 92, controlY, 28, 30, index)
@@ -431,8 +421,8 @@ end
 
 local function drawCart(accent)
     local x, w = 1038, 396
-    dxDrawText("Sepet", x, 48, x + w - 64, 82, tocolor(247, 248, 250, 255), 1, fonts.heading, "left", "center")
-    dxDrawText("Sepetinizi yönetin ve ürünlerinizi inceleyin.", x, 86, x + w - 62, 106, tocolor(112, 112, 116, 220), 1, fonts.small, "left", "center", true)
+    exports.aura_ui:uiDrawText("Sepet", x, 48, x + w - 64, 82, tocolor(247, 248, 250, 255), 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Sepetinizi yönetin ve ürünlerinizi inceleyin.", x, 86, x + w - 62, 106, tocolor(112, 112, 116, 220), 1, fonts.small, "left", "center", true)
     drawButton("close", "", x + w - 46, 60, 46, 46, "danger", "cross")
     addHitbox("close", "close", x + w - 46, 60, 46, 46)
 
@@ -441,7 +431,7 @@ local function drawCart(accent)
         if basket then
             dxDrawImage(x + w / 2 - 50, 298, 100, 100, basket, 0, 0, 0, tocolor(255, 255, 255, 145))
         end
-        dxDrawText("Sepetiniz boş.", x, 423, x + w, 451, tocolor(118, 118, 122, 230), 1, fonts.body, "center", "center")
+        exports.aura_ui:uiDrawText("Sepetiniz boş.", x, 423, x + w, 451, tocolor(118, 118, 122, 230), 1, fonts.body, "center", "center")
     else
         local first = state.cartScroll + 1
         local last = math.min(#state.cart, first + cartRows - 1)
@@ -462,9 +452,9 @@ local function drawCart(accent)
     dxDrawLine(x, 749, x + w, 749, tocolor(255, 255, 255, 34), 1)
     rounded(x - 2, 747, 4, 4, 2, tocolor(255, 255, 255, 230))
     rounded(x + w - 2, 747, 4, 4, 2, tocolor(255, 255, 255, 230))
-    dxDrawText("Toplam", x, 763, x + 150, 801, tocolor(246, 248, 250, 255), 1, fonts.heading, "left", "center")
-    dxDrawText(formatMoney(getCartTotal()), x + 150, 763, x + w, 801, tocolor(55, 225, 106, 255), 1, fonts.heading, "right", "center")
-    drawButton("checkout:cash", "Nakit", x, 815, 187, 42, "neutral", nil, state.purchasing or #state.cart == 0)
+    exports.aura_ui:uiDrawText("Toplam", x, 763, x + 150, 801, tocolor(246, 248, 250, 255), 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText(formatMoney(getCartTotal()), x + 150, 763, x + w, 801, tocolor(201, 244, 111, 255), 1, fonts.heading, "right", "center")
+    drawButton("checkout:cash", "Nakit", x, 815, 187, 42, "accent", nil, state.purchasing or #state.cart == 0)
     drawButton("checkout:card", "Kart", x + 205, 815, 191, 42, "neutral", nil, state.purchasing or #state.cart == 0)
     if not state.purchasing and #state.cart > 0 then
         addHitbox("checkout:cash", "checkout", x, 815, 187, 42, "cash")
@@ -476,22 +466,18 @@ local function rebuildTarget()
     if not renderTarget or not isElement(renderTarget) or not state.shop then return false end
     clearHitboxes()
 
-    local r, g, b = parseThemeColor(state.shop.themeColor)
+    local r, g, b = 201,244,111
     local accent = tocolor(r, g, b, 255)
     dxSetRenderTarget(renderTarget, true)
     dxSetBlendMode("modulate_add")
-    rounded(0, 0, panelW, panelH, 16, tocolor(7, 8, 10, 232))
+    exports.aura_ui:uiDrawSurface(0,0,panelW,panelH,{color={15,17,20},radius=16,borderColor={48,54,61}},false)
     drawBackdropDetail(r, g, b)
-    dxDrawText(state.shop.name or "GZL MARKET", 40, 42, 900, 81, tocolor(248, 249, 244, 255), 1, fonts.title, "left", "center")
-    dxDrawText(state.shop.subtitle or "", 40, 89, 950, 108, tocolor(117, 117, 121, 225), 1, fonts.body, "left", "center", true)
-    local logo = getTexture("risk_logo.png")
-    if logo then
-        local logoX = 40 + dxGetTextWidth(state.shop.name or "GZL MARKET", 1, fonts.title) + 20
-        dxDrawImage(logoX, 49, 45, 45, logo)
-    end
+    exports.aura_ui:uiDrawText("aura",40,32,142,84,tocolor(239,242,244),1,fonts.title,"left","center")
+    local marketTitleX=40+dxGetTextWidth("aura",1,fonts.title)+12
+    exports.aura_ui:uiDrawText("MARKET",marketTitleX,43,310,75,tocolor(143,153,164),1,fonts.button,"left","center")
+    exports.aura_ui:uiDrawText(state.shop.name or "Market",40,87,998,111,tocolor(143,153,164),1,fonts.body,"left","center",true)
     drawCategories(accent)
-    rounded(40, 284, 958, 4, 2, accent)
-    rounded(1012, 309, 2, panelH - 309, 1, accent)
+    rounded(40, 284, 958, 1, 0, tocolor(48,54,61))
     drawProducts(accent)
     drawCart(accent)
 
@@ -713,7 +699,7 @@ renderMarket = function()
     if not state.open then return end
     if not renderTarget or not isElement(renderTarget) then return end
     local x, y, w, h = getPanelGeometry()
-    dxDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, 195))
+    exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, 195))
     if backdropTexture and isElement(backdropTexture) then
         dxDrawImage(0, 0, screenW, screenH, backdropTexture)
     end

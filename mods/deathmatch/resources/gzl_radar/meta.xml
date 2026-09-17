@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="thommy" type="script" name="GZL GTA V Radar &amp; Pause Menu Big Map" version="2.0.0" />
     
     <script src="server/vehiclenodes.lua" type="server" />

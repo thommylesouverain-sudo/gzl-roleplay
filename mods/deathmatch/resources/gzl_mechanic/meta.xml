@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="GZL Roleplay" name="Benny's Original Motor Works" version="1.0.0" type="script" description="Benny's Custom Garage and Advanced Mechanic System" />
 
     <min_mta_version client="1.6.0" server="1.6.0" />

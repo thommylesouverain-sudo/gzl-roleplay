@@ -778,11 +778,11 @@ end)
 
 local function drawFastOutlinedText(text, x, y, w, h, color, scaleVal, font, stroke)
     local black = tocolor(0, 0, 0, 255)
-    dxDrawText(text, x - stroke, y, x + w - stroke, y + h, black, scaleVal, font, "center", "center")
-    dxDrawText(text, x + stroke, y, x + w + stroke, y + h, black, scaleVal, font, "center", "center")
-    dxDrawText(text, x, y - stroke, x + w, y + h - stroke, black, scaleVal, font, "center", "center")
-    dxDrawText(text, x, y + stroke, x + w, y + h + stroke, black, scaleVal, font, "center", "center")
-    dxDrawText(text, x, y, x + w, y + h, color, scaleVal, font, "center", "center")
+    exports.aura_ui:uiDrawText(text, x - stroke, y, x + w - stroke, y + h, black, scaleVal, font, "center", "center")
+    exports.aura_ui:uiDrawText(text, x + stroke, y, x + w + stroke, y + h, black, scaleVal, font, "center", "center")
+    exports.aura_ui:uiDrawText(text, x, y - stroke, x + w, y + h - stroke, black, scaleVal, font, "center", "center")
+    exports.aura_ui:uiDrawText(text, x, y + stroke, x + w, y + h + stroke, black, scaleVal, font, "center", "center")
+    exports.aura_ui:uiDrawText(text, x, y, x + w, y + h, color, scaleVal, font, "center", "center")
 end
 
 local function drawOverheadPlayerIDs()
@@ -815,8 +815,8 @@ local function drawOverheadPlayerIDs()
                 local armor = math.max(0, math.min(100, getPedArmor(p)))
 
                 local text = string.format("[%d] %s", id, name)
-                local textW = dxGetTextWidth(text, textScale, font)
-                local textH = dxGetFontHeight(textScale, font)
+                local textW = exports.aura_ui:uiTextWidth(text, textScale, font)
+                local textH = exports.aura_ui:uiFontHeight(textScale, font)
 
                 local textX = math.floor(sx - textW * 0.5)
                 local textY = math.floor(sy - textH)
@@ -829,21 +829,21 @@ local function drawOverheadPlayerIDs()
                 local barX = math.floor(sx - barW * 0.5)
                 local barY = textY + textH + math.floor(2 * distScale)
 
-                dxDrawRectangle(barX - 1, barY - 1, barW + 2, barH + 2, tocolor(0, 0, 0, 230))
-                dxDrawRectangle(barX, barY, barW, barH, tocolor(25, 100, 80, 255))
+                exports.aura_ui:uiDrawRectangle(barX - 1, barY - 1, barW + 2, barH + 2, tocolor(0, 0, 0, 230))
+                exports.aura_ui:uiDrawRectangle(barX, barY, barW, barH, tocolor(25, 100, 80, 255))
 
                 local hpW = math.floor(barW * (hp / 100))
                 if hpW > 0 then
-                    dxDrawRectangle(barX, barY, hpW, barH, tocolor(55, 250, 218, 255))
+                    exports.aura_ui:uiDrawRectangle(barX, barY, hpW, barH, tocolor(55, 250, 218, 255))
                 end
 
                 if armor > 0 then
                     local armY = barY + barH + math.floor(2 * distScale)
-                    dxDrawRectangle(barX - 1, armY - 1, barW + 2, barH + 2, tocolor(0, 0, 0, 230))
-                    dxDrawRectangle(barX, armY, barW, barH, tocolor(20, 50, 80, 255))
+                    exports.aura_ui:uiDrawRectangle(barX - 1, armY - 1, barW + 2, barH + 2, tocolor(0, 0, 0, 230))
+                    exports.aura_ui:uiDrawRectangle(barX, armY, barW, barH, tocolor(20, 50, 80, 255))
                     local armW = math.floor(barW * (armor / 100))
                     if armW > 0 then
-                        dxDrawRectangle(barX, armY, armW, barH, tocolor(56, 189, 248, 255))
+                        exports.aura_ui:uiDrawRectangle(barX, armY, armW, barH, tocolor(56, 189, 248, 255))
                     end
                 end
             end
@@ -1148,13 +1148,13 @@ local function renderBannerNotifications()
         if elapsed < 3500 then
             local tFont = fonts.toast
             local tText = "ℹ  " .. S.toastMessage
-            local tw = dxGetTextWidth(tText, 1.0, tFont) + 32
+            local tw = exports.aura_ui:uiTextWidth(tText, 1.0, tFont) + 32
             local th = 28
             local tx = math.floor((screenW - tw) / 2)
             local ty = screenH - 68
 
             drawRoundedRectangle(tx, ty, tw, th, 6, tocolor(2, 132, 199, 240))
-            dxDrawText(tText, tx, ty, tx + tw, ty + th, tocolor(255, 255, 255, 255), 1.0, tFont, "center", "center")
+            exports.aura_ui:uiDrawText(tText, tx, ty, tx + tw, ty + th, tocolor(255, 255, 255, 255), 1.0, tFont, "center", "center")
         else
             S.toastMessage = nil
             syncRenderState()
@@ -1166,8 +1166,8 @@ local function renderBannerNotifications()
         if elapsed < S.announcementDuration then
             local titleText = "Sunucu Duyurusu (" .. S.activeAnnouncement.admin .. "):"
             local msgText = S.activeAnnouncement.message
-            local titleW = dxGetTextWidth(titleText, 1.0, fonts.item)
-            local msgW = dxGetTextWidth(msgText, 1.0, fonts.val)
+            local titleW = exports.aura_ui:uiTextWidth(titleText, 1.0, fonts.item)
+            local msgW = exports.aura_ui:uiTextWidth(msgText, 1.0, fonts.val)
             local contentW = math.max(titleW, msgW)
             local bannerW = math.max(math.floor(340 * scale), math.min(math.floor(680 * scale), contentW + math.floor(75 * scale)))
             local bannerH = math.floor(56 * scale)
@@ -1195,8 +1195,8 @@ local function renderBannerNotifications()
             local line1Y = bannerY + math.floor(9 * scale)
             local line2Y = bannerY + math.floor(29 * scale)
 
-            dxDrawText(titleText, textX, line1Y, bannerX + bannerW - 14, line1Y + 18, tocolor(28, 25, 23, 255), 1.0, fonts.item, "left", "center", true, false, true)
-            dxDrawText(msgText, textX, line2Y, bannerX + bannerW - 14, line2Y + 20, tocolor(41, 37, 36, 255), 1.0, fonts.val, "left", "center", true, false, true)
+            exports.aura_ui:uiDrawText(titleText, textX, line1Y, bannerX + bannerW - 14, line1Y + 18, tocolor(28, 25, 23, 255), 1.0, fonts.item, "left", "center", true, false, true)
+            exports.aura_ui:uiDrawText(msgText, textX, line2Y, bannerX + bannerW - 14, line2Y + 20, tocolor(41, 37, 36, 255), 1.0, fonts.val, "left", "center", true, false, true)
         else
             S.activeAnnouncement = nil
             syncRenderState()
@@ -1208,8 +1208,8 @@ local function renderBannerNotifications()
         if elapsed < S.dmDuration then
             local titleText = S.activeDirectMessage.admin .. " yöneticisinden DM:"
             local msgText = S.activeDirectMessage.message
-            local titleW = dxGetTextWidth(titleText, 1.0, fonts.item)
-            local msgW = dxGetTextWidth(msgText, 1.0, fonts.val)
+            local titleW = exports.aura_ui:uiTextWidth(titleText, 1.0, fonts.item)
+            local msgW = exports.aura_ui:uiTextWidth(msgText, 1.0, fonts.val)
             local contentW = math.max(titleW, msgW)
             local bannerW = math.max(math.floor(340 * scale), math.min(math.floor(680 * scale), contentW + math.floor(75 * scale)))
             local bannerH = math.floor(56 * scale)
@@ -1237,8 +1237,8 @@ local function renderBannerNotifications()
             local line1Y = bannerY + math.floor(9 * scale)
             local line2Y = bannerY + math.floor(29 * scale)
 
-            dxDrawText(titleText, textX, line1Y, bannerX + bannerW - 14, line1Y + 18, tocolor(255, 255, 255, 255), 1.0, fonts.item, "left", "center", true, false, true)
-            dxDrawText(msgText, textX, line2Y, bannerX + bannerW - 14, line2Y + 20, tocolor(224, 242, 254, 255), 1.0, fonts.val, "left", "center", true, false, true)
+            exports.aura_ui:uiDrawText(titleText, textX, line1Y, bannerX + bannerW - 14, line1Y + 18, tocolor(255, 255, 255, 255), 1.0, fonts.item, "left", "center", true, false, true)
+            exports.aura_ui:uiDrawText(msgText, textX, line2Y, bannerX + bannerW - 14, line2Y + 20, tocolor(224, 242, 254, 255), 1.0, fonts.val, "left", "center", true, false, true)
         else
             S.activeDirectMessage = nil
             syncRenderState()
@@ -1247,7 +1247,7 @@ local function renderBannerNotifications()
 
     if S.activeWarning then
         local pulseAlpha = math.floor(235 + 20 * math.sin(now / 300))
-        dxDrawRectangle(0, 0, screenW, screenH, tocolor(133, 3, 3, pulseAlpha), true)
+        exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(133, 3, 3, pulseAlpha), true)
 
         local cardW = math.floor(640 * scale)
         local cardH = math.floor(240 * scale)
@@ -1257,24 +1257,24 @@ local function renderBannerNotifications()
         drawRoundedRectangle(cardX, cardY, cardW, cardH, 12, tocolor(20, 10, 10, 200), true)
         drawRoundedBorder(cardX, cardY, cardW, cardH, 12, tocolor(245, 245, 245, 240), 2.2, true)
 
-        local titleW = dxGetTextWidth("UYARI", 1.0, fonts.title)
+        local titleW = exports.aura_ui:uiTextWidth("UYARI", 1.0, fonts.title)
         local titleCenterY = cardY + math.floor(24 * scale)
         local titleLineW = titleW + 80 * scale
         local titleLineX = cardX + math.floor((cardW - titleLineW) / 2)
 
         drawIconSVG("warning", titleLineX + 8 * scale, titleCenterY - 2, 24 * scale, tocolor(233, 150, 122, 255), true)
-        dxDrawText("UYARI", cardX, titleCenterY - 4, cardX + cardW, titleCenterY + 24, tocolor(245, 245, 245, 255), 1.0, fonts.title, "center", "center", false, false, true)
+        exports.aura_ui:uiDrawText("UYARI", cardX, titleCenterY - 4, cardX + cardW, titleCenterY + 24, tocolor(245, 245, 245, 255), 1.0, fonts.title, "center", "center", false, false, true)
         drawIconSVG("warning", titleLineX + titleLineW - 32 * scale, titleCenterY - 2, 24 * scale, tocolor(233, 150, 122, 255), true)
 
         dxDrawLine(titleLineX, titleCenterY + 30 * scale, titleLineX + titleLineW, titleCenterY + 30 * scale, tocolor(245, 245, 245, 220), 1.5, true)
 
         local reasonY = cardY + math.floor(75 * scale)
         local reasonH = math.floor(90 * scale)
-        dxDrawText(S.activeWarning.reason, cardX + 24 * scale, reasonY, cardX + cardW - 24 * scale, reasonY + reasonH, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "center", "center", true, true, true)
+        exports.aura_ui:uiDrawText(S.activeWarning.reason, cardX + 24 * scale, reasonY, cardX + cardW - 24 * scale, reasonY + reasonH, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "center", "center", true, true, true)
 
         local authorText = "Uyaran Yetkili: " .. S.activeWarning.admin
         local authorY = cardY + cardH - math.floor(32 * scale)
-        dxDrawText(authorText, cardX + 24 * scale, authorY, cardX + cardW - 24 * scale, authorY + 20 * scale, tocolor(245, 245, 245, 210), 1.0, fonts.sub, "right", "center", false, false, true)
+        exports.aura_ui:uiDrawText(authorText, cardX + 24 * scale, authorY, cardX + cardW - 24 * scale, authorY + 20 * scale, tocolor(245, 245, 245, 210), 1.0, fonts.sub, "right", "center", false, false, true)
 
         local instrY = cardY + cardH + math.floor(28 * scale)
         local isSpaceDown = getKeyState("space")
@@ -1302,15 +1302,15 @@ local function renderBannerNotifications()
         end
 
         local instrText = string.format("Bu mesajı geçmek için [BOŞLUK] tuşunu %d saniye basılı tutun.", secsLeft)
-        dxDrawText(instrText, 0, instrY, screenW, instrY + 24 * scale, tocolor(245, 245, 245, 255), 1.0, fonts.item, "center", "center", false, false, true)
+        exports.aura_ui:uiDrawText(instrText, 0, instrY, screenW, instrY + 24 * scale, tocolor(245, 245, 245, 255), 1.0, fonts.item, "center", "center", false, false, true)
 
         if holdProgress > 0 then
             local pBarW = math.floor(260 * scale)
             local pBarH = math.floor(6 * scale)
             local pBarX = math.floor((screenW - pBarW) / 2)
             local pBarY = instrY + math.floor(30 * scale)
-            dxDrawRectangle(pBarX, pBarY, pBarW, pBarH, tocolor(0, 0, 0, 180), true)
-            dxDrawRectangle(pBarX, pBarY, math.floor(pBarW * holdProgress), pBarH, tocolor(0, 245, 160, 255), true)
+            exports.aura_ui:uiDrawRectangle(pBarX, pBarY, pBarW, pBarH, tocolor(0, 0, 0, 180), true)
+            exports.aura_ui:uiDrawRectangle(pBarX, pBarY, math.floor(pBarW * holdProgress), pBarH, tocolor(0, 245, 160, 255), true)
         end
     end
 end
@@ -1327,7 +1327,7 @@ local function renderPlayerModalDialog()
     drawRoundedRectangle(dx, dy, dw, dh, 14, tocolor(255, 255, 255, 14))
 
     local titleStr = string.format("[%d] %s", S.activePlayerDialog.id, S.activePlayerDialog.name)
-    dxDrawText(titleStr, dx + 20, dy + 14, dx + 300, dy + 38, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+    exports.aura_ui:uiDrawText(titleStr, dx + 20, dy + 14, dx + 300, dy + 38, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
 
     drawIconSVG("cross", dx + dw - 30, dy + 14, 16, tocolor(148, 163, 184, 255))
 
@@ -1362,15 +1362,15 @@ local function renderPlayerModalDialog()
         end
 
         drawIconSVG(sTab.icon, dx + 20, sy + 9, 15, tocolor(255, 255, 255, 240))
-        dxDrawText(sTab.name, dx + 44, sy, dx + 12 + sideW, sy + tabItemH, tocolor(255, 255, 255, 255), 1.0, fonts.sideTab, "left", "center")
+        exports.aura_ui:uiDrawText(sTab.name, dx + 44, sy, dx + 12 + sideW, sy + tabItemH, tocolor(255, 255, 255, 255), 1.0, fonts.sideTab, "left", "center")
     end
 
     local contentX = dx + sideW + math.floor(18 * scale)
 
     if S.playerDialogTab == "İşlemler" then
-        dxDrawText("Oyuncu İşlemleri", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Oyuncu İşlemleri", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
 
-        dxDrawText("Yönetim", contentX, sepY + 38, contentX + 300, sepY + 52, tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Yönetim", contentX, sepY + 38, contentX + 300, sepY + 52, tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
         local modBtns = {"MESAJ", "UYARI", "AT", "YETKİ VER"}
         local by1 = sepY + math.floor(56 * scale)
         local bw1 = math.floor(78 * scale)
@@ -1380,10 +1380,10 @@ local function renderPlayerModalDialog()
             local isHov = isMouseInArea(bx, by1, bw1, bh1)
             drawRoundedRectangle(bx, by1, bw1, bh1, 4, isHov and tocolor(0, 245, 160, 30) or tocolor(15, 23, 33, 220))
             drawRoundedBorder(bx, by1, bw1, bh1, 4, tocolor(0, 245, 160, 240), 1.2)
-            dxDrawText(bName, bx, by1, bx + bw1, by1 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
+            exports.aura_ui:uiDrawText(bName, bx, by1, bx + bw1, by1 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
         end
 
-        dxDrawText("Etkileşim", contentX, sepY + math.floor(96 * scale), contentX + 300, sepY + math.floor(110 * scale), tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Etkileşim", contentX, sepY + math.floor(96 * scale), contentX + 300, sepY + math.floor(110 * scale), tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
         local intBtns = {"İYİLEŞTİR", "GİT", "ÇEK", "İZLE", "DONDUR"}
         local by2 = sepY + math.floor(114 * scale)
         local bw2 = math.floor(64 * scale)
@@ -1392,10 +1392,10 @@ local function renderPlayerModalDialog()
             local isHov = isMouseInArea(bx, by2, bw2, bh1)
             drawRoundedRectangle(bx, by2, bw2, bh1, 4, isHov and tocolor(0, 245, 160, 30) or tocolor(15, 23, 33, 220))
             drawRoundedBorder(bx, by2, bw2, bh1, 4, tocolor(0, 245, 160, 240), 1.2)
-            dxDrawText(bName, bx, by2, bx + bw2, by2 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
+            exports.aura_ui:uiDrawText(bName, bx, by2, bx + bw2, by2 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
         end
 
-        dxDrawText("Eğlence", contentX, sepY + math.floor(154 * scale), contentX + 300, sepY + math.floor(168 * scale), tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Eğlence", contentX, sepY + math.floor(154 * scale), contentX + 300, sepY + math.floor(168 * scale), tocolor(148, 163, 184, 255), 1.0, fonts.cat, "left", "center")
         local isTargetDrunk = getElementData(S.activePlayerDialog.element, "txadmin:isDrunk")
         local drunkLabel = isTargetDrunk and "AYILT" or "SARHOŞ ET"
         local trollBtns = {drunkLabel, "ATEŞE VER", "TOKATLA"}
@@ -1406,21 +1406,21 @@ local function renderPlayerModalDialog()
             local isHov = isMouseInArea(bx, by3, bw3, bh1)
             drawRoundedRectangle(bx, by3, bw3, bh1, 4, isHov and tocolor(0, 245, 160, 30) or tocolor(15, 23, 33, 220))
             drawRoundedBorder(bx, by3, bw3, bh1, 4, tocolor(0, 245, 160, 240), 1.2)
-            dxDrawText(bName, bx, by3, bx + bw3, by3 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
+            exports.aura_ui:uiDrawText(bName, bx, by3, bx + bw3, by3 + bh1, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
         end
 
     elseif S.playerDialogTab == "Bilgiler" then
-        dxDrawText("Oyuncu Bilgisi", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Oyuncu Bilgisi", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
 
         local line1Y = sepY + math.floor(38 * scale)
-        dxDrawText("Oturum Süresi: #ffffff8 dakika", contentX, line1Y, contentX + 300, line1Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
+        exports.aura_ui:uiDrawText("Oturum Süresi: #ffffff8 dakika", contentX, line1Y, contentX + 300, line1Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
         local line2Y = line1Y + math.floor(22 * scale)
-        dxDrawText("Oynama Süresi: #ffffff1 gün, 2 saat, 39 dakika", contentX, line2Y, contentX + 300, line2Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
+        exports.aura_ui:uiDrawText("Oynama Süresi: #ffffff1 gün, 2 saat, 39 dakika", contentX, line2Y, contentX + 300, line2Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
         local line3Y = line2Y + math.floor(22 * scale)
-        dxDrawText("Kayıt Tarihi: #ffffff13 Ekim 2022 - 21:01:29", contentX, line3Y, contentX + 300, line3Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
+        exports.aura_ui:uiDrawText("Kayıt Tarihi: #ffffff13 Ekim 2022 - 21:01:29", contentX, line3Y, contentX + 300, line3Y + 18, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center", false, false, false, true)
 
         local noteLabelY = line3Y + math.floor(30 * scale)
-        dxDrawText("Bu oyuncu hakkında notlar", contentX, noteLabelY, contentX + 300, noteLabelY + 16, tocolor(0, 245, 160, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Bu oyuncu hakkında notlar", contentX, noteLabelY, contentX + 300, noteLabelY + 16, tocolor(0, 245, 160, 255), 1.0, fonts.cat, "left", "center")
 
         local noteBoxY = noteLabelY + math.floor(22 * scale)
         local noteBoxW = dw - (contentX - dx) - 24
@@ -1429,17 +1429,17 @@ local function renderPlayerModalDialog()
         drawRoundedBorder(contentX, noteBoxY, noteBoxW, noteBoxH, 6, tocolor(0, 245, 160, 180), 1.2)
 
         local dispNote = (S.playerNoteInput == "") and "Not girin..." or S.playerNoteInput .. (getTickCount() % 1000 > 500 and "|" or "")
-        dxDrawText(dispNote, contentX + 10, noteBoxY + 8, contentX + noteBoxW - 10, noteBoxY + noteBoxH - 8, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "top", true, true)
+        exports.aura_ui:uiDrawText(dispNote, contentX + 10, noteBoxY + 8, contentX + noteBoxW - 10, noteBoxY + noteBoxH - 8, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "top", true, true)
 
         local btnSaveW = math.floor(100 * scale)
         local btnSaveH = math.floor(25 * scale)
         local btnSaveY = noteBoxY + noteBoxH + math.floor(12 * scale)
         drawRoundedRectangle(contentX, btnSaveY, btnSaveW, btnSaveH, 4, tocolor(15, 23, 33, 255))
         drawRoundedBorder(contentX, btnSaveY, btnSaveW, btnSaveH, 4, tocolor(0, 245, 160, 240), 1.2)
-        dxDrawText("NOTU KAYDET", contentX, btnSaveY, contentX + btnSaveW, btnSaveY + btnSaveH, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
+        exports.aura_ui:uiDrawText("NOTU KAYDET", contentX, btnSaveY, contentX + btnSaveW, btnSaveY + btnSaveH, tocolor(0, 245, 160, 255), 1.0, fonts.btn, "center", "center")
 
     elseif S.playerDialogTab == "Kimlikler" then
-        dxDrawText("Oyuncu Kimlikleri", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Oyuncu Kimlikleri", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
 
         local idList = {
             { label = "license:9660e7e3327b8f6ae2a7cff7836c666b7663eed2" },
@@ -1455,19 +1455,19 @@ local function renderPlayerModalDialog()
         for i, item in ipairs(idList) do
             local iy = idStartY + (i - 1) * (idRowH + 7)
             drawRoundedRectangle(contentX, iy, idRowW, idRowH, 6, tocolor(25, 33, 46, 255))
-            dxDrawText(item.label, contentX + 10, iy, contentX + idRowW - 36, iy + idRowH, tocolor(226, 232, 240, 255), 1.0, fonts.ver, "left", "center", true, false)
+            exports.aura_ui:uiDrawText(item.label, contentX + 10, iy, contentX + idRowW - 36, iy + idRowH, tocolor(226, 232, 240, 255), 1.0, fonts.ver, "left", "center", true, false)
             drawIconSVG("copy", contentX + idRowW - 26, iy + 8, 15, tocolor(148, 163, 184, 255))
         end
 
     elseif S.playerDialogTab == "Geçmiş" then
-        dxDrawText("Oyuncu Geçmişi", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
-        dxDrawText("Bu oyuncu için geçmiş kayıt bulunamadı.", contentX, sepY + 44, contentX + 300, sepY + 68, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center")
+        exports.aura_ui:uiDrawText("Oyuncu Geçmişi", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Bu oyuncu için geçmiş kayıt bulunamadı.", contentX, sepY + 44, contentX + 300, sepY + 68, tocolor(148, 163, 184, 255), 1.0, fonts.val, "left", "center")
 
     elseif S.playerDialogTab == "Yasakla" then
-        dxDrawText("Oyuncuyu Yasakla", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Oyuncuyu Yasakla", contentX, sepY + 12, contentX + 300, sepY + 30, tocolor(255, 255, 255, 255), 1.0, fonts.dialogTitle, "left", "center")
 
         local label1Y = sepY + math.floor(38 * scale)
-        dxDrawText("Sebep *", contentX, label1Y, contentX + 300, label1Y + 16, tocolor(0, 245, 160, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Sebep *", contentX, label1Y, contentX + 300, label1Y + 16, tocolor(0, 245, 160, 255), 1.0, fonts.cat, "left", "center")
 
         local box1Y = label1Y + math.floor(20 * scale)
         local boxW = dw - (contentX - dx) - 24
@@ -1476,10 +1476,10 @@ local function renderPlayerModalDialog()
         drawRoundedBorder(contentX, box1Y, boxW, box1H, 6, tocolor(0, 245, 160, 180), 1.2)
 
         local dispReason = S.banReasonInput .. (getTickCount() % 1000 > 500 and "|" or "")
-        dxDrawText(dispReason, contentX + 10, box1Y, contentX + boxW - 10, box1Y + box1H, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center", true, false)
+        exports.aura_ui:uiDrawText(dispReason, contentX + 10, box1Y, contentX + boxW - 10, box1Y + box1H, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center", true, false)
 
         local label2Y = box1Y + box1H + math.floor(14 * scale)
-        dxDrawText("Süre *", contentX, label2Y, contentX + 300, label2Y + 16, tocolor(100, 116, 139, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Süre *", contentX, label2Y, contentX + 300, label2Y + 16, tocolor(100, 116, 139, 255), 1.0, fonts.cat, "left", "center")
 
         local box2Y = label2Y + math.floor(20 * scale)
         local box2W = math.floor(220 * scale)
@@ -1488,17 +1488,17 @@ local function renderPlayerModalDialog()
         drawRoundedBorder(contentX, box2Y, box2W, box2H, 6, tocolor(100, 116, 139, 120), 1.2)
 
         local curDurText = S.banDurations[S.banDurationIndex].label
-        dxDrawText(curDurText, contentX + 10, box2Y, contentX + math.floor(180 * scale), box2Y + box2H, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center")
+        exports.aura_ui:uiDrawText(curDurText, contentX + 10, box2Y, contentX + math.floor(180 * scale), box2Y + box2H, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center")
         drawIconSVG(S.isBanDropdownOpen and "chevron_up" or "chevron_down", contentX + math.floor(195 * scale), box2Y + 7, 15, tocolor(148, 163, 184, 255))
 
         local helpY = box2Y + box2H + math.floor(6 * scale)
-        dxDrawText("Lütfen bir süre seçin.", contentX, helpY, contentX + 300, helpY + 16, tocolor(100, 116, 139, 255), 1.0, fonts.cat, "left", "center")
+        exports.aura_ui:uiDrawText("Lütfen bir süre seçin.", contentX, helpY, contentX + 300, helpY + 16, tocolor(100, 116, 139, 255), 1.0, fonts.cat, "left", "center")
 
         local btnBanW = math.floor(90 * scale)
         local btnBanH = math.floor(28 * scale)
         local btnBanY = helpY + math.floor(22 * scale)
         drawRoundedRectangle(contentX, btnBanY, btnBanW, btnBanH, 4, tocolor(0, 245, 160, 255))
-        dxDrawText("YASAKLA", contentX, btnBanY, contentX + btnBanW, btnBanY + btnBanH, tocolor(10, 15, 22, 255), 1.0, fonts.btn, "center", "center")
+        exports.aura_ui:uiDrawText("YASAKLA", contentX, btnBanY, contentX + btnBanW, btnBanY + btnBanH, tocolor(10, 15, 22, 255), 1.0, fonts.btn, "center", "center")
 
         if S.isBanDropdownOpen then
             local dropItemH = math.floor(26 * scale)
@@ -1516,7 +1516,7 @@ local function renderPlayerModalDialog()
                     drawRoundedRectangle(contentX + 2, iy + 1, box2W - 4, dropItemH - 2, 4, tocolor(30, 41, 56, 240), true)
                 end
                 local textColor = isSel and tocolor(0, 245, 160, 255) or (isHover and tocolor(255, 255, 255, 255) or tocolor(203, 213, 225, 255))
-                dxDrawText(d.label, contentX + 12, iy, contentX + box2W - 28, iy + dropItemH, textColor, 1.0, fonts.val, "left", "center", false, false, true)
+                exports.aura_ui:uiDrawText(d.label, contentX + 12, iy, contentX + box2W - 28, iy + dropItemH, textColor, 1.0, fonts.val, "left", "center", false, false, true)
                 if isSel then
                     drawIconSVG("check", contentX + box2W - 22, iy + 5, 14, tocolor(0, 245, 160, 255), true)
                 end
@@ -1558,8 +1558,8 @@ local function renderInputModal()
         mSub = "Atılma sebebini girin."
     end
 
-    dxDrawText(mTitle, mx + 22, my + 14, mx + mw - 22, my + 38, tocolor(0, 245, 160, 255), 1.0, fonts.item, "left", "center")
-    dxDrawText(mSub, mx + 22, my + 38, mx + mw - 22, my + 56, tocolor(148, 163, 184, 255), 1.0, fonts.ver, "left", "center")
+    exports.aura_ui:uiDrawText(mTitle, mx + 22, my + 14, mx + mw - 22, my + 38, tocolor(0, 245, 160, 255), 1.0, fonts.item, "left", "center")
+    exports.aura_ui:uiDrawText(mSub, mx + 22, my + 38, mx + mw - 22, my + 56, tocolor(148, 163, 184, 255), 1.0, fonts.ver, "left", "center")
 
     local inY = my + math.floor(74 * scale)
     local inW = mw - 44
@@ -1568,7 +1568,7 @@ local function renderInputModal()
 
     drawIconSVG("pencil", inX + 2, inY + 5, 15, tocolor(148, 163, 184, 255))
     local displayModalText = (S.modalInputText == "") and "" or S.modalInputText
-    dxDrawText(displayModalText .. (getTickCount() % 1000 > 500 and "|" or "") , inX + 26, inY, inX + inW, inY + inH, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center")
+    exports.aura_ui:uiDrawText(displayModalText .. (getTickCount() % 1000 > 500 and "|" or "") , inX + 26, inY, inX + inW, inY + inH, tocolor(255, 255, 255, 255), 1.0, fonts.val, "left", "center")
     dxDrawLine(inX, inY + inH + 2, inX + inW, inY + inH + 2, tocolor(0, 245, 160, 255), 1.8)
 
     local btnCancelX = mx + mw - math.floor(145 * scale)
@@ -1576,14 +1576,14 @@ local function renderInputModal()
     local btnCancelW = math.floor(60 * scale)
     local btnCancelH = math.floor(24 * scale)
 
-    dxDrawText("İPTAL", btnCancelX, btnCancelY, btnCancelX + btnCancelW, btnCancelY + btnCancelH, tocolor(148, 163, 184, 255), 1.0, fonts.item, "center", "center")
+    exports.aura_ui:uiDrawText("İPTAL", btnCancelX, btnCancelY, btnCancelX + btnCancelW, btnCancelY + btnCancelH, tocolor(148, 163, 184, 255), 1.0, fonts.item, "center", "center")
 
     local btnSubmitX = mx + mw - math.floor(78 * scale)
     local btnSubmitY = btnCancelY
     local btnSubmitW = math.floor(65 * scale)
     local btnSubmitH = btnCancelH
 
-    dxDrawText("ONAYLA", btnSubmitX, btnSubmitY, btnSubmitX + btnSubmitW, btnSubmitY + btnSubmitH, tocolor(0, 245, 160, 255), 1.0, fonts.item, "center", "center")
+    exports.aura_ui:uiDrawText("ONAYLA", btnSubmitX, btnSubmitY, btnSubmitX + btnSubmitW, btnSubmitY + btnSubmitH, tocolor(0, 245, 160, 255), 1.0, fonts.item, "center", "center")
 end
 
 renderTxAdmin = function()
@@ -1609,13 +1609,13 @@ renderTxAdmin = function()
     local headerY = cardY + math.floor(14 * scale)
     local logoStartX = cardX + math.floor(20 * scale)
 
-    dxDrawText("tx", logoStartX, headerY, logoStartX + 26, headerY + 28, tocolor(0, 245, 160, 255), 1.0, brandFont, "left", "center")
-    local txW = dxGetTextWidth("tx", 1.0, brandFont)
-    dxDrawText("Admin", logoStartX + txW, headerY, logoStartX + txW + 90, headerY + 28, tocolor(0, 245, 160, 255), 1.0, brandFont, "left", "center")
-    local adminW = dxGetTextWidth("Admin", 1.0, brandFont)
+    exports.aura_ui:uiDrawText("tx", logoStartX, headerY, logoStartX + 26, headerY + 28, tocolor(0, 245, 160, 255), 1.0, brandFont, "left", "center")
+    local txW = exports.aura_ui:uiTextWidth("tx", 1.0, brandFont)
+    exports.aura_ui:uiDrawText("Admin", logoStartX + txW, headerY, logoStartX + txW + 90, headerY + 28, tocolor(0, 245, 160, 255), 1.0, brandFont, "left", "center")
+    local adminW = exports.aura_ui:uiTextWidth("Admin", 1.0, brandFont)
 
-    dxDrawText("v6.0.2", logoStartX + txW + adminW + 5, headerY + 3, logoStartX + txW + adminW + 60, headerY + 28, tocolor(100, 116, 139, 255), 1.0, verFont, "left", "center")
-    dxDrawText("[M: İmleç]", cardX + cardW - math.floor(80 * scale), headerY + 3, cardX + cardW - math.floor(16 * scale), headerY + 28, tocolor(100, 116, 139, 200), 1.0, verFont, "right", "center")
+    exports.aura_ui:uiDrawText("v6.0.2", logoStartX + txW + adminW + 5, headerY + 3, logoStartX + txW + adminW + 60, headerY + 28, tocolor(100, 116, 139, 255), 1.0, verFont, "left", "center")
+    exports.aura_ui:uiDrawText("[M: İmleç]", cardX + cardW - math.floor(80 * scale), headerY + 3, cardX + cardW - math.floor(16 * scale), headerY + 28, tocolor(100, 116, 139, 200), 1.0, verFont, "right", "center")
 
     local tabY = cardY + math.floor(48 * scale)
     local tabW = math.floor(cardW / 3)
@@ -1628,7 +1628,7 @@ renderTxAdmin = function()
         local isHover = isMouseInArea(tx, tabY, tabW, tabH)
 
         local tabColor = isCurrent and tocolor(0, 245, 160, 255) or (isHover and tocolor(203, 213, 225, 255) or tocolor(100, 116, 139, 255))
-        dxDrawText(tabName, tx, tabY, tx + tabW, tabY + tabH, tabColor, 1.0, tabFont, "center", "center")
+        exports.aura_ui:uiDrawText(tabName, tx, tabY, tx + tabW, tabY + tabH, tabColor, 1.0, tabFont, "center", "center")
 
         if isCurrent then
             local lineW = math.floor(tabW * 0.58)
@@ -1671,21 +1671,21 @@ renderTxAdmin = function()
 
             local textX = iconX + iconSize + math.floor(10 * scale)
             local titleColor = tocolor(255, 255, 255, 255)
-            local titleW = dxGetTextWidth(item.title, 1.0, itemFont)
+            local titleW = exports.aura_ui:uiTextWidth(item.title, 1.0, itemFont)
 
-            dxDrawText(item.title, textX, ry, textX + titleW, ry + rowH, titleColor, 1.0, itemFont, "left", "center")
+            exports.aura_ui:uiDrawText(item.title, textX, ry, textX + titleW, ry + rowH, titleColor, 1.0, itemFont, "left", "center")
 
             if item.val ~= "" then
                 local valX = textX + titleW + math.floor(5 * scale)
                 local valColor = tocolor(116, 133, 152, 255)
-                dxDrawText(item.val, valX, ry, rowX + rowW - math.floor(36 * scale), ry + rowH, valColor, 1.0, valFont, "left", "center", true, false)
+                exports.aura_ui:uiDrawText(item.val, valX, ry, rowX + rowW - math.floor(36 * scale), ry + rowH, valColor, 1.0, valFont, "left", "center", true, false)
             end
 
             if item.hasArrows then
                 local arrowBoxW = math.floor(32 * scale)
                 local arrowX = rowX + rowW - arrowBoxW - math.floor(8 * scale)
                 local arrowColor = tocolor(82, 98, 116, 255)
-                dxDrawText("< >", arrowX, ry, arrowX + arrowBoxW, ry + rowH, arrowColor, 1.0, arrowFont, "center", "center")
+                exports.aura_ui:uiDrawText("< >", arrowX, ry, arrowX + arrowBoxW, ry + rowH, arrowColor, 1.0, arrowFont, "center", "center")
             end
         end
 
@@ -1726,21 +1726,21 @@ renderTxAdmin = function()
 
             local textX = iconX + iconSize + math.floor(10 * scale)
             local titleColor = tocolor(255, 255, 255, 255)
-            local titleW = dxGetTextWidth(item.title, 1.0, itemFont)
+            local titleW = exports.aura_ui:uiTextWidth(item.title, 1.0, itemFont)
 
-            dxDrawText(item.title, textX, ry, textX + titleW, ry + rowH, titleColor, 1.0, itemFont, "left", "center")
+            exports.aura_ui:uiDrawText(item.title, textX, ry, textX + titleW, ry + rowH, titleColor, 1.0, itemFont, "left", "center")
 
             if item.val ~= "" then
                 local valX = textX + titleW + math.floor(5 * scale)
                 local valColor = tocolor(116, 133, 152, 255)
-                dxDrawText(item.val, valX, ry, rowX + rowW - math.floor(36 * scale), ry + rowH, valColor, 1.0, valFont, "left", "center", true, false)
+                exports.aura_ui:uiDrawText(item.val, valX, ry, rowX + rowW - math.floor(36 * scale), ry + rowH, valColor, 1.0, valFont, "left", "center", true, false)
             end
 
             if item.hasArrows then
                 local arrowBoxW = math.floor(32 * scale)
                 local arrowX = rowX + rowW - arrowBoxW - math.floor(8 * scale)
                 local arrowColor = tocolor(82, 98, 116, 255)
-                dxDrawText("< >", arrowX, ry, arrowX + arrowBoxW, ry + rowH, arrowColor, 1.0, arrowFont, "center", "center")
+                exports.aura_ui:uiDrawText("< >", arrowX, ry, arrowX + arrowBoxW, ry + rowH, arrowColor, 1.0, arrowFont, "center", "center")
             end
         end
 
@@ -1762,23 +1762,23 @@ renderTxAdmin = function()
         local subFont = fonts.sub
         local tinyLabelFont = fonts.tiny
 
-        dxDrawText("Çevrimiçi Oyuncular", wideX + 24, wideY + 16, wideX + 300, wideY + 38, tocolor(0, 245, 160, 255), 1.0, titleFont, "left", "center")
+        exports.aura_ui:uiDrawText("Çevrimiçi Oyuncular", wideX + 24, wideY + 16, wideX + 300, wideY + 38, tocolor(0, 245, 160, 255), 1.0, titleFont, "left", "center")
         local countStr = string.format("%d/48 Oyuncu - (Aktif)", #S.playerList)
-        dxDrawText(countStr, wideX + 24, wideY + 38, wideX + 300, wideY + 54, tocolor(100, 116, 139, 255), 1.0, subFont, "left", "center")
+        exports.aura_ui:uiDrawText(countStr, wideX + 24, wideY + 38, wideX + 300, wideY + 54, tocolor(100, 116, 139, 255), 1.0, subFont, "left", "center")
 
         local sortW = math.floor(140 * scale)
         local sortX = wideX + wideW - sortW - math.floor(24 * scale)
         local sortY = wideY + math.floor(28 * scale)
-        dxDrawText("Sıralama", sortX, sortY - 14, sortX + sortW, sortY, tocolor(100, 116, 139, 255), 1.0, tinyLabelFont, "left", "center")
-        dxDrawText("A-Z  ID (İlk Giren) ▾", sortX, sortY, sortX + sortW, sortY + 20, tocolor(148, 163, 184, 255), 1.0, subFont, "left", "center")
+        exports.aura_ui:uiDrawText("Sıralama", sortX, sortY - 14, sortX + sortW, sortY, tocolor(100, 116, 139, 255), 1.0, tinyLabelFont, "left", "center")
+        exports.aura_ui:uiDrawText("A-Z  ID (İlk Giren) ▾", sortX, sortY, sortX + sortW, sortY + 20, tocolor(148, 163, 184, 255), 1.0, subFont, "left", "center")
 
         local searchW = math.floor(180 * scale)
         local searchX = sortX - searchW - math.floor(24 * scale)
         local searchY = sortY
-        dxDrawText("Arama", searchX, searchY - 14, searchX + searchW, searchY, tocolor(100, 116, 139, 255), 1.0, tinyLabelFont, "left", "center")
+        exports.aura_ui:uiDrawText("Arama", searchX, searchY - 14, searchX + searchW, searchY, tocolor(100, 116, 139, 255), 1.0, tinyLabelFont, "left", "center")
         drawIconSVG("search", searchX, searchY + 2, 14, tocolor(100, 116, 139, 255))
         local sDisplay = (S.playerSearchQuery == "" and not S.isSearchingPlayers) and "" or S.playerSearchQuery .. (S.isSearchingPlayers and (getTickCount() % 1000 > 500 and "|" or "") or "")
-        dxDrawText(sDisplay, searchX + 20, searchY, searchX + searchW, searchY + 20, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center", true, false)
+        exports.aura_ui:uiDrawText(sDisplay, searchX + 20, searchY, searchX + searchW, searchY + 20, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center", true, false)
         dxDrawLine(searchX, searchY + 20, searchX + searchW, searchY + 20, tocolor(51, 65, 85, 255), 1.0)
 
         local pStartY = wideY + math.floor(74 * scale)
@@ -1786,7 +1786,7 @@ renderTxAdmin = function()
         local cardItemH = math.floor(46 * scale)
 
         if #S.playerList == 0 then
-            dxDrawText("Çevrimiçi oyuncu bulunamadı.", wideX + 24, pStartY + 30, wideX + 300, pStartY + 70, tocolor(100, 116, 139, 255), 1.0, itemFont, "left", "center")
+            exports.aura_ui:uiDrawText("Çevrimiçi oyuncu bulunamadı.", wideX + 24, pStartY + 30, wideX + 300, pStartY + 70, tocolor(100, 116, 139, 255), 1.0, itemFont, "left", "center")
         else
             for i = 1, math.min(10, #S.playerList) do
                 local ply = S.playerList[i]
@@ -1798,27 +1798,27 @@ renderTxAdmin = function()
                 drawIconSVG("ped_walk", wideX + 34, ry + 11, 18, tocolor(16, 185, 129, 255))
 
                 local idText = string.format("%d |", ply.id)
-                local idW = dxGetTextWidth(idText, 1.0, subFont)
-                dxDrawText(idText, wideX + 58, ry, wideX + 58 + idW, ry + cardItemH - 6, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center")
+                local idW = exports.aura_ui:uiTextWidth(idText, 1.0, subFont)
+                exports.aura_ui:uiDrawText(idText, wideX + 58, ry, wideX + 58 + idW, ry + cardItemH - 6, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center")
 
                 drawCircle(wideX + 68 + idW, ry + (cardItemH - 6) * 0.5, 4.5, tocolor(56, 189, 248, 255))
 
                 local nameStr = ply.name
-                local nameW = dxGetTextWidth(nameStr, 1.0, subFont)
-                dxDrawText(nameStr, wideX + 78 + idW, ry, wideX + 78 + idW + nameW, ry + cardItemH - 6, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center")
+                local nameW = exports.aura_ui:uiTextWidth(nameStr, 1.0, subFont)
+                exports.aura_ui:uiDrawText(nameStr, wideX + 78 + idW, ry, wideX + 78 + idW + nameW, ry + cardItemH - 6, tocolor(255, 255, 255, 255), 1.0, subFont, "left", "center")
 
                 local distStr = string.format("%dm", ply.dist)
-                dxDrawText(distStr, wideX + 84 + idW + nameW, ry, wideX + 24 + cardItemW - 10, ry + cardItemH - 6, tocolor(100, 116, 139, 255), 1.0, subFont, "left", "center")
+                exports.aura_ui:uiDrawText(distStr, wideX + 84 + idW + nameW, ry, wideX + 24 + cardItemW - 10, ry + cardItemH - 6, tocolor(100, 116, 139, 255), 1.0, subFont, "left", "center")
 
                 local hpBarW = cardItemW - 20
                 local hpBarH = 2.5
                 local hpBarX = wideX + 34
                 local hpBarY = ry + cardItemH - 5
 
-                dxDrawRectangle(hpBarX, hpBarY, hpBarW, hpBarH, tocolor(15, 23, 42, 255))
+                exports.aura_ui:uiDrawRectangle(hpBarX, hpBarY, hpBarW, hpBarH, tocolor(15, 23, 42, 255))
                 local curW = math.floor(hpBarW * (ply.health / 100))
                 if curW > 0 then
-                    dxDrawRectangle(hpBarX, hpBarY, curW, hpBarH, tocolor(16, 185, 129, 255))
+                    exports.aura_ui:uiDrawRectangle(hpBarX, hpBarY, curW, hpBarH, tocolor(16, 185, 129, 255))
                 end
             end
         end

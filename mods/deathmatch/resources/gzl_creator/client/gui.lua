@@ -112,16 +112,16 @@ local function renderStudioToolbar()
         {"idle","Duruş"},{"walk","Yürü"},{"run","Koş"},{"undo","Geri al"},{"redo","İleri al"},{"resetview","Sıfırla"}
     }
     exports.gzl_ui:drawRoundedRectangle(x-12*scale,y-31*scale,width+24*scale,111*scale,12*scale,tocolor(12,19,25,235))
-    dxDrawText("PROVA STÜDYOSU",x,y-25*scale,x+width,y-5*scale,tocolor(120,225,195,255),1,fonts.section,"left","center")
+    exports.aura_ui:uiDrawText("PROVA STÜDYOSU",x,y-25*scale,x+width,y-5*scale,tocolor(120,225,195,255),1,fonts.section,"left","center")
     studioButtons={}
     local choices=getCreatorOutfits(charData.gender)
     local current='GZL gardırop'
     for _,item in ipairs(choices) do if item.id==(charData.outfit or '') then current=item.name end end
     local oy=y-80*scale
     exports.gzl_ui:drawRoundedRectangle(x-12*scale,oy,width+24*scale,43*scale,8*scale,tocolor(19,31,38,245))
-    dxDrawText('KOMBİN  /  '..current,x+45*scale,oy,x+width-45*scale,oy+43*scale,tocolor(174,236,214,255),1,fonts.body,'center','center',true)
+    exports.aura_ui:uiDrawText('KOMBİN  /  '..current,x+45*scale,oy,x+width-45*scale,oy+43*scale,tocolor(174,236,214,255),1,fonts.body,'center','center',true)
     for _,item in ipairs({{'outfitprev','<',x},{'outfitnext','>',x+width-36*scale}}) do
-        dxDrawText(item[2],item[3],oy,item[3]+36*scale,oy+43*scale,tocolor(230,245,240,255),1,fonts.title,'center','center')
+        exports.aura_ui:uiDrawText(item[2],item[3],oy,item[3]+36*scale,oy+43*scale,tocolor(230,245,240,255),1,fonts.title,'center','center')
         studioButtons[#studioButtons+1]={id=item[1],x=item[3],y=oy,w=36*scale,h=43*scale,enabled=#choices>1}
     end
     local bw=(width-5*5*scale)/6
@@ -131,7 +131,7 @@ local function renderStudioToolbar()
         local enabled=not (d[1]=="undo" and #studioHistory==0 or d[1]=="redo" and #studioFuture==0)
         local hover=exports.gzl_ui:isMouseInPosition(bx,by,bw,31*scale)
         exports.gzl_ui:drawRoundedRectangle(bx,by,bw,31*scale,6*scale,hover and enabled and tocolor(44,120,108,245) or tocolor(27,38,47,245))
-        dxDrawText(d[2],bx,by,bx+bw,by+31*scale,enabled and tocolor(233,242,241,255) or tocolor(111,124,132,180),1,fonts.body,"center","center",true)
+        exports.aura_ui:uiDrawText(d[2],bx,by,bx+bw,by+31*scale,enabled and tocolor(233,242,241,255) or tocolor(111,124,132,180),1,fonts.body,"center","center",true)
         studioButtons[#studioButtons+1]={id=d[1],x=bx,y=by,w=bw,h=31*scale,enabled=enabled}
     end
 end
@@ -214,7 +214,7 @@ end
 
 local function drawSelectorRow(id, labelText, currentValueText, x, y, w, h)
     local scale = layout.scale
-    dxDrawText(labelText, x, y, x + w, y + 18 * scale, tocolor(195, 210, 230, 240), 1, fonts.label, "left", "center")
+    exports.aura_ui:uiDrawText(labelText, x, y, x + w, y + 18 * scale, tocolor(195, 210, 230, 240), 1, fonts.label, "left", "center")
 
     local boxY = y + 20 * scale
     local boxH = 34 * scale
@@ -226,16 +226,16 @@ local function drawSelectorRow(id, labelText, currentValueText, x, y, w, h)
     if leftHov then
         exports.gzl_ui:drawRoundedRectangle(x, boxY, btnW, boxH, 8 * scale, tocolor(55, 177, 149, 70))
     end
-    dxDrawText("❮", x, boxY, x + btnW, boxY + boxH, leftHov and tocolor(255, 255, 255, 255) or tocolor(140, 160, 185, 220), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("❮", x, boxY, x + btnW, boxY + boxH, leftHov and tocolor(255, 255, 255, 255) or tocolor(140, 160, 185, 220), 1, fonts.button, "center", "center")
 
-    dxDrawText(currentValueText, x + btnW, boxY, x + w - btnW, boxY + boxH, tocolor(240, 245, 255, 255), 1, fonts.body, "center", "center", true)
+    exports.aura_ui:uiDrawText(currentValueText, x + btnW, boxY, x + w - btnW, boxY + boxH, tocolor(240, 245, 255, 255), 1, fonts.body, "center", "center", true)
 
     local rightX = x + w - btnW
     local rightHov = exports.gzl_ui:isMouseInPosition(rightX, boxY, btnW, boxH)
     if rightHov then
         exports.gzl_ui:drawRoundedRectangle(rightX, boxY, btnW, boxH, 8 * scale, tocolor(55, 177, 149, 70))
     end
-    dxDrawText("❯", rightX, boxY, rightX + btnW, boxY + boxH, rightHov and tocolor(255, 255, 255, 255) or tocolor(140, 160, 185, 220), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("❯", rightX, boxY, rightX + btnW, boxY + boxH, rightHov and tocolor(255, 255, 255, 255) or tocolor(140, 160, 185, 220), 1, fonts.button, "center", "center")
 
     return leftHov, rightHov
 end
@@ -258,10 +258,10 @@ local function renderCreatorUI()
     local titleX = px + 22 * scale
     local titleY = py + 20 * scale
     exports.gzl_ui:drawRoundedRectangle(titleX, titleY + 2 * scale, 4 * scale, 38 * scale, 2 * scale, tocolor(55, 177, 149, 255))
-    dxDrawText("GZL  /  STUDIO", titleX + 12 * scale, titleY, titleX + pw, titleY + 20 * scale, tocolor(255, 255, 255, 255), 1, fonts.title, "left", "center")
+    exports.aura_ui:uiDrawText("GZL  /  STUDIO", titleX + 12 * scale, titleY, titleX + pw, titleY + 20 * scale, tocolor(255, 255, 255, 255), 1, fonts.title, "left", "center")
 
     local subTitleText = isIngame and "KIYAFET & GÖRÜNÜM MENÜSÜ" or "KARAKTERİNİ OLUŞTUR"
-    dxDrawText(subTitleText, titleX + 12 * scale, titleY + 20 * scale, titleX + pw, titleY + 38 * scale, tocolor(118, 219, 192, 220), 1, fonts.subtitle, "left", "center")
+    exports.aura_ui:uiDrawText(subTitleText, titleX + 12 * scale, titleY + 20 * scale, titleX + pw, titleY + 38 * scale, tocolor(118, 219, 192, 220), 1, fonts.subtitle, "left", "center")
 
     local tabs = {}
     if isIngame then
@@ -298,7 +298,7 @@ local function renderCreatorUI()
         elseif hovered then
             exports.gzl_ui:drawRoundedRectangle(tx, tabY, tabW - 2, tabH, 6 * scale, tocolor(255, 255, 255, 20))
         end
-        dxDrawText(tab.name, tx, tabY, tx + tabW - 2, tabY + tabH, active and tocolor(255, 255, 255, 255) or tocolor(150, 165, 185, 200), 1, fonts.tab, "center", "center")
+        exports.aura_ui:uiDrawText(tab.name, tx, tabY, tx + tabW - 2, tabY + tabH, active and tocolor(255, 255, 255, 255) or tocolor(150, 165, 185, 200), 1, fonts.tab, "center", "center")
     end
 
     local contentY = py + 112 * scale
@@ -307,22 +307,22 @@ local function renderCreatorUI()
 
     if currentTab == "identity" and not isIngame then
 
-        dxDrawText("Cinsiyet", contentX, contentY, contentX + contentW, contentY + 16 * scale, tocolor(180, 200, 225, 240), 1, fonts.label)
+        exports.aura_ui:uiDrawText("Cinsiyet", contentX, contentY, contentX + contentW, contentY + 16 * scale, tocolor(180, 200, 225, 240), 1, fonts.label)
         local gBtnW = (contentW - 8 * scale) / 2
         local gBtnH = 36 * scale
         local gBtnY = contentY + 20 * scale
 
         local maleActive = charData.gender == "male"
         exports.gzl_ui:drawRoundedRectangle(contentX, gBtnY, gBtnW, gBtnH, 8 * scale, maleActive and tocolor(37, 99, 235, 220) or tocolor(20, 28, 42, 200))
-        dxDrawText("♂ Erkek", contentX, gBtnY, contentX + gBtnW, gBtnY + gBtnH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
+        exports.aura_ui:uiDrawText("♂ Erkek", contentX, gBtnY, contentX + gBtnW, gBtnY + gBtnH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
 
         local femaleActive = charData.gender == "female"
         local femaleX = contentX + gBtnW + 8 * scale
         exports.gzl_ui:drawRoundedRectangle(femaleX, gBtnY, gBtnW, gBtnH, 8 * scale, femaleActive and tocolor(219, 39, 119, 220) or tocolor(20, 28, 42, 200))
-        dxDrawText("♀ Kadın", femaleX, gBtnY, femaleX + gBtnW, gBtnY + gBtnH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
+        exports.aura_ui:uiDrawText("♀ Kadın", femaleX, gBtnY, femaleX + gBtnW, gBtnY + gBtnH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
 
         local nameY = gBtnY + 50 * scale
-        dxDrawText("Karakter Adı & Soyadı", contentX, nameY, contentX + contentW, nameY + 16 * scale, tocolor(180, 200, 225, 240), 1, fonts.label)
+        exports.aura_ui:uiDrawText("Karakter Adı & Soyadı", contentX, nameY, contentX + contentW, nameY + 16 * scale, tocolor(180, 200, 225, 240), 1, fonts.label)
         exports.gzl_ui:drawGlassEditBox("creator_char_name", contentX, nameY + 20 * scale, contentW, 36 * scale, { placeholder = "Ad_Soyad", text = charData.name, font = fonts.body })
 
         local ageY = nameY + 70 * scale
@@ -392,7 +392,7 @@ local function renderCreatorUI()
             local infoY = contentY + 68 * scale
             exports.gzl_ui:drawRoundedRectangle(contentX, infoY, contentW, 52 * scale, 8 * scale, tocolor(23, 33, 42, 180))
             exports.gzl_ui:drawRoundedBorder(contentX, infoY, contentW, 52 * scale, 8 * scale, 1, tocolor(255, 255, 255, 12))
-            dxDrawText("Kel / Saçsız stil seçildi.\nRenk ve varyant seçenekleri devre dışıdır.", contentX, infoY, contentX + contentW, infoY + 52 * scale, tocolor(140, 160, 185, 220), 1, fonts.subtitle, "center", "center")
+            exports.aura_ui:uiDrawText("Kel / Saçsız stil seçildi.\nRenk ve varyant seçenekleri devre dışıdır.", contentX, infoY, contentX + contentW, infoY + 52 * scale, tocolor(140, 160, 185, 220), 1, fonts.subtitle, "center", "center")
         end
 
     elseif currentTab == "clothes" then
@@ -447,7 +447,7 @@ local function renderCreatorUI()
             else
                 exports.gzl_ui:drawRoundedRectangle(cx, contentY, catW, catH, 6 * scale, tocolor(23, 33, 42, 180))
             end
-            dxDrawText(cat.name, cx, contentY, cx + catW, contentY + catH, isSel and tocolor(255, 255, 255, 255) or tocolor(150, 165, 185, 220), 1, fonts.tab, "center", "center")
+            exports.aura_ui:uiDrawText(cat.name, cx, contentY, cx + catW, contentY + catH, isSel and tocolor(255, 255, 255, 255) or tocolor(150, 165, 185, 220), 1, fonts.tab, "center", "center")
         end
 
         local filtered = getFilteredAccessories(cfg, currentAccCategory)
@@ -483,13 +483,13 @@ local function renderCreatorUI()
             local dotY = ay + (itemH - dotSize) / 2
             exports.gzl_ui:drawRoundedRectangle(dotX, dotY, dotSize, dotSize, 2 * scale, isEquipped and tocolor(55, 177, 149, 255) or tocolor(140, 160, 185, 180))
 
-            dxDrawText(item.name, dotX + dotSize + 10 * scale, ay, contentX + cardW - 142 * scale, ay + itemH, tocolor(240, 245, 255, 255), 1, fonts.body, "left", "center", true)
+            exports.aura_ui:uiDrawText(item.name, dotX + dotSize + 10 * scale, ay, contentX + cardW - 142 * scale, ay + itemH, tocolor(240, 245, 255, 255), 1, fonts.body, "left", "center", true)
 
             local variants=cfg.accessories[item.key].variants or 1
             if variants>1 then
                 local vx=contentX+cardW-137*scale
                 exports.gzl_ui:drawRoundedRectangle(vx,ay+7*scale,55*scale,24*scale,5*scale,tocolor(34,58,65,245))
-                dxDrawText(tostring(charData.accessoryVariants and charData.accessoryVariants[item.key] or 1)..'/'..variants..' >',vx,ay,vx+55*scale,ay+itemH,tocolor(171,235,213,255),1,fonts.body,'center','center')
+                exports.aura_ui:uiDrawText(tostring(charData.accessoryVariants and charData.accessoryVariants[item.key] or 1)..'/'..variants..' >',vx,ay,vx+55*scale,ay+itemH,tocolor(171,235,213,255),1,fonts.body,'center','center')
             end
 
             local badgeW = 66 * scale
@@ -499,11 +499,11 @@ local function renderCreatorUI()
 
             if isEquipped then
                 exports.gzl_ui:drawRoundedRectangle(badgeX, badgeY, badgeW, badgeH, 6 * scale, tocolor(16, 185, 129, 220))
-                dxDrawText("✓ TAKILI", badgeX, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
+                exports.aura_ui:uiDrawText("✓ TAKILI", badgeX, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(255, 255, 255, 255), 1, fonts.button, "center", "center")
             else
                 exports.gzl_ui:drawRoundedRectangle(badgeX, badgeY, badgeW, badgeH, 6 * scale, tocolor(30, 41, 59, 220))
                 exports.gzl_ui:drawRoundedBorder(badgeX, badgeY, badgeW, badgeH, 6 * scale, 1, tocolor(255, 255, 255, 20))
-                dxDrawText("+ TAK", badgeX, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(160, 175, 195, 220), 1, fonts.label, "center", "center")
+                exports.aura_ui:uiDrawText("+ TAK", badgeX, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(160, 175, 195, 220), 1, fonts.label, "center", "center")
             end
         end
 
@@ -518,7 +518,7 @@ local function renderCreatorUI()
         end
 
         local row1Y = py + ph - 88 * scale
-        dxDrawText("💡 Fare tekerleği ile kaydırabilirsiniz", contentX, row1Y - 20 * scale, contentX + contentW, row1Y - 4 * scale, tocolor(140, 160, 185, 160), 1, fonts.subtitle, "center", "center")
+        exports.aura_ui:uiDrawText("💡 Fare tekerleği ile kaydırabilirsiniz", contentX, row1Y - 20 * scale, contentX + contentW, row1Y - 4 * scale, tocolor(140, 160, 185, 160), 1, fonts.subtitle, "center", "center")
     end
 
     local row1Y = py + ph - 88 * scale
@@ -557,10 +557,10 @@ local function renderCreatorUI()
         if hovered then
             exports.gzl_ui:drawRoundedRectangle(bx + 2, camBarY + 2, cbW - 4, camBarH - 4, 6 * scale, tocolor(55, 177, 149, 60))
         end
-        dxDrawText(cv.name, bx, camBarY, bx + cbW, camBarY + camBarH, hovered and tocolor(255, 255, 255, 255) or tocolor(180, 200, 225, 220), 1, fonts.button, "center", "center")
+        exports.aura_ui:uiDrawText(cv.name, bx, camBarY, bx + cbW, camBarY + camBarH, hovered and tocolor(255, 255, 255, 255) or tocolor(180, 200, 225, 220), 1, fonts.button, "center", "center")
     end
 
-    dxDrawText("💡 Karakteri döndürmek için sağ tarafa tıklayıp sürükleyin", screenW - 360 * scale, screenH - 30 * scale, screenW - 20 * scale, screenH, tocolor(160, 180, 205, 180), 1, fonts.subtitle, "right", "center")
+    exports.aura_ui:uiDrawText("💡 Karakteri döndürmek için sağ tarafa tıklayıp sürükleyin", screenW - 360 * scale, screenH - 30 * scale, screenW - 20 * scale, screenH, tocolor(160, 180, 205, 180), 1, fonts.subtitle, "right", "center")
 end
 
 local function handleCreatorClick(button, state)
@@ -1243,6 +1243,11 @@ addEventHandler("gzl_creator:clientRecover", root, function()
     showChat(true)
     setPlayerHudComponentVisible("all", false)
     setPlayerHudComponentVisible("crosshair", true)
+    local cdata = getElementData(localPlayer, "char:customization")
+    if cdata then
+        resetPedShaders(localPlayer)
+        applyCharacterCustomization(localPlayer, cdata)
+    end
 end)
 
 addEventHandler("onClientResourceStart", resourceRoot, function()

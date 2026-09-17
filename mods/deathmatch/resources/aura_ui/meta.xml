@@ -1,0 +1,41 @@
+<meta>
+    <info author="thommy" name="AURA / DX Interface Kit" version="0.2.0" type="script" description="Standalone, themeable DX components and interactive showroom" />
+    <min_mta_version client="1.6.0" />
+    <file src="assets/Manrope-Medium.ttf" />
+    <file src="assets/Manrope-Bold.ttf" />
+    <file src="assets/OFL.txt" />
+    <file src="assets/surface.fx" />
+    <script src="client/core.lua" type="client" cache="false" />
+    <script src="client/editor.lua" type="client" cache="false" />
+    <script src="client/advanced.lua" type="client" cache="false" />
+    <script src="client/immediate.lua" type="client" cache="false" />
+    <script src="client/templates.lua" type="client" cache="false" />
+    <script src="client/showroom_pages.lua" type="client" cache="false" />
+    <script src="client/showroom.lua" type="client" cache="false" />
+    <export function="uiCreate" type="client" />
+    <export function="uiSet" type="client" />
+    <export function="uiGet" type="client" />
+    <export function="uiDestroy" type="client" />
+    <export function="uiSetTheme" type="client" />
+    <export function="uiToast" type="client" />
+    <export function="uiFocus" type="client" />
+    <export function="uiStats" type="client" />
+    <export function="uiModal" type="client" />
+    <export function="uiExport" type="client" />
+    <export function="uiIcons" type="client" />
+    <export function="uiTemplate" type="client" />
+    <export function="uiTableView" type="client" />
+    <export function="uiDrawSurface" type="client" />
+    <export function="uiDrawRectangle" type="client" />
+    <export function="uiDrawRoundedRectangle" type="client" />
+    <export function="uiDrawBorder" type="client" />
+    <export function="uiDrawPanel" type="client" />
+    <export function="uiDrawButtonSurface" type="client" />
+    <export function="uiDrawEditSurface" type="client" />
+    <export function="uiDrawTabsSurface" type="client" />
+    <export function="uiDrawNotificationSurface" type="client" />
+    <export function="uiGetFont" type="client" />
+    <export function="uiDrawText" type="client" />
+    <export function="uiTextWidth" type="client" />
+    <export function="uiFontHeight" type="client" />
+</meta>

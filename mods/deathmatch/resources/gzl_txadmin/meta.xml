@@ -1,4 +1,5 @@
 ﻿<meta>
+    <include resource="aura_ui" />
     <info author="thommy" type="script" name="GZL txAdmin DX" version="6.0.2" description="txAdmin DX Admin Management System" />
 
     <script src="shared/config.lua" type="shared" cache="false" />

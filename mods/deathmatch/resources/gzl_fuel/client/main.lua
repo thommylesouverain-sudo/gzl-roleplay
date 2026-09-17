@@ -198,12 +198,12 @@ end
 
 local function fitText(value, maximumWidth, font)
     local text = tostring(value or "")
-    if dxGetTextWidth(text, 1, font) <= maximumWidth then return text end
+    if exports.aura_ui:uiTextWidth(text, 1, font) <= maximumWidth then return text end
     local length = utf8 and utf8.len and utf8.len(text) or string.len(text)
     while length and length > 1 do
         local candidate = utf8 and utf8.sub and utf8.sub(text, 1, length) or string.sub(text, 1, length)
         candidate = candidate .. "..."
-        if dxGetTextWidth(candidate, 1, font) <= maximumWidth then return candidate end
+        if exports.aura_ui:uiTextWidth(candidate, 1, font) <= maximumWidth then return candidate end
         length = length - 1
     end
     return "..."
@@ -235,7 +235,7 @@ local function drawButton(action, label, x, y, w, h, theme, buttonIcon, enabled,
         })
     else
         drawCard(x, y, w, h, S(10), enabled)
-        dxDrawText(label, x, y, x + w, y + h, enabled and colors.text or colors.faint, 1, fonts.badge or "default-bold", "center", "center")
+        exports.aura_ui:uiDrawText(label, x, y, x + w, y + h, enabled and colors.text or colors.faint, 1, fonts.badge or "default-bold", "center", "center")
     end
     addHitbox(action, x, y, w, h, data, enabled)
 end
@@ -243,7 +243,7 @@ end
 local function drawPill(label, x, y, w, color, pillIcon)
     rounded(x, y, w, S(28), S(14), tocolor(255, 255, 255, 10))
     if pillIcon then icon(pillIcon, x + S(9), y + S(7), S(14), color) end
-    dxDrawText(label, x + (pillIcon and S(29) or S(10)), y, x + w - S(9), y + S(28), color, 1, fonts.badge, "left", "center", true)
+    exports.aura_ui:uiDrawText(label, x + (pillIcon and S(29) or S(10)), y, x + w - S(9), y + S(28), color, 1, fonts.badge, "left", "center", true)
 end
 
 local function getStationConfig(stationId)
@@ -335,8 +335,8 @@ local function drawSidebar()
     local y = panelY + S(34)
     circle(x + S(22), y + S(22), S(22), colors.amberSoft)
     icon("water", x + S(12), y + S(12), S(20), colors.amber)
-    dxDrawText("GZL", x + S(56), y - S(1), x + sidebarW - S(36), y + S(21), colors.text, 1, fonts.heading, "left", "center")
-    dxDrawText("FUEL OPERATIONS", x + S(56), y + S(19), x + sidebarW - S(36), y + S(40), colors.amber, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText("GZL", x + S(56), y - S(1), x + sidebarW - S(36), y + S(21), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("FUEL OPERATIONS", x + S(56), y + S(19), x + sidebarW - S(36), y + S(40), colors.amber, 1, fonts.small, "left", "center")
 
     local itemY = panelY + S(116)
     for _, tab in ipairs(tabs) do
@@ -347,7 +347,7 @@ local function drawSidebar()
                 rounded(panelX + S(24), itemY + S(8), S(3), S(32), S(2), colors.amber)
             end
             icon(tab.icon, panelX + S(42), itemY + S(15), S(18), active and colors.amber or colors.muted)
-            dxDrawText(tab.label, panelX + S(72), itemY, panelX + sidebarW - S(28), itemY + S(48), active and colors.text or colors.muted, 1, fonts.body, "left", "center")
+            exports.aura_ui:uiDrawText(tab.label, panelX + S(72), itemY, panelX + sidebarW - S(28), itemY + S(48), active and colors.text or colors.muted, 1, fonts.body, "left", "center")
             addHitbox("tab", panelX + S(24), itemY, sidebarW - S(38), S(48), tab.id, true)
             itemY = itemY + S(58)
         end
@@ -356,8 +356,8 @@ local function drawSidebar()
     local statusY = panelY + panelH - S(115)
     rounded(panelX + S(28), statusY, sidebarW - S(46), S(56), S(12), tocolor(255, 255, 255, 8))
     circle(panelX + S(48), statusY + S(28), S(5), state.loading and colors.amber or colors.green)
-    dxDrawText(state.loading and "VERİLER ALINIYOR" or "SİSTEM ÇEVRİMİÇİ", panelX + S(62), statusY + S(7), panelX + sidebarW - S(28), statusY + S(28), state.loading and colors.amber or colors.green, 1, fonts.small, "left", "center")
-    dxDrawText("ESC  Kapat", panelX + S(62), statusY + S(27), panelX + sidebarW - S(28), statusY + S(48), colors.faint, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(state.loading and "VERİLER ALINIYOR" or "SİSTEM ÇEVRİMİÇİ", panelX + S(62), statusY + S(7), panelX + sidebarW - S(28), statusY + S(28), state.loading and colors.amber or colors.green, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText("ESC  Kapat", panelX + S(62), statusY + S(27), panelX + sidebarW - S(28), statusY + S(48), colors.faint, 1, fonts.small, "left", "center")
 end
 
 local function drawHeader()
@@ -379,8 +379,8 @@ local function drawHeader()
     local config = getStationConfig(state.stationId)
     local title = station and station.name or config and config.name or "Benzin İstasyonu"
     local district = station and station.district or config and config.district or "Veriler hazırlanıyor"
-    dxDrawText(title, contentX, panelY + S(29), priceX - S(16), panelY + S(56), colors.text, 1, fonts.title, "left", "center", true)
-    dxDrawText(district, contentX, panelY + S(57), priceX - S(16), panelY + S(78), colors.muted, 1, fonts.small, "left", "center", true)
+    exports.aura_ui:uiDrawText(title, contentX, panelY + S(29), priceX - S(16), panelY + S(56), colors.text, 1, fonts.title, "left", "center", true)
+    exports.aura_ui:uiDrawText(district, contentX, panelY + S(57), priceX - S(16), panelY + S(78), colors.muted, 1, fonts.small, "left", "center", true)
     if station then
         drawPill(string.format("$%.2f / L", station.price), priceX, pillY, priceW, colors.amber, "water")
         local stockColor = station.stock / station.maxStock <= 0.15 and colors.red or colors.mint
@@ -394,17 +394,17 @@ local function drawMetricCard(x, y, w, h, label, value, detail, metricIcon, acce
     drawCard(x, y, w, h, S(14), false)
     circle(x + S(29), y + S(29), S(16), tocolor(255, 255, 255, 9))
     icon(metricIcon, x + S(20), y + S(20), S(18), accent)
-    dxDrawText(label, x + S(54), y + S(12), x + w - S(14), y + S(32), colors.muted, 1, fonts.small, "left", "center", true)
-    dxDrawText(value, x + S(18), y + S(46), x + w - S(18), y + S(78), colors.text, 1, fonts.metric, "left", "center", true)
-    dxDrawText(detail or "", x + S(18), y + S(80), x + w - S(18), y + h - S(10), accent, 1, fonts.small, "left", "center", true)
+    exports.aura_ui:uiDrawText(label, x + S(54), y + S(12), x + w - S(14), y + S(32), colors.muted, 1, fonts.small, "left", "center", true)
+    exports.aura_ui:uiDrawText(value, x + S(18), y + S(46), x + w - S(18), y + S(78), colors.text, 1, fonts.metric, "left", "center", true)
+    exports.aura_ui:uiDrawText(detail or "", x + S(18), y + S(80), x + w - S(18), y + h - S(10), accent, 1, fonts.small, "left", "center", true)
 end
 
 local function drawNoVehicle(x, y, w, h)
     drawCard(x, y, w, h, S(18), true)
     circle(x + w / 2, y + S(92), S(38), tocolor(56, 189, 248, 20))
     icon("car", x + w / 2 - S(18), y + S(74), S(36), colors.cyan)
-    dxDrawText("Araç algılanmadı", x + S(30), y + S(145), x + w - S(30), y + S(176), colors.text, 1, fonts.heading, "center", "center")
-    dxDrawText("Aracınızı pompa alanına yanaştırın ve sürücü koltuğundayken E tuşuna basın.", x + S(70), y + S(184), x + w - S(70), y + S(235), colors.muted, 1, fonts.body, "center", "top", true, true)
+    exports.aura_ui:uiDrawText("Araç algılanmadı", x + S(30), y + S(145), x + w - S(30), y + S(176), colors.text, 1, fonts.heading, "center", "center")
+    exports.aura_ui:uiDrawText("Aracınızı pompa alanına yanaştırın ve sürücü koltuğundayken E tuşuna basın.", x + S(70), y + S(184), x + w - S(70), y + S(235), colors.muted, 1, fonts.body, "center", "top", true, true)
     drawPill("Sürücü koltuğu gerekli", x + w / 2 - S(98), y + S(258), S(196), colors.amber, "alert")
 end
 
@@ -416,12 +416,12 @@ local function drawFuelingPanel(x, y, w, h)
     drawCard(x, y, w, h, S(18), true)
     circle(x + S(52), y + S(54), S(27), tocolor(245, 158, 11, 25))
     icon("water", x + S(38), y + S(40), S(28), colors.amber)
-    dxDrawText("DOLUM DEVAM EDİYOR", x + S(94), y + S(24), x + w - S(30), y + S(53), colors.amber, 1, fonts.small, "left", "center")
-    dxDrawText(formatLiters(delivered) .. " / " .. formatLiters(target), x + S(94), y + S(48), x + w - S(30), y + S(82), colors.text, 1, fonts.hero, "left", "center")
+    exports.aura_ui:uiDrawText("DOLUM DEVAM EDİYOR", x + S(94), y + S(24), x + w - S(30), y + S(53), colors.amber, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(formatLiters(delivered) .. " / " .. formatLiters(target), x + S(94), y + S(48), x + w - S(30), y + S(82), colors.text, 1, fonts.hero, "left", "center")
     drawProgress(x + S(30), y + S(112), w - S(60), S(12), delivered / target, colors.amber)
     local percent = math.floor(clamp(delivered / target, 0, 1) * 100)
-    dxDrawText("%" .. tostring(percent), x + S(30), y + S(132), x + S(100), y + S(158), colors.muted, 1, fonts.badge, "left", "center")
-    dxDrawText("Ödenen " .. formatMoney(paid), x + S(100), y + S(132), x + w - S(30), y + S(158), colors.green, 1, fonts.badge, "right", "center")
+    exports.aura_ui:uiDrawText("%" .. tostring(percent), x + S(30), y + S(132), x + S(100), y + S(158), colors.muted, 1, fonts.badge, "left", "center")
+    exports.aura_ui:uiDrawText("Ödenen " .. formatMoney(paid), x + S(100), y + S(132), x + w - S(30), y + S(158), colors.green, 1, fonts.badge, "right", "center")
     if progressData.attendant then
         drawPill("Görevli: " .. progressData.attendant, x + S(30), y + S(175), w - S(60), colors.cyan, "badge")
     else
@@ -474,9 +474,9 @@ local function drawFuelTab(contentX, contentY, contentW, contentH)
     end
 
     drawCard(contentX, bodyY, leftW, contentH - S(128), S(16), false)
-    dxDrawText("Dolum miktarı", contentX + S(24), bodyY + S(18), contentX + leftW - S(24), bodyY + S(46), colors.text, 1, fonts.heading, "left", "center")
-    dxDrawText("İhtiyacınız olan litreyi seçin", contentX + S(24), bodyY + S(46), contentX + leftW - S(24), bodyY + S(67), colors.muted, 1, fonts.small, "left", "center")
-    dxDrawText(formatLiters(state.selectedLiters), contentX + S(24), bodyY + S(86), contentX + leftW - S(24), bodyY + S(126), colors.amber, 1, fonts.hero, "left", "center")
+    exports.aura_ui:uiDrawText("Dolum miktarı", contentX + S(24), bodyY + S(18), contentX + leftW - S(24), bodyY + S(46), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("İhtiyacınız olan litreyi seçin", contentX + S(24), bodyY + S(46), contentX + leftW - S(24), bodyY + S(67), colors.muted, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(formatLiters(state.selectedLiters), contentX + S(24), bodyY + S(86), contentX + leftW - S(24), bodyY + S(126), colors.amber, 1, fonts.hero, "left", "center")
 
     local sliderX = contentX + S(24)
     local sliderY = bodyY + S(143)
@@ -487,8 +487,8 @@ local function drawFuelTab(contentX, contentY, contentW, contentH)
     circle(sliderX + sliderW * sliderProgress, sliderY + S(5), S(9), colors.text)
     circle(sliderX + sliderW * sliderProgress, sliderY + S(5), S(5), colors.amber)
     addHitbox("fuel_slider", sliderX, sliderY - S(14), sliderW, S(38), nil, maximum > 0)
-    dxDrawText("1 L", sliderX, sliderY + S(20), sliderX + S(60), sliderY + S(42), colors.faint, 1, fonts.small, "left", "center")
-    dxDrawText(formatLiters(maximum), sliderX + sliderW - S(100), sliderY + S(20), sliderX + sliderW, sliderY + S(42), colors.faint, 1, fonts.small, "right", "center")
+    exports.aura_ui:uiDrawText("1 L", sliderX, sliderY + S(20), sliderX + S(60), sliderY + S(42), colors.faint, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(formatLiters(maximum), sliderX + sliderW - S(100), sliderY + S(20), sliderX + sliderW, sliderY + S(42), colors.faint, 1, fonts.small, "right", "center")
 
     local presetY = bodyY + S(211)
     local presetGap = S(9)
@@ -503,7 +503,7 @@ local function drawFuelTab(contentX, contentY, contentW, contentH)
     drawPill("Nakit " .. formatMoney(data.player.cash), sliderX + S(166), bodyY + S(302), sliderW - S(166), colors.mint, "wallet")
 
     drawCard(rightX, bodyY, rightW, contentH - S(128), S(16), true)
-    dxDrawText("İşlem Özeti", rightX + S(22), bodyY + S(18), rightX + rightW - S(22), bodyY + S(47), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("İşlem Özeti", rightX + S(22), bodyY + S(18), rightX + rightW - S(22), bodyY + S(47), colors.text, 1, fonts.heading, "left", "center")
     local summaryY = bodyY + S(75)
     local labels = { "Seçilen yakıt", "Tahmini tutar", "Dolum sonrası", "Ödeme" }
     local values = {
@@ -514,13 +514,13 @@ local function drawFuelTab(contentX, contentY, contentW, contentH)
     }
     for index = 1, #labels do
         local rowY = summaryY + (index - 1) * S(43)
-        dxDrawText(labels[index], rightX + S(22), rowY, rightX + rightW * 0.58, rowY + S(28), colors.muted, 1, fonts.small, "left", "center")
-        dxDrawText(values[index], rightX + rightW * 0.48, rowY, rightX + rightW - S(22), rowY + S(28), index == 2 and colors.amber or colors.text, 1, fonts.badge, "right", "center")
+        exports.aura_ui:uiDrawText(labels[index], rightX + S(22), rowY, rightX + rightW * 0.58, rowY + S(28), colors.muted, 1, fonts.small, "left", "center")
+        exports.aura_ui:uiDrawText(values[index], rightX + rightW * 0.48, rowY, rightX + rightW - S(22), rowY + S(28), index == 2 and colors.amber or colors.text, 1, fonts.badge, "right", "center")
         if index < #labels then rounded(rightX + S(22), rowY + S(35), rightW - S(44), S(1), S(1), colors.border) end
     end
     local canFuel = state.selectedLiters >= 0.1 and not vehicle.engineOn and station.stock >= 0.1 and data.player.cash >= math.ceil(state.selectedLiters * station.price)
     local helper = vehicle.engineOn and "Dolum için motoru kapatın" or data.player.cash < math.ceil(state.selectedLiters * station.price) and "Yetersiz nakit bakiye" or station.stock < 0.1 and "İstasyon stoğu boş" or "Doluma hazır"
-    dxDrawText(helper, rightX + S(22), bodyY + contentH - S(226), rightX + rightW - S(22), bodyY + contentH - S(198), canFuel and colors.green or colors.red, 1, fonts.small, "center", "center")
+    exports.aura_ui:uiDrawText(helper, rightX + S(22), bodyY + contentH - S(226), rightX + rightW - S(22), bodyY + contentH - S(198), canFuel and colors.green or colors.red, 1, fonts.small, "center", "center")
     drawButton("start_fueling", "Dolumu Başlat", rightX + S(22), bodyY + contentH - S(190), rightW - S(44), S(48), "green", "water", canFuel)
 end
 
@@ -531,9 +531,9 @@ local function drawPurchaseOverview(contentX, contentY, contentW, contentH)
     drawCard(contentX, contentY, contentW, contentH, S(18), true)
     circle(contentX + S(70), contentY + S(70), S(38), owned and tocolor(56, 189, 248, 20) or tocolor(245, 158, 11, 22))
     icon(owned and "shield" or "garage", contentX + S(50), contentY + S(50), S(40), owned and colors.cyan or colors.amber)
-    dxDrawText(owned and "Özel işletme" or "Yatırım fırsatı", contentX + S(126), contentY + S(30), contentX + contentW - S(36), contentY + S(62), owned and colors.cyan or colors.amber, 1, fonts.small, "left", "center")
-    dxDrawText(owned and station.ownerName or station.name, contentX + S(126), contentY + S(60), contentX + contentW - S(36), contentY + S(102), colors.text, 1, fonts.hero, "left", "center", true)
-    dxDrawText(owned and "Bu istasyonun yönetim ekranı yalnızca işletme sahibi ve yetkili personeline açıktır." or "İstasyonu satın alarak pompa fiyatını, yakıt stoğunu, işletme kasasını ve personeli yönetin.", contentX + S(126), contentY + S(106), contentX + contentW - S(50), contentY + S(160), colors.muted, 1, fonts.body, "left", "top", true, true)
+    exports.aura_ui:uiDrawText(owned and "Özel işletme" or "Yatırım fırsatı", contentX + S(126), contentY + S(30), contentX + contentW - S(36), contentY + S(62), owned and colors.cyan or colors.amber, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(owned and station.ownerName or station.name, contentX + S(126), contentY + S(60), contentX + contentW - S(36), contentY + S(102), colors.text, 1, fonts.hero, "left", "center", true)
+    exports.aura_ui:uiDrawText(owned and "Bu istasyonun yönetim ekranı yalnızca işletme sahibi ve yetkili personeline açıktır." or "İstasyonu satın alarak pompa fiyatını, yakıt stoğunu, işletme kasasını ve personeli yönetin.", contentX + S(126), contentY + S(106), contentX + contentW - S(50), contentY + S(160), colors.muted, 1, fonts.body, "left", "top", true, true)
 
     local cardsY = contentY + S(190)
     local gap = S(12)
@@ -557,9 +557,9 @@ end
 
 local function drawActivityList(x, y, w, h, logs)
     drawCard(x, y, w, h, S(16), false)
-    dxDrawText("Son Hareketler", x + S(20), y + S(14), x + w - S(20), y + S(42), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Son Hareketler", x + S(20), y + S(14), x + w - S(20), y + S(42), colors.text, 1, fonts.heading, "left", "center")
     if not logs or #logs == 0 then
-        dxDrawText("Henüz işlem kaydı yok.", x + S(20), y + S(62), x + w - S(20), y + h - S(20), colors.muted, 1, fonts.body, "center", "center")
+        exports.aura_ui:uiDrawText("Henüz işlem kaydı yok.", x + S(20), y + S(62), x + w - S(20), y + h - S(20), colors.muted, 1, fonts.body, "center", "center")
         return
     end
     local rowY = y + S(56)
@@ -570,10 +570,10 @@ local function drawActivityList(x, y, w, h, logs)
         local label = logLabels[item.event_type] or item.event_type or "İşlem"
         local accent = item.event_type == "fuel_sale" and colors.green or item.event_type == "withdraw" and colors.red or colors.cyan
         circle(x + S(30), rowY + rowH / 2, S(5), accent)
-        dxDrawText(fitText(label, w * 0.45, fonts.badge), x + S(46), rowY + S(3), x + w * 0.58, rowY + S(24), colors.text, 1, fonts.badge, "left", "center", true)
-        dxDrawText(fitText(item.actor_name or "Sistem", w * 0.45, fonts.small), x + S(46), rowY + S(23), x + w * 0.58, rowY + S(43), colors.muted, 1, fonts.small, "left", "center", true)
+        exports.aura_ui:uiDrawText(fitText(label, w * 0.45, fonts.badge), x + S(46), rowY + S(3), x + w * 0.58, rowY + S(24), colors.text, 1, fonts.badge, "left", "center", true)
+        exports.aura_ui:uiDrawText(fitText(item.actor_name or "Sistem", w * 0.45, fonts.small), x + S(46), rowY + S(23), x + w * 0.58, rowY + S(43), colors.muted, 1, fonts.small, "left", "center", true)
         local value = tonumber(item.liters) and tonumber(item.liters) > 0 and formatLiters(item.liters) or tonumber(item.amount) and tonumber(item.amount) > 0 and formatMoney(item.amount) or ""
-        dxDrawText(value, x + w * 0.58, rowY, x + w - S(18), rowY + rowH, accent, 1, fonts.badge, "right", "center")
+        exports.aura_ui:uiDrawText(value, x + w * 0.58, rowY, x + w - S(18), rowY + rowH, accent, 1, fonts.badge, "right", "center")
         if index < visible then rounded(x + S(20), rowY + rowH - 1, w - S(40), S(1), S(1), colors.border) end
         rowY = rowY + rowH
     end
@@ -607,28 +607,28 @@ local function drawBusinessOverview(contentX, contentY, contentW, contentH)
     local rightX = contentX + leftW + gap
     local rightW = contentW - leftW - gap
     drawCard(rightX, bodyY, rightW, contentH - S(128), S(16), true)
-    dxDrawText("Operasyon Durumu", rightX + S(20), bodyY + S(14), rightX + rightW - S(20), bodyY + S(42), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Operasyon Durumu", rightX + S(20), bodyY + S(14), rightX + rightW - S(20), bodyY + S(42), colors.text, 1, fonts.heading, "left", "center")
     local stockRatio = station.stock / station.maxStock
-    dxDrawText("Yakıt stoğu", rightX + S(20), bodyY + S(66), rightX + rightW - S(20), bodyY + S(88), colors.muted, 1, fonts.small, "left", "center")
-    dxDrawText("%" .. tostring(math.floor(stockRatio * 100)), rightX + S(20), bodyY + S(66), rightX + rightW - S(20), bodyY + S(88), stockRatio <= 0.15 and colors.red or colors.amber, 1, fonts.badge, "right", "center")
+    exports.aura_ui:uiDrawText("Yakıt stoğu", rightX + S(20), bodyY + S(66), rightX + rightW - S(20), bodyY + S(88), colors.muted, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText("%" .. tostring(math.floor(stockRatio * 100)), rightX + S(20), bodyY + S(66), rightX + rightW - S(20), bodyY + S(88), stockRatio <= 0.15 and colors.red or colors.amber, 1, fonts.badge, "right", "center")
     drawProgress(rightX + S(20), bodyY + S(98), rightW - S(40), S(9), stockRatio, stockRatio <= 0.15 and colors.red or colors.amber)
-    dxDrawText(formatLiters(station.stock) .. " / " .. formatLiters(station.maxStock), rightX + S(20), bodyY + S(116), rightX + rightW - S(20), bodyY + S(139), colors.faint, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(formatLiters(station.stock) .. " / " .. formatLiters(station.maxStock), rightX + S(20), bodyY + S(116), rightX + rightW - S(20), bodyY + S(139), colors.faint, 1, fonts.small, "left", "center")
     rounded(rightX + S(20), bodyY + S(153), rightW - S(40), S(1), S(1), colors.border)
     drawPill(data.access.role == "owner" and "İşletme sahibi" or data.access.role == "manager" and "İstasyon müdürü" or "Pompa görevlisi", rightX + S(20), bodyY + S(174), rightW - S(40), colors.cyan, "badge")
     if data.access.canDuty then
         drawPill(data.player.duty and "Mesai aktif" or "Mesai kapalı", rightX + S(20), bodyY + S(215), rightW - S(40), data.player.duty and colors.green or colors.muted, data.player.duty and "check" or "clock")
         drawButton("toggle_duty", data.player.duty and "Mesaiyi Bitir" or "Mesaiye Başla", rightX + S(20), bodyY + S(260), rightW - S(40), S(45), data.player.duty and "danger" or "green", data.player.duty and "cross" or "clock", true)
-        dxDrawText("Aktif görevli, müşteri dolumlarından litre başına ödeme kazanır.", rightX + S(20), bodyY + S(318), rightX + rightW - S(20), bodyY + S(365), colors.muted, 1, fonts.small, "center", "top", true, true)
+        exports.aura_ui:uiDrawText("Aktif görevli, müşteri dolumlarından litre başına ödeme kazanır.", rightX + S(20), bodyY + S(318), rightX + rightW - S(20), bodyY + S(365), colors.muted, 1, fonts.small, "center", "top", true, true)
     else
-        dxDrawText("Fiyat, stok ve kasa işlemleri için Operasyon sekmesini kullanın.", rightX + S(24), bodyY + S(225), rightX + rightW - S(24), bodyY + S(285), colors.muted, 1, fonts.body, "center", "center", true, true)
+        exports.aura_ui:uiDrawText("Fiyat, stok ve kasa işlemleri için Operasyon sekmesini kullanın.", rightX + S(24), bodyY + S(225), rightX + rightW - S(24), bodyY + S(285), colors.muted, 1, fonts.body, "center", "center", true, true)
     end
 end
 
 local function drawStepper(label, value, detail, x, y, w, actionMinus, actionPlus, valueColor)
     drawCard(x, y, w, S(94), S(14), false)
-    dxDrawText(label, x + S(18), y + S(12), x + w - S(18), y + S(34), colors.muted, 1, fonts.small, "left", "center")
-    dxDrawText(value, x + S(18), y + S(34), x + w - S(104), y + S(67), valueColor or colors.text, 1, fonts.heading, "left", "center", true)
-    dxDrawText(detail or "", x + S(18), y + S(66), x + w - S(104), y + S(86), colors.faint, 1, fonts.small, "left", "center", true)
+    exports.aura_ui:uiDrawText(label, x + S(18), y + S(12), x + w - S(18), y + S(34), colors.muted, 1, fonts.small, "left", "center")
+    exports.aura_ui:uiDrawText(value, x + S(18), y + S(34), x + w - S(104), y + S(67), valueColor or colors.text, 1, fonts.heading, "left", "center", true)
+    exports.aura_ui:uiDrawText(detail or "", x + S(18), y + S(66), x + w - S(104), y + S(86), colors.faint, 1, fonts.small, "left", "center", true)
     drawButton(actionMinus, "−", x + w - S(92), y + S(26), S(34), S(42), "blue", nil, true)
     drawButton(actionPlus, "+", x + w - S(50), y + S(26), S(34), S(42), "blue", nil, true)
 end
@@ -641,16 +641,16 @@ local function drawOperationsTab(contentX, contentY, contentW, contentH)
     local leftX = contentX
     local rightX = contentX + colW + gap
     drawCard(leftX, contentY, colW, contentH, S(18), true)
-    dxDrawText("Pompa Tarifesi", leftX + S(22), contentY + S(18), leftX + colW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
-    dxDrawText("Kâr marjınızı koruyarak litre fiyatını belirleyin.", leftX + S(22), contentY + S(50), leftX + colW - S(22), contentY + S(82), colors.muted, 1, fonts.small, "left", "top", true, true)
+    exports.aura_ui:uiDrawText("Pompa Tarifesi", leftX + S(22), contentY + S(18), leftX + colW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Kâr marjınızı koruyarak litre fiyatını belirleyin.", leftX + S(22), contentY + S(50), leftX + colW - S(22), contentY + S(82), colors.muted, 1, fonts.small, "left", "top", true, true)
     drawStepper("YENİ LİTRE FİYATI", string.format("$%.2f", state.priceDraft), string.format("Sınır $%.2f - $%.2f", Config.MinFuelPrice, Config.MaxFuelPrice), leftX + S(22), contentY + S(103), colW - S(44), "price_minus", "price_plus", colors.amber)
     local margin = state.priceDraft - station.wholesalePrice
     drawPill(string.format("Tahmini brüt marj $%.2f / L", margin), leftX + S(22), contentY + S(211), colW - S(44), margin > 0 and colors.green or colors.red, "signal")
     drawButton("save_price", "Fiyatı Güncelle", leftX + S(22), contentY + S(254), colW - S(44), S(46), "green", "check", true)
     rounded(leftX + S(22), contentY + S(322), colW - S(44), S(1), S(1), colors.border)
-    dxDrawText("İşletme Devri", leftX + S(22), contentY + S(344), leftX + colW - S(22), contentY + S(374), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("İşletme Devri", leftX + S(22), contentY + S(344), leftX + colW - S(22), contentY + S(374), colors.text, 1, fonts.heading, "left", "center")
     local saleValue = math.floor(station.purchasePrice * Config.BusinessSaleRate + station.balance)
-    dxDrawText("Devlet geri alım bedeli ve mevcut kasa toplamı hesabınıza yatırılır.", leftX + S(22), contentY + S(378), leftX + colW - S(22), contentY + S(426), colors.muted, 1, fonts.small, "left", "top", true, true)
+    exports.aura_ui:uiDrawText("Devlet geri alım bedeli ve mevcut kasa toplamı hesabınıza yatırılır.", leftX + S(22), contentY + S(378), leftX + colW - S(22), contentY + S(426), colors.muted, 1, fonts.small, "left", "top", true, true)
     drawPill("Net ödeme " .. formatMoney(saleValue), leftX + S(22), contentY + S(438), colW - S(44), colors.amber, "bank")
     if data.access.isOwner then
         local confirming = getTickCount() < state.sellConfirmUntil
@@ -658,7 +658,7 @@ local function drawOperationsTab(contentX, contentY, contentW, contentH)
     end
 
     drawCard(rightX, contentY, colW, contentH, S(18), true)
-    dxDrawText("Tedarik & Kasa", rightX + S(22), contentY + S(18), rightX + colW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Tedarik & Kasa", rightX + S(22), contentY + S(18), rightX + colW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
     local freeStock = math.max(0, station.maxStock - station.stock)
     drawStepper("SİPARİŞ MİKTARI", formatLiters(state.orderAmount), formatLiters(freeStock) .. " boş kapasite", rightX + S(22), contentY + S(72), colW - S(44), "order_minus", "order_plus", colors.cyan)
     local orderCost = math.ceil(state.orderAmount * station.wholesalePrice)
@@ -680,20 +680,20 @@ local function drawStaffTab(contentX, contentY, contentW, contentH)
     local formX = contentX + listW + gap
     local formW = contentW - listW - gap
     drawCard(contentX, contentY, listW, contentH, S(18), false)
-    dxDrawText("Personel Kadrosu", contentX + S(22), contentY + S(16), contentX + listW - S(80), contentY + S(46), colors.text, 1, fonts.heading, "left", "center")
+    exports.aura_ui:uiDrawText("Personel Kadrosu", contentX + S(22), contentY + S(16), contentX + listW - S(80), contentY + S(46), colors.text, 1, fonts.heading, "left", "center")
     drawPill(tostring(#employees) .. " / " .. tostring(Config.MaxEmployees), contentX + listW - S(76), contentY + S(17), S(54), colors.cyan)
     local rowY = contentY + S(62)
     local rowH = S(52)
     if #employees == 0 then
-        dxDrawText("İstasyonda kayıtlı personel yok.", contentX + S(22), rowY, contentX + listW - S(22), contentY + contentH - S(22), colors.muted, 1, fonts.body, "center", "center")
+        exports.aura_ui:uiDrawText("İstasyonda kayıtlı personel yok.", contentX + S(22), rowY, contentX + listW - S(22), contentY + contentH - S(22), colors.muted, 1, fonts.body, "center", "center")
     else
         for index = 1, math.min(#employees, Config.MaxEmployees) do
             local employee = employees[index]
             rounded(contentX + S(18), rowY, listW - S(36), rowH, S(12), index % 2 == 0 and tocolor(255, 255, 255, 8) or tocolor(255, 255, 255, 5))
             circle(contentX + S(44), rowY + rowH / 2, S(14), employee.role == "manager" and tocolor(56, 189, 248, 22) or tocolor(45, 212, 191, 20))
             icon(employee.role == "manager" and "shield" or "user", contentX + S(36), rowY + rowH / 2 - S(8), S(16), employee.role == "manager" and colors.cyan or colors.mint)
-            dxDrawText(fitText(employee.name, listW - S(190), fonts.badge), contentX + S(66), rowY + S(5), contentX + listW - S(118), rowY + S(27), colors.text, 1, fonts.badge, "left", "center", true)
-            dxDrawText("ID " .. tostring(employee.characterId) .. " · " .. (employee.role == "manager" and "Müdür" or "Kasiyer"), contentX + S(66), rowY + S(27), contentX + listW - S(118), rowY + S(47), colors.muted, 1, fonts.small, "left", "center", true)
+            exports.aura_ui:uiDrawText(fitText(employee.name, listW - S(190), fonts.badge), contentX + S(66), rowY + S(5), contentX + listW - S(118), rowY + S(27), colors.text, 1, fonts.badge, "left", "center", true)
+            exports.aura_ui:uiDrawText("ID " .. tostring(employee.characterId) .. " · " .. (employee.role == "manager" and "Müdür" or "Kasiyer"), contentX + S(66), rowY + S(27), contentX + listW - S(118), rowY + S(47), colors.muted, 1, fonts.small, "left", "center", true)
             if data.access.canStaff then
                 drawButton("remove_employee", "Çıkar", contentX + listW - S(102), rowY + S(8), S(72), S(36), "danger", nil, true, employee.characterId)
             end
@@ -703,8 +703,8 @@ local function drawStaffTab(contentX, contentY, contentW, contentH)
 
     drawCard(formX, contentY, formW, contentH, S(18), true)
     if data.access.canStaff then
-        dxDrawText("Personel Ekle", formX + S(22), contentY + S(18), formX + formW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
-        dxDrawText("Çevrimiçi karakter ID'si ile rol atayın.", formX + S(22), contentY + S(49), formX + formW - S(22), contentY + S(79), colors.muted, 1, fonts.small, "left", "top", true, true)
+        exports.aura_ui:uiDrawText("Personel Ekle", formX + S(22), contentY + S(18), formX + formW - S(22), contentY + S(48), colors.text, 1, fonts.heading, "left", "center")
+        exports.aura_ui:uiDrawText("Çevrimiçi karakter ID'si ile rol atayın.", formX + S(22), contentY + S(49), formX + formW - S(22), contentY + S(79), colors.muted, 1, fonts.small, "left", "top", true, true)
         if hasUiExport("drawGlassEditBox") then
             exports.gzl_ui:drawGlassEditBox("gzl_fuel_employee_id", formX + S(22), contentY + S(98), formW - S(44), S(48), {
                 placeholder = "Karakter ID",
@@ -717,14 +717,14 @@ local function drawStaffTab(contentX, contentY, contentW, contentH)
         drawButton("hire_cashier", "Kasiyer Ekle", formX + S(22), contentY + S(162), formW - S(44), S(44), "green", "user", #employees < Config.MaxEmployees)
         drawButton("hire_manager", "Müdür Ekle", formX + S(22), contentY + S(216), formW - S(44), S(44), "blue", "shield", #employees < Config.MaxEmployees)
         rounded(formX + S(22), contentY + S(284), formW - S(44), S(1), S(1), colors.border)
-        dxDrawText("Rol Yetkileri", formX + S(22), contentY + S(306), formX + formW - S(22), contentY + S(334), colors.text, 1, fonts.heading, "left", "center")
+        exports.aura_ui:uiDrawText("Rol Yetkileri", formX + S(22), contentY + S(306), formX + formW - S(22), contentY + S(334), colors.text, 1, fonts.heading, "left", "center")
         drawPill("Müdür: fiyat ve stok", formX + S(22), contentY + S(350), formW - S(44), colors.cyan, "shield")
         drawPill("Kasiyer: mesai ve kazanç", formX + S(22), contentY + S(392), formW - S(44), colors.mint, "badge")
     else
         circle(formX + formW / 2, contentY + S(100), S(34), tocolor(45, 212, 191, 20))
         icon("clock", formX + formW / 2 - S(17), contentY + S(83), S(34), colors.mint)
-        dxDrawText("Pompa Görevlisi", formX + S(22), contentY + S(150), formX + formW - S(22), contentY + S(184), colors.text, 1, fonts.heading, "center", "center")
-        dxDrawText("Mesai açıkken bu istasyonda tamamlanan müşteri dolumlarından litre başına ödeme kazanırsınız.", formX + S(26), contentY + S(194), formX + formW - S(26), contentY + S(270), colors.muted, 1, fonts.body, "center", "top", true, true)
+        exports.aura_ui:uiDrawText("Pompa Görevlisi", formX + S(22), contentY + S(150), formX + formW - S(22), contentY + S(184), colors.text, 1, fonts.heading, "center", "center")
+        exports.aura_ui:uiDrawText("Mesai açıkken bu istasyonda tamamlanan müşteri dolumlarından litre başına ödeme kazanırsınız.", formX + S(26), contentY + S(194), formX + formW - S(26), contentY + S(270), colors.muted, 1, fonts.body, "center", "top", true, true)
         drawPill(data.player.duty and "Mesai aktif" or "Mesai kapalı", formX + S(22), contentY + S(302), formW - S(44), data.player.duty and colors.green or colors.muted, data.player.duty and "check" or "clock")
         drawButton("toggle_duty", data.player.duty and "Mesaiyi Bitir" or "Mesaiye Başla", formX + S(22), contentY + S(350), formW - S(44), S(48), data.player.duty and "danger" or "green", data.player.duty and "cross" or "clock", true)
     end
@@ -735,7 +735,7 @@ local function drawLoading(contentX, contentY, contentW, contentH)
     local pulse = (math.sin(getTickCount() / 260) + 1) / 2
     circle(contentX + contentW / 2, contentY + contentH / 2 - S(42), S(28), tocolor(245, 158, 11, math.floor(25 + pulse * 35)))
     icon("water", contentX + contentW / 2 - S(14), contentY + contentH / 2 - S(56), S(28), colors.amber)
-    dxDrawText("İstasyon verileri hazırlanıyor", contentX + S(30), contentY + contentH / 2 + S(5), contentX + contentW - S(30), contentY + contentH / 2 + S(38), colors.text, 1, fonts.heading, "center", "center")
+    exports.aura_ui:uiDrawText("İstasyon verileri hazırlanıyor", contentX + S(30), contentY + contentH / 2 + S(5), contentX + contentW - S(30), contentY + contentH / 2 + S(38), colors.text, 1, fonts.heading, "center", "center")
 end
 
 local function renderPanel()
@@ -782,10 +782,10 @@ local function renderWorldPrompt()
     glass(x, y, w, h, S(16))
     circle(x + S(38), y + h / 2, S(20), colors.amberSoft)
     icon("water", x + S(28), y + h / 2 - S(10), S(20), colors.amber)
-    dxDrawText(config.name, x + S(68), y + S(10), x + w - S(62), y + S(35), colors.text, 1, fonts.body or "default-bold", "left", "center", true)
-    dxDrawText("Yakıt ve işletme paneli", x + S(68), y + S(34), x + w - S(62), y + S(59), colors.muted, 1, fonts.small or "default", "left", "center", true)
+    exports.aura_ui:uiDrawText(config.name, x + S(68), y + S(10), x + w - S(62), y + S(35), colors.text, 1, fonts.body or "default-bold", "left", "center", true)
+    exports.aura_ui:uiDrawText("Yakıt ve işletme paneli", x + S(68), y + S(34), x + w - S(62), y + S(59), colors.muted, 1, fonts.small or "default", "left", "center", true)
     rounded(x + w - S(50), y + S(20), S(30), S(32), S(8), tocolor(245, 158, 11, 28))
-    dxDrawText("E", x + w - S(50), y + S(20), x + w - S(20), y + S(52), colors.amber, 1, fonts.badge or "default-bold", "center", "center")
+    exports.aura_ui:uiDrawText("E", x + w - S(50), y + S(20), x + w - S(20), y + S(52), colors.amber, 1, fonts.badge or "default-bold", "center", "center")
 end
 
 addEventHandler("onClientRender", root, function()

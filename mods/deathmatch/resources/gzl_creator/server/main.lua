@@ -46,8 +46,30 @@ addCommandHandler("fixkarakter", function(player)
     setElementInterior(player, 0)
     setElementAlpha(player, 255)
     setElementFrozen(player, false)
-    triggerClientEvent(player, "gzl_creator:clientRecover", player)
-    outputChatBox("#34d399[GZL]#ffffff Karakter durumunuz (boyut, görünürlük, kamera) başarıyla sıfırlandı!", player, 255, 255, 255, true)
+
+    local charId = getElementData(player, "character:id") or getElementData(player, "char:id")
+    local db = exports.gzl_characters and exports.gzl_characters:getCharacterDB()
+    if db and charId then
+        dbQuery(function(qh)
+            local res = dbPoll(qh, 0)
+            if res and res[1] then
+                local skinId = tonumber(res[1].skin) or CreatorConfig.MaleSkinID
+                setElementModel(player, skinId)
+                if res[1].customization and res[1].customization ~= "" and res[1].customization ~= "{}" then
+                    local cdata = fromJSON(res[1].customization)
+                    if cdata then
+                        setElementData(player, "char:customization", cdata, true)
+                    end
+                end
+            end
+            triggerClientEvent(player, "gzl_creator:clientRecover", player)
+        end, db, "SELECT skin, customization FROM characters WHERE id = ?", charId)
+    else
+        local skinId = getElementData(player, "character:skin") or CreatorConfig.MaleSkinID
+        setElementModel(player, skinId)
+        triggerClientEvent(player, "gzl_creator:clientRecover", player)
+    end
+    outputChatBox("#34d399[GZL]#ffffff Karakter durumunuz ve kıyafetleriniz başarıyla sıfırlandı!", player, 255, 255, 255, true)
 end)
 
 addEvent("gzl_creator:saveCharacter", true)

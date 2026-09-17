@@ -1,10 +1,10 @@
 local fontCache = {}
 local fontFiles = {
-    ["regular"] = "assets/fonts/SFUIText-Regular.ttf",
-    ["medium"] = "assets/fonts/SFUIText-Medium.ttf",
-    ["semibold"] = "assets/fonts/SFUIText-Semibold.ttf",
-    ["bold"] = "assets/fonts/SFUIText-Bold.ttf",
-    ["heavy"] = "assets/fonts/SFUIText-Heavy.ttf"
+    ["regular"] = ":aura_ui/assets/Manrope-Medium.ttf",
+    ["medium"] = ":aura_ui/assets/Manrope-Medium.ttf",
+    ["semibold"] = ":aura_ui/assets/Manrope-Bold.ttf",
+    ["bold"] = ":aura_ui/assets/Manrope-Bold.ttf",
+    ["heavy"] = ":aura_ui/assets/Manrope-Bold.ttf"
 }
 
 function getMechanicFont(style, size)

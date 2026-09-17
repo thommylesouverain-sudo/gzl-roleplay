@@ -369,10 +369,10 @@ local function initAllResources()
     ]]
     cursorSvg = svgCreate(24, 24, cursorData)
 
-    fontTitle = dxCreateFont("assets/font_bold.ttf", 22, true) or "default-bold"
-    fontBold = dxCreateFont("assets/font_bold.ttf", 12, true) or "default-bold"
-    fontMedium = dxCreateFont("assets/font_medium.ttf", 11, false) or "default"
-    fontSmall = dxCreateFont("assets/font_medium.ttf", 9, false) or "default"
+    fontTitle = dxCreateFont(":aura_ui/assets/Manrope-Bold.ttf", 22, true) or "default-bold"
+    fontBold = dxCreateFont(":aura_ui/assets/Manrope-Bold.ttf", 12, true) or "default-bold"
+    fontMedium = dxCreateFont(":aura_ui/assets/Manrope-Medium.ttf", 11, false) or "default"
+    fontSmall = dxCreateFont(":aura_ui/assets/Manrope-Medium.ttf", 9, false) or "default"
 
     loadTablerIcon("user", "assets/icons/user.svg")
     loadTablerIcon("police", "assets/icons/police.svg")
@@ -1162,9 +1162,9 @@ addEventHandler("onClientRender", root, function()
                 local distText = (distToWp < 1000) and string.format("HEDEF: %d m", math.floor(distToWp)) or string.format("HEDEF: %.1f km", distToWp / 1000)
                 local bw = 110
                 local bh = 24
-                dxDrawRectangle(sx - bw / 2, sy - bh / 2, bw, bh, tocolor(10, 15, 26, 220))
-                dxDrawRectangle(sx - bw / 2, sy - bh / 2, bw, 2, tocolor(168, 85, 247, 255))
-                dxDrawText(distText, sx - bw / 2, sy - bh / 2, sx + bw / 2, sy + bh / 2, tocolor(255, 255, 255, 255), 1.0, "default-bold", "center", "center")
+                exports.aura_ui:uiDrawRectangle(sx - bw / 2, sy - bh / 2, bw, bh, tocolor(10, 15, 26, 220))
+                exports.aura_ui:uiDrawRectangle(sx - bw / 2, sy - bh / 2, bw, 2, tocolor(168, 85, 247, 255))
+                exports.aura_ui:uiDrawText(distText, sx - bw / 2, sy - bh / 2, sx + bw / 2, sy + bh / 2, tocolor(255, 255, 255, 255), 1.0, "default-bold", "center", "center")
             end
         end
     end
@@ -1209,13 +1209,13 @@ addEventHandler("onClientRender", root, function()
 
                 if isInterior then
                     if isSquare then
-                        dxDrawRectangle(radarX, radarY, radarDiameter, radarDiameter, tocolor(15, 23, 42, 235))
-                        dxDrawRectangle(radarX + 8, radarY + 8, radarDiameter - 16, radarDiameter - 16, tocolor(24, 32, 52, 140))
+                        exports.aura_ui:uiDrawRectangle(radarX, radarY, radarDiameter, radarDiameter, tocolor(15, 23, 42, 235))
+                        exports.aura_ui:uiDrawRectangle(radarX + 8, radarY + 8, radarDiameter - 16, radarDiameter - 16, tocolor(24, 32, 52, 140))
                     else
                         dxDrawCircle(radarX + radarRadius, radarY + radarRadius, radarRadius - 2, 0, 360, tocolor(15, 23, 42, 235))
                         dxDrawCircle(radarX + radarRadius, radarY + radarRadius, radarRadius - 12, 0, 360, tocolor(24, 32, 52, 140))
                     end
-                    dxDrawText("İÇ MEKAN", radarX, radarY + 16, radarX + radarDiameter, radarY + 32, tocolor(148, 163, 184, 180), 1.0, "default-bold", "center", "center")
+                    exports.aura_ui:uiDrawText("İÇ MEKAN", radarX, radarY + 16, radarX + radarDiameter, radarY + 32, tocolor(148, 163, 184, 180), 1.0, "default-bold", "center", "center")
                 else
                     local u = (px + 3000) / 6000
                     local v = (3000 - py) / 6000
@@ -1362,7 +1362,7 @@ addEventHandler("onClientRender", root, function()
                 end
 
                 dxDrawCircle(northX, northY, 8, 0, 360, tocolor(12, 16, 24, 230))
-                dxDrawText("N", northX - 8, northY - 8, northX + 8, northY + 8, tocolor(240, 245, 255, 240), 1.0, "default-bold", "center", "center")
+                exports.aura_ui:uiDrawText("N", northX - 8, northY - 8, northX + 8, northY + 8, tocolor(240, 245, 255, 240), 1.0, "default-bold", "center", "center")
 
                 if currentWaypoint and not isInterior then
                     local distToGoal = getDistanceBetweenPoints2D(px, py, currentWaypoint.x, currentWaypoint.y)
@@ -1371,9 +1371,9 @@ addEventHandler("onClientRender", root, function()
                     local badgeH = 18
                     local badgeX = radarX + radarDiameter - badgeW
                     local badgeY = radarY + radarDiameter - badgeH
-                    dxDrawRectangle(badgeX, badgeY, badgeW, badgeH, tocolor(15, 23, 42, 220))
-                    dxDrawRectangle(badgeX, badgeY, 2, badgeH, tocolor(168, 85, 247, 255))
-                    dxDrawText(distText, badgeX + 4, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(255, 255, 255, 255), 1.0, fontSmall or "default-bold", "center", "center")
+                    exports.aura_ui:uiDrawRectangle(badgeX, badgeY, badgeW, badgeH, tocolor(15, 23, 42, 220))
+                    exports.aura_ui:uiDrawRectangle(badgeX, badgeY, 2, badgeH, tocolor(168, 85, 247, 255))
+                    exports.aura_ui:uiDrawText(distText, badgeX + 4, badgeY, badgeX + badgeW, badgeY + badgeH, tocolor(255, 255, 255, 255), 1.0, fontSmall or "default-bold", "center", "center")
                 end
             end
         end
@@ -1382,13 +1382,13 @@ addEventHandler("onClientRender", root, function()
     hoveredBlip = nil
 
     if isPauseOpen and isElement(mapTexture) and isElement(mapShader) then
-        dxDrawRectangle(0, 0, screenW, screenH, tocolor(10, 14, 23, 255), true)
+        exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(10, 14, 23, 255), true)
 
         local function drawSVGBox(x, y, w, h, r, color, postGUI)
             if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                 exports.gzl_ui:drawRoundedRectangle(x, y, w, h, r or 3, color, postGUI ~= false)
             else
-                dxDrawRectangle(x, y, w, h, color, postGUI ~= false)
+                exports.aura_ui:uiDrawRectangle(x, y, w, h, color, postGUI ~= false)
             end
         end
 
@@ -1405,24 +1405,24 @@ addEventHandler("onClientRender", root, function()
 
             drawSVGBox(panelX, panelY, panelW, panelH, 6, tocolor(10, 14, 23, 240), true)
 
-            dxDrawRectangle(panelX, panelY, panelW, 1, tocolor(255, 255, 255, 25), true)
-            dxDrawRectangle(panelX, panelY + panelH - 1, panelW, 1, tocolor(255, 255, 255, 15), true)
-            dxDrawRectangle(panelX, panelY, 1, panelH, tocolor(255, 255, 255, 20), true)
-            dxDrawRectangle(panelX + panelW - 1, panelY, 1, panelH, tocolor(255, 255, 255, 15), true)
+            exports.aura_ui:uiDrawRectangle(panelX, panelY, panelW, 1, tocolor(255, 255, 255, 25), true)
+            exports.aura_ui:uiDrawRectangle(panelX, panelY + panelH - 1, panelW, 1, tocolor(255, 255, 255, 15), true)
+            exports.aura_ui:uiDrawRectangle(panelX, panelY, 1, panelH, tocolor(255, 255, 255, 20), true)
+            exports.aura_ui:uiDrawRectangle(panelX + panelW - 1, panelY, 1, panelH, tocolor(255, 255, 255, 15), true)
 
             drawSVGBox(panelX + 1, panelY + 1, panelW - 2, 54, 4, tocolor(16, 23, 36, 245), true)
-            dxDrawRectangle(panelX + 1, panelY + 54, panelW - 2, 1, tocolor(255, 255, 255, 20), true)
+            exports.aura_ui:uiDrawRectangle(panelX + 1, panelY + 54, panelW - 2, 1, tocolor(255, 255, 255, 20), true)
 
-            dxDrawText("HARİTA REHBERİ", panelX + 14, panelY + 10, panelX + 200, panelY + 30, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "center", false, false, true)
-            dxDrawText("Hızlı Konum & GPS", panelX + 14, panelY + 28, panelX + 200, panelY + 46, tocolor(148, 163, 184, 230), 1.0, fontSmall, "left", "center", false, false, true)
+            exports.aura_ui:uiDrawText("HARİTA REHBERİ", panelX + 14, panelY + 10, panelX + 200, panelY + 30, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "center", false, false, true)
+            exports.aura_ui:uiDrawText("Hızlı Konum & GPS", panelX + 14, panelY + 28, panelX + 200, panelY + 46, tocolor(148, 163, 184, 230), 1.0, fontSmall, "left", "center", false, false, true)
 
             local filteredList = getFilteredLegendList(px, py)
             local totalCount = #filteredList
             local countStr = string.format("%d Nokta", totalCount)
-            local cw = dxGetTextWidth(countStr, 1.0, fontSmall) + 16
+            local cw = exports.aura_ui:uiTextWidth(countStr, 1.0, fontSmall) + 16
             local countX = panelX + panelW - cw - 14
             drawSVGBox(countX, panelY + 16, cw, 22, 3, tocolor(56, 189, 248, 35), true)
-            dxDrawText(countStr, countX, panelY + 16, countX + cw, panelY + 38, tocolor(56, 189, 248, 255), 1.0, fontSmall, "center", "center", false, false, true)
+            exports.aura_ui:uiDrawText(countStr, countX, panelY + 16, countX + cw, panelY + 38, tocolor(56, 189, 248, 255), 1.0, fontSmall, "center", "center", false, false, true)
 
             local catY = panelY + 62
             local catH = 26
@@ -1439,7 +1439,7 @@ addEventHandler("onClientRender", root, function()
                 local txtCol = isCatSel and tocolor(10, 14, 23, 255) or (isCatHover and tocolor(255, 255, 255, 255) or tocolor(148, 163, 184, 220))
 
                 drawSVGBox(cx, catY, catW - 3, catH, 2, bgCol, true)
-                dxDrawText(cat, cx, catY, cx + catW - 3, catY + catH, txtCol, 1.0, fontSmall, "center", "center", false, false, true)
+                exports.aura_ui:uiDrawText(cat, cx, catY, cx + catW - 3, catY + catH, txtCol, 1.0, fontSmall, "center", "center", false, false, true)
             end
 
             local listY = catY + catH + 10
@@ -1481,7 +1481,7 @@ addEventHandler("onClientRender", root, function()
                     drawSVGBox(ix, iy, itemW, itemH, 3, rowBg, true)
 
                     if isSel then
-                        dxDrawRectangle(ix, iy + 3, 3, itemH - 6, tocolor(56, 189, 248, 255), true)
+                        exports.aura_ui:uiDrawRectangle(ix, iy + 3, 3, itemH - 6, tocolor(56, 189, 248, 255), true)
                     end
 
                     drawBlipBadge(ix + 20, iy + itemH / 2, item.iconKey, item.color, 11, isSel, true)
@@ -1498,15 +1498,15 @@ addEventHandler("onClientRender", root, function()
                     local tagW = 46
                     if isAtWaypoint then
                         drawSVGBox(ix + itemW - tagW - 8, iy + 10, tagW, 20, 2, tocolor(168, 85, 247, 240), true)
-                        dxDrawText("HEDEF", ix + itemW - tagW - 8, iy + 10, ix + itemW - 8, iy + 30, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center", false, false, true)
+                        exports.aura_ui:uiDrawText("HEDEF", ix + itemW - tagW - 8, iy + 10, ix + itemW - 8, iy + 30, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center", false, false, true)
                     else
-                        dxDrawText(distStr, ix + itemW - tagW - 8, iy + 4, ix + itemW - 8, iy + 22, tocolor(148, 163, 184, 220), 1.0, fontSmall, "right", "center", false, false, true)
+                        exports.aura_ui:uiDrawText(distStr, ix + itemW - tagW - 8, iy + 4, ix + itemW - 8, iy + 22, tocolor(148, 163, 184, 220), 1.0, fontSmall, "right", "center", false, false, true)
                     end
 
                     local textRight = ix + itemW - tagW - 12
-                    dxDrawText(item.name, ix + 38, iy + 4, textRight, iy + 22, tocolor(255, 255, 255, 255), 1.0, fontMedium, "left", "center", true, false, true)
+                    exports.aura_ui:uiDrawText(item.name, ix + 38, iy + 4, textRight, iy + 22, tocolor(255, 255, 255, 255), 1.0, fontMedium, "left", "center", true, false, true)
                     local subText = item.sub or (getZoneName(item.x, item.y, 0) .. " (" .. (item.category or "Bölge") .. ")")
-                    dxDrawText(subText, ix + 38, iy + 20, textRight, iy + 36, tocolor(148, 163, 184, 200), 1.0, fontSmall, "left", "center", true, false, true)
+                    exports.aura_ui:uiDrawText(subText, ix + 38, iy + 20, textRight, iy + 36, tocolor(148, 163, 184, 200), 1.0, fontSmall, "left", "center", true, false, true)
                 end
             end
 
@@ -1514,16 +1514,16 @@ addEventHandler("onClientRender", root, function()
                 local trackX = panelX + panelW - 10
                 local trackY = listY
                 local trackH = listH
-                dxDrawRectangle(trackX, trackY, 4, trackH, tocolor(255, 255, 255, 15), true)
+                exports.aura_ui:uiDrawRectangle(trackX, trackY, 4, trackH, tocolor(255, 255, 255, 15), true)
 
                 local thumbH = math.max(18, math.floor(trackH * (visibleCount / totalCount)))
                 local thumbY = trackY + math.floor((trackH - thumbH) * (legendScrollOffset / maxScroll))
-                dxDrawRectangle(trackX, thumbY, 4, thumbH, tocolor(56, 189, 248, 200), true)
+                exports.aura_ui:uiDrawRectangle(trackX, thumbY, 4, thumbH, tocolor(56, 189, 248, 200), true)
             end
 
             local footY = panelY + panelH - footerH
-            dxDrawRectangle(panelX + 1, footY, panelW - 2, 1, tocolor(255, 255, 255, 18), true)
-            dxDrawText("[Sol Tık] Odaklan  •  [Sağ Tık] GPS  •  [Tekerlek] Kaydır", panelX, footY, panelX + panelW, panelY + panelH, tocolor(148, 163, 184, 210), 1.0, fontSmall, "center", "center", false, false, true)
+            exports.aura_ui:uiDrawRectangle(panelX + 1, footY, panelW - 2, 1, tocolor(255, 255, 255, 18), true)
+            exports.aura_ui:uiDrawText("[Sol Tık] Odaklan  •  [Sağ Tık] GPS  •  [Tekerlek] Kaydır", panelX, footY, panelX + panelW, panelY + panelH, tocolor(148, 163, 184, 210), 1.0, fontSmall, "center", "center", false, false, true)
         end
 
         local function drawActionBar(actionList)
@@ -1534,7 +1534,7 @@ addEventHandler("onClientRender", root, function()
             local totalW = 0
             for i, act in ipairs(actionList) do
                 if act.label and #act.label > 0 then
-                    totalW = totalW + dxGetTextWidth(act.label, 1.0, fontMedium) + 6
+                    totalW = totalW + exports.aura_ui:uiTextWidth(act.label, 1.0, fontMedium) + 6
                 end
                 for j, k in ipairs(act.keys) do
                     local isTwoLines = string.find(k, "\n", 1, true)
@@ -1543,9 +1543,9 @@ addEventHandler("onClientRender", root, function()
                         kw = 20
                     elseif isTwoLines then
                         local p1, p2 = k:match("([^\n]+)\n([^\n]+)")
-                        kw = math.max(dxGetTextWidth(p1 or "", 1.0, fontSmall), dxGetTextWidth(p2 or "", 1.0, fontSmall)) + 10
+                        kw = math.max(exports.aura_ui:uiTextWidth(p1 or "", 1.0, fontSmall), exports.aura_ui:uiTextWidth(p2 or "", 1.0, fontSmall)) + 10
                     else
-                        kw = dxGetTextWidth(k, 1.0, fontMedium) + 10
+                        kw = exports.aura_ui:uiTextWidth(k, 1.0, fontMedium) + 10
                     end
                     totalW = totalW + kw + (j < #act.keys and 3 or 0)
                 end
@@ -1561,8 +1561,8 @@ addEventHandler("onClientRender", root, function()
             local curX = startX + barPadding
             for i, act in ipairs(actionList) do
                 if act.label and #act.label > 0 then
-                    local lw = dxGetTextWidth(act.label, 1.0, fontMedium)
-                    dxDrawText(act.label, curX, footerY, curX + lw, footerY + footerH, tocolor(255, 255, 255, 255), 1.0, fontMedium, "left", "center", false, false, true)
+                    local lw = exports.aura_ui:uiTextWidth(act.label, 1.0, fontMedium)
+                    exports.aura_ui:uiDrawText(act.label, curX, footerY, curX + lw, footerY + footerH, tocolor(255, 255, 255, 255), 1.0, fontMedium, "left", "center", false, false, true)
                     curX = curX + lw + 6
                 end
                 for j, k in ipairs(act.keys) do
@@ -1572,19 +1572,19 @@ addEventHandler("onClientRender", root, function()
                         kw = 20
                     elseif isTwoLines then
                         local p1, p2 = k:match("([^\n]+)\n([^\n]+)")
-                        kw = math.max(dxGetTextWidth(p1 or "", 1.0, fontSmall), dxGetTextWidth(p2 or "", 1.0, fontSmall)) + 10
+                        kw = math.max(exports.aura_ui:uiTextWidth(p1 or "", 1.0, fontSmall), exports.aura_ui:uiTextWidth(p2 or "", 1.0, fontSmall)) + 10
                     else
-                        kw = dxGetTextWidth(k, 1.0, fontMedium) + 10
+                        kw = exports.aura_ui:uiTextWidth(k, 1.0, fontMedium) + 10
                     end
 
                     drawSVGBox(curX, footerY + 3, kw, 24, 2, tocolor(255, 255, 255, 255), true)
 
                     if isTwoLines then
                         local p1, p2 = k:match("([^\n]+)\n([^\n]+)")
-                        dxDrawText(p1 or "", curX, footerY + 3, curX + kw, footerY + 15, tocolor(0, 0, 0, 255), 1.0, fontSmall, "center", "center", false, false, true)
-                        dxDrawText(p2 or "", curX, footerY + 15, curX + kw, footerY + 27, tocolor(0, 0, 0, 255), 1.0, fontSmall, "center", "center", false, false, true)
+                        exports.aura_ui:uiDrawText(p1 or "", curX, footerY + 3, curX + kw, footerY + 15, tocolor(0, 0, 0, 255), 1.0, fontSmall, "center", "center", false, false, true)
+                        exports.aura_ui:uiDrawText(p2 or "", curX, footerY + 15, curX + kw, footerY + 27, tocolor(0, 0, 0, 255), 1.0, fontSmall, "center", "center", false, false, true)
                     else
-                        dxDrawText(k, curX, footerY + 3, curX + kw, footerY + 27, tocolor(0, 0, 0, 255), 1.0, fontMedium, "center", "center", false, false, true)
+                        exports.aura_ui:uiDrawText(k, curX, footerY + 3, curX + kw, footerY + 27, tocolor(0, 0, 0, 255), 1.0, fontMedium, "center", "center", false, false, true)
                     end
 
                     curX = curX + kw + 3
@@ -1601,7 +1601,7 @@ addEventHandler("onClientRender", root, function()
         end
 
         if not isMapInteractive then
-            dxDrawRectangle(0, 0, screenW, screenH, tocolor(12, 18, 14, 210), true)
+            exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(12, 18, 14, 210), true)
 
             local marginX, headerY, tabY, tabH, mapY, menuW, mapH = getMenuLayout()
 
@@ -1615,7 +1615,7 @@ addEventHandler("onClientRender", root, function()
             local dayName = days[realTime.weekday + 1] or "CUMA"
             local timeStr = string.format("%s %02d:%02d", dayName, realTime.hour, realTime.minute)
 
-            dxDrawText("Grand Theft Auto V", marginX, headerY, marginX + 400, headerY + 40, tocolor(255, 255, 255, 255), 1.0, fontTitle, "left", "center", false, false, true)
+            exports.aura_ui:uiDrawText("Grand Theft Auto V", marginX, headerY, marginX + 400, headerY + 40, tocolor(255, 255, 255, 255), 1.0, fontTitle, "left", "center", false, false, true)
 
             local profileRightX = marginX + menuW
             local avatarW, avatarH = 48, 44
@@ -1628,13 +1628,13 @@ addEventHandler("onClientRender", root, function()
             end
 
             local metaTextRight = avatarX - 14
-            dxDrawText(string.upper(pName), marginX, headerY - 10, metaTextRight, headerY + 6, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
-            dxDrawText(timeStr, marginX, headerY + 7, metaTextRight, headerY + 22, tocolor(210, 220, 230, 230), 1.0, fontMedium, "right", "top", false, false, true)
-            dxDrawText(string.format("$%s", tostring(pBank + pCash)), marginX, headerY + 23, metaTextRight, headerY + 40, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
+            exports.aura_ui:uiDrawText(string.upper(pName), marginX, headerY - 10, metaTextRight, headerY + 6, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
+            exports.aura_ui:uiDrawText(timeStr, marginX, headerY + 7, metaTextRight, headerY + 22, tocolor(210, 220, 230, 230), 1.0, fontMedium, "right", "top", false, false, true)
+            exports.aura_ui:uiDrawText(string.format("$%s", tostring(pBank + pCash)), marginX, headerY + 23, metaTextRight, headerY + 40, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
 
             drawSVGBox(marginX, tabY, menuW, tabH, 2, tocolor(0, 0, 0, 200), true)
-            dxDrawText("<", marginX, tabY, marginX + 22, tabY + tabH, tocolor(255, 255, 255, 200), 1.0, fontBold, "center", "center", false, false, true)
-            dxDrawText(">", marginX + menuW - 22, tabY, marginX + menuW, tabY + tabH, tocolor(255, 255, 255, 200), 1.0, fontBold, "center", "center", false, false, true)
+            exports.aura_ui:uiDrawText("<", marginX, tabY, marginX + 22, tabY + tabH, tocolor(255, 255, 255, 200), 1.0, fontBold, "center", "center", false, false, true)
+            exports.aura_ui:uiDrawText(">", marginX + menuW - 22, tabY, marginX + menuW, tabY + tabH, tocolor(255, 255, 255, 200), 1.0, fontBold, "center", "center", false, false, true)
 
             local tabStartX = marginX + 22
             local tabTotalW = menuW - 44
@@ -1646,10 +1646,10 @@ addEventHandler("onClientRender", root, function()
                 if isSelected then
                     drawSVGBox(tx, tabY, tabW - 2, tabH, 2, tocolor(255, 255, 255, 255), true)
                     drawSVGBox(tx, tabY, tabW - 2, 4, 1, tocolor(74, 222, 128, 255), true)
-                    dxDrawText(tab.label, tx, tabY + 4, tx + tabW - 2, tabY + tabH, tocolor(0, 0, 0, 255), 1.0, fontBold, "center", "center", false, false, true)
+                    exports.aura_ui:uiDrawText(tab.label, tx, tabY + 4, tx + tabW - 2, tabY + tabH, tocolor(0, 0, 0, 255), 1.0, fontBold, "center", "center", false, false, true)
                 else
                     drawSVGBox(tx, tabY, tabW - 2, tabH, 2, tocolor(0, 0, 0, 160), true)
-                    dxDrawText(tab.label, tx, tabY + 4, tx + tabW - 2, tabY + tabH, tocolor(230, 235, 245, 220), 1.0, fontBold, "center", "center", false, false, true)
+                    exports.aura_ui:uiDrawText(tab.label, tx, tabY + 4, tx + tabW - 2, tabY + tabH, tocolor(230, 235, 245, 220), 1.0, fontBold, "center", "center", false, false, true)
                 end
             end
 
@@ -1727,19 +1727,19 @@ addEventHandler("onClientRender", root, function()
                     if isSel then
                         drawSVGBox(marginX, iy, listW, itemH, 2, tocolor(255, 255, 255, 255), true)
                         drawSVGBox(marginX, iy, 4, itemH, 1, tocolor(74, 222, 128, 255), true)
-                        dxDrawText(item.title, marginX + 16, iy + 8, marginX + listW - 16, iy + 30, tocolor(10, 14, 20, 255), 1.0, fontBold, "left", "top", false, false, true)
-                        dxDrawText(item.desc, marginX + 16, iy + 30, marginX + listW - 16, iy + itemH, tocolor(70, 85, 100, 240), 1.0, fontSmall, "left", "top", true, false, true)
+                        exports.aura_ui:uiDrawText(item.title, marginX + 16, iy + 8, marginX + listW - 16, iy + 30, tocolor(10, 14, 20, 255), 1.0, fontBold, "left", "top", false, false, true)
+                        exports.aura_ui:uiDrawText(item.desc, marginX + 16, iy + 30, marginX + listW - 16, iy + itemH, tocolor(70, 85, 100, 240), 1.0, fontSmall, "left", "top", true, false, true)
                     else
                         drawSVGBox(marginX, iy, listW, itemH, 2, tocolor(0, 0, 0, 190), true)
-                        dxDrawText(item.title, marginX + 16, iy + 8, marginX + listW - 16, iy + 30, tocolor(240, 245, 255, 240), 1.0, fontBold, "left", "top", false, false, true)
-                        dxDrawText(item.desc, marginX + 16, iy + 30, marginX + listW - 16, iy + itemH, tocolor(140, 155, 175, 200), 1.0, fontSmall, "left", "top", true, false, true)
+                        exports.aura_ui:uiDrawText(item.title, marginX + 16, iy + 8, marginX + listW - 16, iy + 30, tocolor(240, 245, 255, 240), 1.0, fontBold, "left", "top", false, false, true)
+                        exports.aura_ui:uiDrawText(item.desc, marginX + 16, iy + 30, marginX + listW - 16, iy + itemH, tocolor(140, 155, 175, 200), 1.0, fontSmall, "left", "top", true, false, true)
                     end
                 end
 
                 drawSVGBox(cardX, mapY, cardW, cardH, 2, tocolor(0, 0, 0, 190), true)
                 drawSVGBox(cardX, mapY, cardW, 48, 2, tocolor(0, 0, 0, 230), true)
                 local selectedTitle = gameMenuItems[selectedGameMenuIndex] and gameMenuItems[selectedGameMenuIndex].title or "Genel Bakış"
-                dxDrawText(string.upper(selectedTitle), cardX + 24, mapY + 12, cardX + cardW, mapY + 48, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "top", false, false, true)
+                exports.aura_ui:uiDrawText(string.upper(selectedTitle), cardX + 24, mapY + 12, cardX + cardW, mapY + 48, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "top", false, false, true)
 
                 local pJob = getElementData(localPlayer, "char:job") or "Sivil - Freelancer"
                 local infoRows = {}
@@ -1784,8 +1784,8 @@ addEventHandler("onClientRender", root, function()
                 for i, row in ipairs(infoRows) do
                     local iy = mapY + 60 + (i - 1) * 48
                     drawSVGBox(cardX + 20, iy, cardW - 40, 42, 2, tocolor(15, 20, 28, 200), true)
-                    dxDrawText(row[1], cardX + 32, iy + 11, cardX + 300, iy + 42, tocolor(150, 165, 185, 240), 1.0, fontBold, "left", "top", false, false, true)
-                    dxDrawText(row[2], cardX + 300, iy + 11, cardX + cardW - 32, iy + 42, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
+                    exports.aura_ui:uiDrawText(row[1], cardX + 32, iy + 11, cardX + 300, iy + 42, tocolor(150, 165, 185, 240), 1.0, fontBold, "left", "top", false, false, true)
+                    exports.aura_ui:uiDrawText(row[2], cardX + 300, iy + 11, cardX + cardW - 32, iy + 42, tocolor(255, 255, 255, 255), 1.0, fontBold, "right", "top", false, false, true)
                 end
             end
         else
@@ -1865,8 +1865,8 @@ addEventHandler("onClientRender", root, function()
 
             local currentZone = getZoneName(mapCenterX, mapCenterY, 0)
             local scaleY = screenH - 65
-            dxDrawText("0", 32, scaleY - 14, 46, scaleY, tocolor(255, 255, 255, 240), 1.0, fontSmall, "left", "bottom", false, false, true)
-            dxDrawText(string.format("%dft", math.floor(zoomLevel * 4500)), 32, scaleY - 14, 132, scaleY, tocolor(255, 255, 255, 240), 1.0, fontSmall, "right", "bottom", false, false, true)
+            exports.aura_ui:uiDrawText("0", 32, scaleY - 14, 46, scaleY, tocolor(255, 255, 255, 240), 1.0, fontSmall, "left", "bottom", false, false, true)
+            exports.aura_ui:uiDrawText(string.format("%dft", math.floor(zoomLevel * 4500)), 32, scaleY - 14, 132, scaleY, tocolor(255, 255, 255, 240), 1.0, fontSmall, "right", "bottom", false, false, true)
             dxDrawLine(32, scaleY, 132, scaleY, tocolor(255, 255, 255, 240), 1.5, true)
             dxDrawLine(32, scaleY - 6, 32, scaleY, tocolor(255, 255, 255, 240), 1.5, true)
             dxDrawLine(132, scaleY - 6, 132, scaleY, tocolor(255, 255, 255, 240), 1.5, true)
@@ -1877,7 +1877,7 @@ addEventHandler("onClientRender", root, function()
                 local dwStr = (dw < 1000) and string.format("%d m", math.floor(dw)) or string.format("%.1f km", dw / 1000)
                 zoneDisplay = zoneDisplay .. "  #a855f7|  HEDEF: " .. dwStr
             end
-            dxDrawText(zoneDisplay, 32, scaleY + 8, 450, scaleY + 28, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "top", false, false, true, true)
+            exports.aura_ui:uiDrawText(zoneDisplay, 32, scaleY + 8, 450, scaleY + 28, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "top", false, false, true, true)
 
             if hoveredBlip then
                 local hText = hoveredBlip.name
@@ -1885,14 +1885,14 @@ addEventHandler("onClientRender", root, function()
                 local distStr = (distFromP < 1000) and string.format("%d m", math.floor(distFromP)) or string.format("%.1f km", distFromP / 1000)
                 local tipLine1 = hText
                 local tipLine2 = "Mesafe: " .. distStr
-                local tipW = math.max(dxGetTextWidth(tipLine1, 1.0, fontBold), dxGetTextWidth(tipLine2, 1.0, fontSmall)) + 24
+                local tipW = math.max(exports.aura_ui:uiTextWidth(tipLine1, 1.0, fontBold), exports.aura_ui:uiTextWidth(tipLine2, 1.0, fontSmall)) + 24
                 local tipH = 40
                 local tipX = math.max(10, math.min(screenW - tipW - 10, hoveredBlip.x - tipW / 2))
                 local tipY = hoveredBlip.y - tipH - 12
                 drawSVGBox(tipX, tipY, tipW, tipH, 4, tocolor(10, 15, 26, 245), true)
                 drawSVGBox(tipX, tipY + tipH - 2, tipW, 2, 0, tocolor(56, 189, 248, 255), true)
-                dxDrawText(tipLine1, tipX + 12, tipY + 4, tipX + tipW - 12, tipY + 22, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "center", false, false, true)
-                dxDrawText(tipLine2, tipX + 12, tipY + 20, tipX + tipW - 12, tipY + 36, tocolor(148, 163, 184, 255), 1.0, fontSmall, "left", "center", false, false, true)
+                exports.aura_ui:uiDrawText(tipLine1, tipX + 12, tipY + 4, tipX + tipW - 12, tipY + 22, tocolor(255, 255, 255, 255), 1.0, fontBold, "left", "center", false, false, true)
+                exports.aura_ui:uiDrawText(tipLine2, tipX + 12, tipY + 20, tipX + tipW - 12, tipY + 36, tocolor(148, 163, 184, 255), 1.0, fontSmall, "left", "center", false, false, true)
             end
 
             drawActionBar({

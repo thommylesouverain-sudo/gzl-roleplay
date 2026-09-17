@@ -144,7 +144,7 @@ local function prepareFonts(scale)
     local sizes = {small = 9, body = 11, strong = 11, title = 24, metric = 25}
     for key, size in pairs(sizes) do
         local file = (key == "small" or key == "body") and "Regular" or "Semibold"
-        fonts[key] = dxCreateFont("assets/" .. file .. ".ttf", math.max(7, math.floor(size * scale)), false, "cleartype") or "default"
+        fonts[key] = dxCreateFont(":aura_ui/assets/Manrope-" .. (file == "Regular" and "Medium" or "Bold") .. ".ttf", math.max(7, math.floor(size * scale)), false, "cleartype") or "default"
     end
     PerfProbe.record("fonts", getTickCount() - started)
 end
@@ -153,10 +153,10 @@ local function drawPanel(x, y, scale, postGUI)
     local white, muted = tocolor(235, 241, 251), tocolor(135, 151, 173)
     local accent, green = tocolor(117, 154, 255), tocolor(80, 218, 178)
     local function rect(left, top, width, height, color)
-        dxDrawRectangle(x + left * scale, y + top * scale, width * scale, height * scale, color, postGUI)
+        exports.aura_ui:uiDrawRectangle(x + left * scale, y + top * scale, width * scale, height * scale, color, postGUI)
     end
     local function label(text, left, top, width, color, font, align, height)
-        dxDrawText(text, x + left * scale, y + top * scale,
+        exports.aura_ui:uiDrawText(text, x + left * scale, y + top * scale,
             x + (left + width) * scale, y + (top + (height or 25)) * scale,
             color or white, 1, fonts[font or "body"], align or "left", "center", true, false, postGUI)
     end
@@ -245,7 +245,7 @@ local function render()
             nextSample = getTickCount() + 2000
         end
         if isElement(panelTarget) then
-            dxDrawRectangle(0, 0, sw, sh, tocolor(3, 7, 14, 110), true)
+            exports.aura_ui:uiDrawRectangle(0, 0, sw, sh, tocolor(3, 7, 14, 110), true)
             dxDrawImage((sw - 1100 * scale) / 2 - 6 * scale, (sh - 780 * scale) / 2 - 6 * scale,
                 math.ceil(1112 * scale), math.ceil(792 * scale), panelTarget, 0, 0, 0, tocolor(255,255,255), true)
         end
@@ -274,7 +274,7 @@ local function render()
             panelDirty = false
         end
     end
-    dxDrawRectangle(0, 0, sw, sh, tocolor(3, 7, 14, 110), true)
+    exports.aura_ui:uiDrawRectangle(0, 0, sw, sh, tocolor(3, 7, 14, 110), true)
     if isElement(panelTarget) and not panelDirty then
         local previousBlend = dxGetBlendMode()
         dxSetBlendMode("blend")

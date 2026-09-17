@@ -230,8 +230,8 @@ local function drawBrand(x, y, alpha)
     local iconSize = 27 * scale
     exports.gzl_ui:drawRoundedRectangle(x, y, iconBox, iconBox, 11 * scale, tocolor(16, 30, 51, math.floor(224 * alpha)))
     exports.gzl_ui:drawIconSVG("badge", x + (iconBox - iconSize) / 2, y + (iconBox - iconSize) / 2, iconSize, tocolor(95, 168, 255, math.floor(255 * alpha)))
-    dxDrawText("#5FA8FFGZL #F4F7FCROLEPLAY", x + 61 * scale, y - 2 * scale, x + layout.panelW, y + 30 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.brand, "left", "center", false, false, false, true)
-    dxDrawText("Hikâyenin başladığı yer", x + 61 * scale, y + 25 * scale, x + layout.panelW, y + 48 * scale, tocolor(151, 166, 188, math.floor(225 * alpha)), 1, fonts.brandSub, "left", "center")
+    exports.aura_ui:uiDrawText("#5FA8FFGZL #F4F7FCROLEPLAY", x + 61 * scale, y - 2 * scale, x + layout.panelW, y + 30 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.brand, "left", "center", false, false, false, true)
+    exports.aura_ui:uiDrawText("Hikâyenin başladığı yer", x + 61 * scale, y + 25 * scale, x + layout.panelW, y + 48 * scale, tocolor(151, 166, 188, math.floor(225 * alpha)), 1, fonts.brandSub, "left", "center")
 end
 
 local function drawForm(alpha)
@@ -252,9 +252,9 @@ local function drawForm(alpha)
     exports.gzl_ui:drawRoundedRectangle(x, y + layout.panelH - railW, hookW, railW, 2 * scale, tocolor(95, 168, 255, math.floor(235 * alpha)))
     drawBrand(x + 30 * scale, y + 28 * scale, alpha)
 
-    dxDrawText("HESAP MERKEZİ", formX, y + 108 * scale, x + panelW - 30 * scale, y + 126 * scale, tocolor(95, 168, 255, math.floor(245 * alpha)), 1, fonts.eyebrow, "left", "top")
-    dxDrawText(title, formX, y + 132 * scale, x + panelW - 30 * scale, y + 174 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.title, "left", "top")
-    dxDrawText(body, formX, y + 188 * scale, x + panelW - 30 * scale, y + 218 * scale, tocolor(161, 176, 198, math.floor(225 * alpha)), 1, fonts.body, "left", "top", false, true)
+    exports.aura_ui:uiDrawText("HESAP MERKEZİ", formX, y + 108 * scale, x + panelW - 30 * scale, y + 126 * scale, tocolor(95, 168, 255, math.floor(245 * alpha)), 1, fonts.eyebrow, "left", "top")
+    exports.aura_ui:uiDrawText(title, formX, y + 132 * scale, x + panelW - 30 * scale, y + 174 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.title, "left", "top")
+    exports.aura_ui:uiDrawText(body, formX, y + 188 * scale, x + panelW - 30 * scale, y + 218 * scale, tocolor(161, 176, 198, math.floor(225 * alpha)), 1, fonts.body, "left", "top", false, true)
 
     local tabX = formX
     local tabW = formW
@@ -264,17 +264,17 @@ local function drawForm(alpha)
     local registerHover = exports.gzl_ui:isMouseInPosition(tabX + tabHalfW, layout.tabY, tabHalfW, layout.tabH)
     local loginColor = currentTab == "login" and tocolor(247, 250, 255, math.floor(255 * alpha)) or tocolor(154, 169, 190, math.floor((loginHover and 235 or 180) * alpha))
     local registerColor = currentTab == "register" and tocolor(247, 250, 255, math.floor(255 * alpha)) or tocolor(154, 169, 190, math.floor((registerHover and 235 or 180) * alpha))
-    dxDrawText("GİRİŞ", tabX, layout.tabY, tabX + tabHalfW - 5 * scale, layout.tabY + layout.tabH, loginColor, 1, fonts.tab, "center", "center")
-    dxDrawText("KAYIT", tabX + tabHalfW + 5 * scale, layout.tabY, tabX + tabW, layout.tabY + layout.tabH, registerColor, 1, fonts.tab, "center", "center")
+    exports.aura_ui:uiDrawText("GİRİŞ", tabX, layout.tabY, tabX + tabHalfW - 5 * scale, layout.tabY + layout.tabH, loginColor, 1, fonts.tab, "center", "center")
+    exports.aura_ui:uiDrawText("KAYIT", tabX + tabHalfW + 5 * scale, layout.tabY, tabX + tabW, layout.tabY + layout.tabH, registerColor, 1, fonts.tab, "center", "center")
 
-    dxDrawText("KULLANICI ADI", formX, layout.userLabelY, formX + formW, layout.userLabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("KULLANICI ADI", formX, layout.userLabelY, formX + formW, layout.userLabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     if currentTab == "login" then
         exports.gzl_ui:drawGlassEditBox("login_user", formX, layout.userBoxY, formW, layout.inputH, loginUserOptions)
     else
         exports.gzl_ui:drawGlassEditBox("reg_user", formX, layout.userBoxY, formW, layout.inputH, registerUserOptions)
     end
 
-    dxDrawText("ŞİFRE", formX, layout.passLabelY, formX + formW, layout.passLabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("ŞİFRE", formX, layout.passLabelY, formX + formW, layout.passLabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     if currentTab == "login" then
         exports.gzl_ui:drawGlassEditBox("login_pass", formX, layout.passBoxY, formW, layout.inputH, loginPassOptions)
 
@@ -285,7 +285,7 @@ local function drawForm(alpha)
         local checkX = formX
 
         local textX = checkX + checkSize + 10 * scale
-        local textW = fonts and dxGetTextWidth("Beni Hatırla", 1, fonts.label) or (80 * scale)
+        local textW = fonts and exports.aura_ui:uiTextWidth("Beni Hatırla", 1, fonts.label) or (80 * scale)
         layout.rememberHitW = (18 + 10) * scale + textW + 15 * scale
         local isRemHover = exports.gzl_ui:isMouseInPosition(checkX, remY, layout.rememberHitW, remH)
 
@@ -301,10 +301,10 @@ local function drawForm(alpha)
         end
 
         local labelColor = isRemHover and tocolor(244, 247, 252, math.floor(255 * alpha)) or tocolor(161, 176, 198, math.floor(225 * alpha))
-        dxDrawText("Beni Hatırla", textX, remY, formX + formW, remY + remH, labelColor, 1, fonts.label, "left", "center")
+        exports.aura_ui:uiDrawText("Beni Hatırla", textX, remY, formX + formW, remY + remH, labelColor, 1, fonts.label, "left", "center")
     else
         exports.gzl_ui:drawGlassEditBox("reg_pass", formX, layout.passBoxY, formW, layout.inputH, registerPassOptions)
-        dxDrawText("ŞİFRE TEKRARI", formX, layout.pass2LabelY, formX + formW, layout.pass2LabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+        exports.aura_ui:uiDrawText("ŞİFRE TEKRARI", formX, layout.pass2LabelY, formX + formW, layout.pass2LabelY + 16 * scale, tocolor(178, 193, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
         exports.gzl_ui:drawGlassEditBox("reg_pass2", formX, layout.pass2BoxY, formW, layout.inputH, registerPassConfirmOptions)
     end
 
@@ -319,7 +319,7 @@ local function drawForm(alpha)
     local hintText = currentTab == "login" and "Hesabın yok mu?  #5FA8FFKayıt ol" or "Zaten hesabın var mı?  #5FA8FFGiriş yap"
     local hintHover = exports.gzl_ui:isMouseInPosition(formX, layout.hintY, formW, 24 * scale)
     local hintColor = hintHover and tocolor(230, 238, 249, math.floor(255 * alpha)) or tocolor(154, 169, 190, math.floor(205 * alpha))
-    dxDrawText(hintText, formX, layout.hintY, formX + formW, layout.hintY + 24 * scale, hintColor, 1, fonts.hint, "left", "center", false, false, false, true)
+    exports.aura_ui:uiDrawText(hintText, formX, layout.hintY, formX + formW, layout.hintY + 24 * scale, hintColor, 1, fonts.hint, "left", "center", false, false, false, true)
 end
 
 local function renderAuthGUI()

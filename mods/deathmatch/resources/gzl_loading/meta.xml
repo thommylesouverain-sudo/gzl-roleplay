@@ -1,16 +1,10 @@
 <meta>
-    <info author="GZL Roleplay" type="script" name="GZL Cinematic Loading Screen" version="1.0.0" description="Interactive local CEF loading screen" />
+    <info author="GZL Roleplay" type="script" name="GZL AURA Loading" version="2.0.0" description="Cached AURA DX loading screen" />
     <min_mta_version client="1.6.0" server="1.6.0" />
     <oop>true</oop>
     <download_priority_group>100</download_priority_group>
-    <script src="client/cef_diagnostics.lua" type="client" cache="false" />
+    <include resource="aura_ui" />
     <script src="server.lua" type="server" />
     <script src="client.lua" type="client" cache="false" />
-    <file src="html/index.html" />
-    <file src="html/style.css" />
-    <file src="html/app.js" />
     <file src="assets/background.png" />
-    <file src="assets/fonts/SFUIText-Regular.ttf" />
-    <file src="assets/fonts/SFUIText-Medium.ttf" />
-    <file src="assets/fonts/SFUIText-Semibold.ttf" />
 </meta>

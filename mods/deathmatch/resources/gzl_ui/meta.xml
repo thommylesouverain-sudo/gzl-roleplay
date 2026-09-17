@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="thommy" type="script" name="GZL Roleplay - UI Framework" version="1.0.0" description="GZL Liquid Glass UI Library" />
 
     <file src="assets/fonts/SFUIText-Regular.ttf" />
@@ -16,6 +17,7 @@
 
     <script src="client/fonts.lua" type="client" cache="false" />
     <script src="client/svg.lua" type="client" cache="false" />
+    <script src="client/aura.lua" type="client" cache="false" />
     <script src="client/components.lua" type="client" cache="false" />
     <script src="client/progressbar.lua" type="client" cache="false" />
     <script src="server/main.lua" type="server" />

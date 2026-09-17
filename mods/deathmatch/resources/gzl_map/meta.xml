@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="thommy" type="script" name="GZL GTA V Pause Menu &amp; Big Map" version="1.0.0" />
     
     <script src="client/gui.lua" type="client" />

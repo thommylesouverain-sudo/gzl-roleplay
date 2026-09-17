@@ -16,7 +16,7 @@ local function getBootStatus()
     end
 
     local elapsed = getTickCount() - startedAt
-    return 0, 0, true, elapsed >= 12000
+    return 0, 0, elapsed < 12000, elapsed >= 12000
 end
 
 local bootTimer = nil

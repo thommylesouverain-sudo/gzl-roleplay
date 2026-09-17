@@ -296,7 +296,6 @@ addEventHandler("onClientRender", root, function()
     dxDrawText(rightText, startX, textY, startX + totalWidth, barY, tocolor(255, 255, 255, textAlpha), 1, font, "right", "top", false, false, true, false)
 
     local segRadius = math.floor(barHeight / 2)
-    local segSVG = getSegmentPillSVG(segWidth, barHeight, segRadius)
 
     local cr, cg, cb = pb.color[1] or 239, pb.color[2] or 68, pb.color[3] or 68
     local bgR = pb.bgColor[1] or 255
@@ -307,21 +306,20 @@ addEventHandler("onClientRender", root, function()
     for i = 1, segmentCount do
         local segX = startX + (i - 1) * (segWidth + gap)
 
-        dxDrawImage(segX, barY, segWidth, barHeight, segSVG, 0, 0, 0, tocolor(bgR, bgG, bgB, bgA), true)
+        drawRoundedRectangle(segX, barY, segWidth, barHeight, segRadius, tocolor(bgR, bgG, bgB, bgA), true)
 
         local segStart = (i - 1) / segmentCount
         local segEnd = i / segmentCount
 
         if pb.progress >= segEnd then
 
-            dxDrawImage(segX, barY, segWidth, barHeight, segSVG, 0, 0, 0, tocolor(cr, cg, cb, alpha), true)
+            drawRoundedRectangle(segX, barY, segWidth, barHeight, segRadius, tocolor(cr, cg, cb, alpha), true)
         elseif pb.progress > segStart then
 
             local segRatio = (pb.progress - segStart) / (segEnd - segStart)
             local fillW = math.max(barHeight, math.floor(segWidth * segRatio))
             fillW = math.min(segWidth, fillW)
-            local partialSVG = getSegmentPillSVG(fillW, barHeight, segRadius)
-            dxDrawImage(segX, barY, fillW, barHeight, partialSVG, 0, 0, 0, tocolor(cr, cg, cb, alpha), true)
+            drawRoundedRectangle(segX, barY, fillW, barHeight, segRadius, tocolor(cr, cg, cb, alpha), true)
         end
     end
 end)

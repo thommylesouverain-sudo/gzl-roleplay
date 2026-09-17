@@ -31,6 +31,7 @@ Config.Phases = {
             { name = "gzl_anticheat", desc = "Sunucu event ve veri korumasi" },
             { name = "gzl_logs", desc = "Merkezi SQLite Audit Trail & Log Motoru" },
             { name = "gzl_core", desc = "Core RP Altyapısı & Veritabanı" },
+            { name = "bone_attach", desc = "Kemik Eklenti (Bone Attach) Altyapısı" },
             { name = "gps", desc = "Yol Ağı & Rota Hesaplama Motoru" },
             { name = "gzl_map", desc = "Özel Los Santos Haritaları & İnteriorlar" },
         }

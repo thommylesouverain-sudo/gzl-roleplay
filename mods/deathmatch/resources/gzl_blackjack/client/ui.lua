@@ -8,25 +8,8 @@ local cardTextures = {}
 local chipTextures = {}
 
 local rounded = {}
-function dxDrawRoundedRectangle(id, x, y, w, h, radius, color, post)
-    if not id then id = "def" end
-    w = math.max(1, math.floor(w))
-    h = math.max(1, math.floor(h))
-    radius = math.max(0, math.min(math.floor(radius or 0), math.floor(w * 0.5), math.floor(h * 0.5)))
-
-    if not rounded[id] then
-        rounded[id] = {}
-    end
-    if not rounded[id][w] then
-        rounded[id][w] = {}
-    end
-    if not rounded[id][w][h] then
-        local path = string.format([[<svg width="%s" height="%s" viewBox="0 0 %s %s" fill="none" xmlns="http://www.w3.org/2000/svg"><rect opacity="1" width="%s" height="%s" rx="%s" fill="#FFFFFF"/></svg>]], w, h, w, h, w, h, radius)
-        rounded[id][w][h] = svgCreate(w, h, path)
-    end
-    if rounded[id][w][h] then
-        dxDrawImage(x, y, w, h, rounded[id][w][h], 0, 0, 0, color, (post or false))
-    end
+function dxDrawRoundedRectangle(id,x,y,w,h,radius,color,post)
+    return exports.aura_ui:uiDrawRoundedRectangle(x,y,w,h,radius,color,post)
 end
 
 local function drawModernGlass(id, x, y, w, h, radius, bgAlpha, borderCol, accentColor, postGUI)
@@ -44,13 +27,13 @@ local function drawModernGlass(id, x, y, w, h, radius, bgAlpha, borderCol, accen
 
     local innerW = w - radius * 2
     if innerW > 0 then
-        dxDrawRectangle(x + radius, y + 1, innerW, 1, tocolor(255, 255, 255, 30), postGUI)
+        exports.aura_ui:uiDrawRectangle(x + radius, y + 1, innerW, 1, tocolor(255, 255, 255, 30), postGUI)
     end
 
     if accentColor then
         local accW = math.min(w - 24, math.floor(w * 0.75))
         local accX = x + (w - accW) / 2
-        dxDrawRectangle(accX, y, accW, 2, accentColor, postGUI)
+        exports.aura_ui:uiDrawRectangle(accX, y, accW, 2, accentColor, postGUI)
     end
 end
 
@@ -240,7 +223,7 @@ addEventHandler("onClientRender", root, function()
             local bW, bH = 154, 28
             local bX, bY = dsX - bW/2, dsY - bH/2
             drawModernGlass("dealer_badge", bX, bY, bW, bH, 8, 235, tocolor(212, 175, 55, 180), tocolor(212, 175, 55, 255))
-            dxDrawText(dScoreText, bX, bY, bX + bW, bY + bH,
+            exports.aura_ui:uiDrawText(dScoreText, bX, bY, bX + bW, bY + bH,
                 tocolor(212, 175, 55, 255), 1.0, fontScoreBadge, "center", "center")
         end
     end
@@ -311,7 +294,7 @@ addEventHandler("onClientRender", root, function()
                     local pillAccent = isActiveHand and tocolor(212, 175, 55, 255) or nil
                     drawModernGlass("seat_badge_" .. sIdx .. "_" .. hIdx, pillX, pillY, pillW, pillH, 8, 230, pillBorder, pillAccent)
 
-                    dxDrawText(badgeText, pillX + 4, pillY, pillX + pillW, pillY + pillH,
+                    exports.aura_ui:uiDrawText(badgeText, pillX + 4, pillY, pillX + pillW, pillY + pillH,
                         isActiveHand and tocolor(212, 175, 55, 255) or (isLocal and tocolor(56, 189, 248, 240) or tocolor(230, 230, 230, 220)),
                         1.0, fontSmall, "center", "center")
                 end
@@ -325,7 +308,7 @@ addEventHandler("onClientRender", root, function()
 
     drawModernGlass("ui_header", headerX, headerY, headerW, headerH, 16, 235, tocolor(212, 175, 55, 80), tocolor(212, 175, 55, 240))
 
-    dxDrawText("♦ DIAMOND CASINO & RESORT ♦",
+    exports.aura_ui:uiDrawText("♦ DIAMOND CASINO & RESORT ♦",
         headerX, headerY + 6, headerX + headerW, headerY + 24,
         tocolor(212, 175, 55, 255), 1.0, fontTitle, "center", "center")
 
@@ -366,10 +349,10 @@ addEventHandler("onClientRender", root, function()
     dxDrawRoundedRectangle("hdr_status_pill", statusX, statusY, statusW, statusH, 10, tocolor(15, 20, 32, 220))
     dxDrawRoundedRectangle("hdr_status_border", statusX, statusY, statusW, statusH, 10, stateBadgeCol)
     dxDrawRoundedRectangle("hdr_status_inner", statusX + 1, statusY + 1, statusW - 2, statusH - 2, 9, tocolor(15, 20, 32, 240))
-    dxDrawText(stateText, statusX, statusY, statusX + statusW, statusY + statusH,
+    exports.aura_ui:uiDrawText(stateText, statusX, statusY, statusX + statusW, statusY + statusH,
         stateBadgeCol, 1.0, fontSmall, "center", "center")
 
-    dxDrawText(limitText, headerX + 16, headerY + 28, headerX + statusW, headerY + statusH + 28,
+    exports.aura_ui:uiDrawText(limitText, headerX + 16, headerY + 28, headerX + statusW, headerY + statusH + 28,
         tocolor(148, 163, 184, 200), 1.0, fontSmall, "left", "center")
 
     local hintW, hintH = 220, 30
@@ -378,7 +361,7 @@ addEventHandler("onClientRender", root, function()
     dxDrawRoundedRectangle("ui_hint_bg", hintX, hintY, hintW, hintH, 15, tocolor(10, 14, 24, 210))
     dxDrawRoundedRectangle("ui_hint_brd", hintX, hintY, hintW, hintH, 15, tocolor(255, 255, 255, 35))
     dxDrawRoundedRectangle("ui_hint_in", hintX + 1, hintY + 1, hintW - 2, hintH - 2, 14, tocolor(10, 14, 24, 240))
-    dxDrawText("[V] Kamera  •  [F] Masadan Kalk", hintX, hintY, hintX + hintW, hintY + hintH,
+    exports.aura_ui:uiDrawText("[V] Kamera  •  [F] Masadan Kalk", hintX, hintY, hintX + hintW, hintY + hintH,
         tocolor(226, 232, 240, 200), 1.0, fontSmall, "center", "center")
 
     local sub = SoundManager.getActiveSubtitle()
@@ -389,7 +372,7 @@ addEventHandler("onClientRender", root, function()
         local subY = headerY + headerH + 12
 
         drawModernGlass("ui_sub", subX, subY, subW, subH, 10, 240, tocolor(212, 175, 55, 80), tocolor(212, 175, 55, 255))
-        dxDrawText("“ " .. sub .. " ”", subX, subY, subX + subW, subY + subH,
+        exports.aura_ui:uiDrawText("“ " .. sub .. " ”", subX, subY, subX + subW, subY + subH,
             tocolor(255, 255, 255, 235), 1.0, fontNormal, "center", "center")
     end
 
@@ -404,15 +387,15 @@ addEventHandler("onClientRender", root, function()
 
         drawModernGlass("ui_bet_panel", betPanelX, betPanelY, betPanelW, betPanelH, 16, 240, tocolor(212, 175, 55, 80), tocolor(212, 175, 55, 255))
 
-        dxDrawText("◆ BAHİS SEÇİMİ", betPanelX + 18, betPanelY + 6, betPanelX + 180, betPanelY + 28,
+        exports.aura_ui:uiDrawText("◆ BAHİS SEÇİMİ", betPanelX + 18, betPanelY + 6, betPanelX + 180, betPanelY + 28,
             tocolor(212, 175, 55, 255), 1.0, fontTitle, "left", "center")
 
         local finText = string.format("Nakit: #10b981$%s#ffffff  |  Banka: #38bdf8$%s#ffffff  •  Toplam: #f1f5f9$%s",
             formatMoney(charCash), formatMoney(charBank), formatMoney(totalMoney))
-        dxDrawText(finText, betPanelX + 180, betPanelY + 6, betPanelX + betPanelW - 18, betPanelY + 28,
+        exports.aura_ui:uiDrawText(finText, betPanelX + 180, betPanelY + 6, betPanelX + betPanelW - 18, betPanelY + 28,
             tocolor(255, 255, 255, 230), 1.0, fontNormal, "right", "center", false, false, false, true)
 
-        dxDrawRectangle(betPanelX + 16, betPanelY + 30, betPanelW - 32, 1, tocolor(255, 255, 255, 20))
+        exports.aura_ui:uiDrawRectangle(betPanelX + 16, betPanelY + 30, betPanelW - 32, 1, tocolor(255, 255, 255, 20))
 
         local chipSize = 48
         local chipGap = 12
@@ -478,8 +461,8 @@ addEventHandler("onClientRender", root, function()
         local clearBg = isClearHov and tocolor(225, 29, 72, 235) or tocolor(190, 18, 60, 160)
         dxDrawRoundedRectangle("btn_clear_shd", clearX - 1, btnY + 1, btnW + 2, btnH + 2, 8, tocolor(0, 0, 0, 80))
         dxDrawRoundedRectangle("btn_clear", clearX, btnY, btnW, btnH, 8, clearBg)
-        dxDrawRectangle(clearX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isClearHov and 80 or 40))
-        dxDrawText("TEMİZLE", clearX, btnY, clearX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
+        exports.aura_ui:uiDrawRectangle(clearX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isClearHov and 80 or 40))
+        exports.aura_ui:uiDrawText("TEMİZLE", clearX, btnY, clearX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
 
         if isClearHov and isM1 and not wasClickHandled then
             wasClickHandled = true
@@ -493,8 +476,8 @@ addEventHandler("onClientRender", root, function()
         local doubleBg = isDoubleHov and tocolor(37, 99, 235, 235) or tocolor(29, 78, 216, 160)
         dxDrawRoundedRectangle("btn_double_shd", doubleX - 1, btnY + 1, btnW + 2, btnH + 2, 8, tocolor(0, 0, 0, 80))
         dxDrawRoundedRectangle("btn_double", doubleX, btnY, btnW, btnH, 8, doubleBg)
-        dxDrawRectangle(doubleX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isDoubleHov and 80 or 40))
-        dxDrawText("2X", doubleX, btnY, doubleX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
+        exports.aura_ui:uiDrawRectangle(doubleX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isDoubleHov and 80 or 40))
+        exports.aura_ui:uiDrawText("2X", doubleX, btnY, doubleX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
 
         if isDoubleHov and isM1 and not wasClickHandled then
             wasClickHandled = true
@@ -508,8 +491,8 @@ addEventHandler("onClientRender", root, function()
         local maxBg = isMaxHov and tocolor(217, 119, 6, 235) or tocolor(180, 83, 9, 160)
         dxDrawRoundedRectangle("btn_max_shd", maxX - 1, btnY + 1, btnW + 2, btnH + 2, 8, tocolor(0, 0, 0, 80))
         dxDrawRoundedRectangle("btn_max", maxX, btnY, btnW, btnH, 8, maxBg)
-        dxDrawRectangle(maxX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isMaxHov and 80 or 40))
-        dxDrawText("MAKS", maxX, btnY, maxX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
+        exports.aura_ui:uiDrawRectangle(maxX + 6, btnY + 1, btnW - 12, 1, tocolor(255, 255, 255, isMaxHov and 80 or 40))
+        exports.aura_ui:uiDrawText("MAKS", maxX, btnY, maxX + btnW, btnY + btnH, tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
 
         if isMaxHov and isM1 and not wasClickHandled then
             wasClickHandled = true
@@ -541,10 +524,10 @@ addEventHandler("onClientRender", root, function()
         dxDrawRoundedRectangle("btn_conf_shd", confirmX - 1, confirmY + 1, confirmW + 2, confirmH + 2, 10, tocolor(0, 0, 0, 90))
         dxDrawRoundedRectangle("btn_conf", confirmX, confirmY, confirmW, confirmH, 10, confirmBg)
         if canBet then
-            dxDrawRectangle(confirmX + 12, confirmY + 1, confirmW - 24, 1, tocolor(255, 255, 255, isConfirmHov and 80 or 40))
+            exports.aura_ui:uiDrawRectangle(confirmX + 12, confirmY + 1, confirmW - 24, 1, tocolor(255, 255, 255, isConfirmHov and 80 or 40))
         end
 
-        dxDrawText(confirmText, confirmX, confirmY, confirmX + confirmW, confirmY + confirmH,
+        exports.aura_ui:uiDrawText(confirmText, confirmX, confirmY, confirmX + confirmW, confirmY + confirmH,
             tocolor(255, 255, 255, canBet and 255 or 140), 1.0, fontButton, "center", "center")
 
         if canBet and isConfirmHov and isM1 and not wasClickHandled then
@@ -590,14 +573,14 @@ addEventHandler("onClientRender", root, function()
             dxDrawRoundedRectangle("act_bg_" .. act.id, bx, btnY, btnW, btnH, 10, col)
 
             if act.enabled then
-                dxDrawRectangle(bx + 8, btnY + 1, btnW - 16, 1, tocolor(255, 255, 255, isHov and 80 or 40))
+                exports.aura_ui:uiDrawRectangle(bx + 8, btnY + 1, btnW - 16, 1, tocolor(255, 255, 255, isHov and 80 or 40))
             end
 
             local keyText = "[" .. act.key .. "]"
-            dxDrawText(keyText, bx, btnY + 8, bx + btnW, btnY + 24,
+            exports.aura_ui:uiDrawText(keyText, bx, btnY + 8, bx + btnW, btnY + 24,
                 tocolor(255, 255, 255, act.enabled and 210 or 80), 1.0, fontSmall, "center", "center")
 
-            dxDrawText(act.title, bx, btnY + 26, bx + btnW, btnY + btnH - 6,
+            exports.aura_ui:uiDrawText(act.title, bx, btnY + 26, bx + btnW, btnY + btnH - 6,
                 tocolor(255, 255, 255, act.enabled and 255 or 90), 1.0, fontButton, "center", "center")
 
             if isHov and isM1 and not wasClickHandled then
@@ -617,20 +600,20 @@ addEventHandler("onClientRender", root, function()
         local canAffordIns = (totalMoney >= insCost)
 
         if localSeat.isInsured then
-            dxDrawText("★ SİGORTA KABUL EDİLDİ ★", insPanelX, insPanelY + 16, insPanelX + insPanelW, insPanelY + 40,
+            exports.aura_ui:uiDrawText("★ SİGORTA KABUL EDİLDİ ★", insPanelX, insPanelY + 16, insPanelX + insPanelW, insPanelY + 40,
                 tocolor(168, 85, 247, 255), 1.0, fontTitle, "center", "center")
-            dxDrawText(string.format("Sigorta: $%s (2:1)  •  Kurpiyerin kapalı kartı bekleniyor... (%ds)",
+            exports.aura_ui:uiDrawText(string.format("Sigorta: $%s (2:1)  •  Kurpiyerin kapalı kartı bekleniyor... (%ds)",
                 formatMoney(localSeat.insuranceBet or insCost), currentTable.timerSeconds or 0),
                 insPanelX, insPanelY + 46, insPanelX + insPanelW, insPanelY + 70,
                 tocolor(255, 255, 255, 220), 1.0, fontNormal, "center", "center")
         elseif localSeat.insuranceDeclined then
-            dxDrawText("SİGORTA PAS GEÇİLDİ", insPanelX, insPanelY + 16, insPanelX + insPanelW, insPanelY + 40,
+            exports.aura_ui:uiDrawText("SİGORTA PAS GEÇİLDİ", insPanelX, insPanelY + 16, insPanelX + insPanelW, insPanelY + 40,
                 tocolor(160, 160, 160, 255), 1.0, fontTitle, "center", "center")
-            dxDrawText(string.format("Kurpiyerin kapalı kart kontrolü bekleniyor... (%ds)", currentTable.timerSeconds or 0),
+            exports.aura_ui:uiDrawText(string.format("Kurpiyerin kapalı kart kontrolü bekleniyor... (%ds)", currentTable.timerSeconds or 0),
                 insPanelX, insPanelY + 46, insPanelX + insPanelW, insPanelY + 70,
                 tocolor(200, 200, 200, 200), 1.0, fontNormal, "center", "center")
         else
-            dxDrawText(string.format("KURPİYER AS AÇTI! SİGORTA ALMAK İSTİYOR MUSUNUZ? (%ds)", currentTable.timerSeconds or 0),
+            exports.aura_ui:uiDrawText(string.format("KURPİYER AS AÇTI! SİGORTA ALMAK İSTİYOR MUSUNUZ? (%ds)", currentTable.timerSeconds or 0),
                 insPanelX, insPanelY + 10, insPanelX + insPanelW, insPanelY + 32,
                 tocolor(212, 175, 55, 255), 1.0, fontButton, "center", "center")
 
@@ -643,7 +626,7 @@ addEventHandler("onClientRender", root, function()
 
             dxDrawRoundedRectangle("btn_ins_shd", insBtnX - 1, btnY + 1, btnW + 2, btnH + 2, 8, tocolor(0, 0, 0, 80))
             dxDrawRoundedRectangle("btn_ins", insBtnX, btnY, btnW, btnH, 8, insBg)
-            dxDrawText(string.format("SİGORTA AL ($%s) [I]", formatMoney(insCost)),
+            exports.aura_ui:uiDrawText(string.format("SİGORTA AL ($%s) [I]", formatMoney(insCost)),
                 insBtnX, btnY, insBtnX + btnW, btnY + btnH,
                 tocolor(255, 255, 255, canAffordIns and 255 or 120), 1.0, fontSmall, "center", "center")
 
@@ -658,7 +641,7 @@ addEventHandler("onClientRender", root, function()
 
             dxDrawRoundedRectangle("btn_pass_shd", passBtnX - 1, btnY + 1, btnW + 2, btnH + 2, 8, tocolor(0, 0, 0, 80))
             dxDrawRoundedRectangle("btn_pass", passBtnX, btnY, btnW, btnH, 8, passBg)
-            dxDrawText("PAS GEÇ [P]", passBtnX, btnY, passBtnX + btnW, btnY + btnH,
+            exports.aura_ui:uiDrawText("PAS GEÇ [P]", passBtnX, btnY, passBtnX + btnW, btnY + btnH,
                 tocolor(255, 255, 255, 255), 1.0, fontSmall, "center", "center")
 
             if isPassHov and isM1 and not wasClickHandled then
@@ -706,9 +689,9 @@ addEventHandler("onClientRender", root, function()
         end
 
         drawModernGlass("ui_payout_banner", bannerX, bannerY, bannerW, bannerH, 16, 245, tocolor(255, 255, 255, 60), accent)
-        dxDrawText(title, bannerX, bannerY + 16, bannerX + bannerW, bannerY + 42,
+        exports.aura_ui:uiDrawText(title, bannerX, bannerY + 16, bannerX + bannerW, bannerY + 42,
             accent, 1.0, fontTitle, "center", "center")
-        dxDrawText(subTitle, bannerX, bannerY + 46, bannerX + bannerW, bannerY + 74,
+        exports.aura_ui:uiDrawText(subTitle, bannerX, bannerY + 46, bannerX + bannerW, bannerY + 74,
             tocolor(255, 255, 255, 220), 1.0, fontNormal, "center", "center")
     end
 
@@ -734,7 +717,7 @@ addEventHandler("onClientRender", root, function()
             drawModernGlass("my_cards_hud", hudX, hudY, hudW, hudH, 14, 235, tocolor(255, 255, 255, 40), isTurnActive and tocolor(212, 175, 55, 255) or tocolor(56, 189, 248, 200))
 
             local headerScore = string.format("ELİNİZ: %s", scText)
-            dxDrawText(headerScore, hudX + 16, hudY + 6, hudX + hudW - 16, hudY + 24,
+            exports.aura_ui:uiDrawText(headerScore, hudX + 16, hudY + 6, hudX + hudW - 16, hudY + 24,
                 activeHand.isBlackjack and tocolor(212, 175, 55, 255) or (activeHand.isBust and tocolor(239, 68, 68, 255) or tocolor(255, 255, 255, 240)),
                 1.0, fontTitle, "center", "center")
 
@@ -750,7 +733,7 @@ addEventHandler("onClientRender", root, function()
                     dxDrawRoundedRectangle("card_fallback_" .. cIdx, cx, cardsY, cardW, cardH, 4, tocolor(240, 240, 240, 255))
                     local isRed = (card.suit == "H" or card.suit == "D")
                     local suitChar = (card.suit == "H" and "♥") or (card.suit == "D" and "♦") or (card.suit == "C" and "♣") or "♠"
-                    dxDrawText(tostring(card.rank) .. "\n" .. suitChar, cx, cardsY, cx + cardW, cardsY + cardH,
+                    exports.aura_ui:uiDrawText(tostring(card.rank) .. "\n" .. suitChar, cx, cardsY, cx + cardW, cardsY + cardH,
                         isRed and tocolor(220, 30, 30, 255) or tocolor(20, 20, 20, 255), 1.0, fontSmall, "center", "center")
                 end
             end

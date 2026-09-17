@@ -409,7 +409,7 @@ function saveCharacter(player)
         end
     end
 
-    local customData = getElementData(player, "char:customization")
+    local customData = getElementData(player, "window_cleaning:origCustom") or getElementData(player, "char:customization")
     local customJson = (type(customData) == "table") and toJSON(customData) or nil
 
     local db = getCharacterDB()

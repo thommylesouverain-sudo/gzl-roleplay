@@ -159,17 +159,17 @@ local function drawCustomEditBox(fieldId, x, y, w, h, placeholder, font, fontSma
         exports.gzl_ui:drawRoundedRectangle(x, y, w, h, 8, tocolor(15, 23, 42, bgAlpha))
         exports.gzl_ui:drawRoundedBorder(x, y, w, h, 8, 1.0, borderColor)
     else
-        dxDrawRectangle(x, y, w, h, tocolor(15, 23, 42, bgAlpha))
+        exports.aura_ui:uiDrawRectangle(x, y, w, h, tocolor(15, 23, 42, bgAlpha))
     end
 
     if string.len(text) == 0 and not isActive then
-        dxDrawText(placeholder, x + 12, y, x + w - 12, y + h, tocolor(100, 116, 139, 180), 1, font, "left", "center", true)
+        exports.aura_ui:uiDrawText(placeholder, x + 12, y, x + w - 12, y + h, tocolor(100, 116, 139, 180), 1, font, "left", "center", true)
     else
         local displayText = text
         if isActive and (getTickCount() % 1000 < 500) then
             displayText = displayText .. "|"
         end
-        dxDrawText(displayText, x + 12, y, x + w - 12, y + h, tocolor(255, 255, 255, 240), 1, font, "left", "center", true)
+        exports.aura_ui:uiDrawText(displayText, x + 12, y, x + w - 12, y + h, tocolor(255, 255, 255, 240), 1, font, "left", "center", true)
     end
 
     return isHovered
@@ -199,14 +199,14 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawGlassPanel then
         exports.gzl_ui:drawGlassPanel(panelX, panelY, panelW, panelH, 16, tocolor(255, 255, 255, globalAlpha))
     else
-        dxDrawRectangle(panelX, panelY, panelW, panelH, tocolor(15, 23, 42, math.floor(245 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(panelX, panelY, panelW, panelH, tocolor(15, 23, 42, math.floor(245 * alphaMult)))
     end
 
     local headerH = 62
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, 14, tocolor(30, 41, 59, math.floor(160 * alphaMult)))
     else
-        dxDrawRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, tocolor(30, 41, 59, math.floor(160 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, tocolor(30, 41, 59, math.floor(160 * alphaMult)))
     end
 
     local logoSize = 34
@@ -215,18 +215,18 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(logoX, logoY, logoSize, logoSize, 8, tocolor(56, 189, 248, math.floor(240 * alphaMult)))
     else
-        dxDrawRectangle(logoX, logoY, logoSize, logoSize, tocolor(56, 189, 248, math.floor(240 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(logoX, logoY, logoSize, logoSize, tocolor(56, 189, 248, math.floor(240 * alphaMult)))
     end
-    dxDrawText("$", logoX, logoY, logoX + logoSize, logoY + logoSize, tocolor(15, 23, 42, globalAlpha), 1, fontLarge, "center", "center")
+    exports.aura_ui:uiDrawText("$", logoX, logoY, logoX + logoSize, logoY + logoSize, tocolor(15, 23, 42, globalAlpha), 1, fontLarge, "center", "center")
 
-    dxDrawText("Bank of San Andreas", logoX + logoSize + 12, panelY + 12, panelX + 350, panelY + 32, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
-    dxDrawText("GZL Ulusal Finans & ATM Ağı", logoX + logoSize + 12, panelY + 32, panelX + 350, panelY + 50, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
+    exports.aura_ui:uiDrawText("Bank of San Andreas", logoX + logoSize + 12, panelY + 12, panelX + 350, panelY + 32, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
+    exports.aura_ui:uiDrawText("GZL Ulusal Finans & ATM Ağı", logoX + logoSize + 12, panelY + 32, panelX + 350, panelY + 50, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
 
     local infoRight = panelX + panelW - 55
     local userTitle = atmData.charName or "Oyuncu"
     local accountText = "Hesap ID: #" .. tostring(atmData.charId)
-    dxDrawText(userTitle, infoRight - 220, panelY + 12, infoRight, panelY + 32, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "right", "center")
-    dxDrawText(accountText, infoRight - 220, panelY + 32, infoRight, panelY + 50, tocolor(56, 189, 248, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
+    exports.aura_ui:uiDrawText(userTitle, infoRight - 220, panelY + 12, infoRight, panelY + 32, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "right", "center")
+    exports.aura_ui:uiDrawText(accountText, infoRight - 220, panelY + 32, infoRight, panelY + 50, tocolor(56, 189, 248, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
 
     local closeBtnX = panelX + panelW - 44
     local closeBtnY = panelY + 14
@@ -236,9 +236,9 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(closeBtnX, closeBtnY, closeBtnSize, closeBtnSize, 8, closeBgColor)
     else
-        dxDrawRectangle(closeBtnX, closeBtnY, closeBtnSize, closeBtnSize, closeBgColor)
+        exports.aura_ui:uiDrawRectangle(closeBtnX, closeBtnY, closeBtnSize, closeBtnSize, closeBgColor)
     end
-    dxDrawText("✕", closeBtnX, closeBtnY, closeBtnX + closeBtnSize, closeBtnY + closeBtnSize, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
+    exports.aura_ui:uiDrawText("✕", closeBtnX, closeBtnY, closeBtnX + closeBtnSize, closeBtnY + closeBtnSize, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
 
     local navX = panelX + 16
     local navY = panelY + headerH + 16
@@ -260,10 +260,10 @@ addEventHandler("onClientRender", root, function()
                 exports.gzl_ui:drawRoundedBorder(navX, tabY, navW, navItemH, 8, 1.0, tocolor(56, 189, 248, math.floor(80 * alphaMult)))
             end
         else
-            dxDrawRectangle(navX, tabY, navW, navItemH, tabBg)
+            exports.aura_ui:uiDrawRectangle(navX, tabY, navW, navItemH, tabBg)
         end
 
-        dxDrawText(tab.title, navX + 14, tabY, navX + navW - 10, tabY + navItemH, tabTextColor, 1, fontBold, "left", "center")
+        exports.aura_ui:uiDrawText(tab.title, navX + 14, tabY, navX + navW - 10, tabY + navItemH, tabTextColor, 1, fontBold, "left", "center")
     end
 
     local contentX = panelX + navW + 30
@@ -275,7 +275,7 @@ addEventHandler("onClientRender", root, function()
         exports.gzl_ui:drawRoundedRectangle(contentX, contentY, contentW, contentH, 12, tocolor(30, 41, 59, math.floor(120 * alphaMult)))
         exports.gzl_ui:drawRoundedBorder(contentX, contentY, contentW, contentH, 12, 1.0, tocolor(51, 65, 85, math.floor(140 * alphaMult)))
     else
-        dxDrawRectangle(contentX, contentY, contentW, contentH, tocolor(30, 41, 59, math.floor(120 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(contentX, contentY, contentW, contentH, tocolor(30, 41, 59, math.floor(120 * alphaMult)))
     end
 
     if activeTab == 1 then
@@ -288,24 +288,24 @@ addEventHandler("onClientRender", root, function()
             exports.gzl_ui:drawRoundedRectangle(bankCardX, cardY, cardW, cardH, 10, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
             exports.gzl_ui:drawRoundedBorder(bankCardX, cardY, cardW, cardH, 10, 1.0, tocolor(56, 189, 248, math.floor(90 * alphaMult)))
         else
-            dxDrawRectangle(bankCardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(bankCardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
         end
-        dxDrawText("BANKA HESABI", bankCardX + 14, cardY + 12, bankCardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("$" .. formatMoney(atmData.bank), bankCardX + 14, cardY + 36, bankCardX + cardW - 14, cardY + 74, tocolor(56, 189, 248, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("BANKA HESABI", bankCardX + 14, cardY + 12, bankCardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("$" .. formatMoney(atmData.bank), bankCardX + 14, cardY + 36, bankCardX + cardW - 14, cardY + 74, tocolor(56, 189, 248, globalAlpha), 1, fontLarge, "left", "center")
 
         local cashCardX = contentX + 14 + cardW + 8
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(cashCardX, cardY, cardW, cardH, 10, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
             exports.gzl_ui:drawRoundedBorder(cashCardX, cardY, cardW, cardH, 10, 1.0, tocolor(52, 211, 153, math.floor(90 * alphaMult)))
         else
-            dxDrawRectangle(cashCardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(cashCardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
         end
-        dxDrawText("CÜZDAN NAKİT", cashCardX + 14, cardY + 12, cashCardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("$" .. formatMoney(atmData.cash), cashCardX + 14, cardY + 36, cashCardX + cardW - 14, cardY + 74, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("CÜZDAN NAKİT", cashCardX + 14, cardY + 12, cashCardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("$" .. formatMoney(atmData.cash), cashCardX + 14, cardY + 36, cashCardX + cardW - 14, cardY + 74, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
 
         local secTitleY = cardY + cardH + 18
-        dxDrawText("HIZLI NAKİT ÇEKİM", contentX + 14, secTitleY, contentX + contentW, secTitleY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
-        dxDrawText("Banka bakiyenizden tek tıkla nakit çekin.", contentX + 14, secTitleY + 20, contentX + contentW, secTitleY + 36, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("HIZLI NAKİT ÇEKİM", contentX + 14, secTitleY, contentX + contentW, secTitleY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
+        exports.aura_ui:uiDrawText("Banka bakiyenizden tek tıkla nakit çekin.", contentX + 14, secTitleY + 20, contentX + contentW, secTitleY + 36, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local gridX = contentX + 14
         local gridY = secTitleY + 44
@@ -332,11 +332,11 @@ addEventHandler("onClientRender", root, function()
                     exports.gzl_ui:drawRoundedBorder(btnX, btnY, colW, rowH, 8, 1.0, tocolor(51, 65, 85, math.floor(120 * alphaMult)))
                 end
             else
-                dxDrawRectangle(btnX, btnY, colW, rowH, btnBg)
+                exports.aura_ui:uiDrawRectangle(btnX, btnY, colW, rowH, btnBg)
             end
 
-            dxDrawText("$" .. formatMoney(val), btnX, btnY + 8, btnX + colW, btnY + 30, textCol, 1, fontTitle, "center", "center")
-            dxDrawText("Nakit Çek", btnX, btnY + 28, btnX + colW, btnY + 48, isBtnHov and tocolor(15, 23, 42, math.floor(200 * alphaMult)) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "center", "center")
+            exports.aura_ui:uiDrawText("$" .. formatMoney(val), btnX, btnY + 8, btnX + colW, btnY + 30, textCol, 1, fontTitle, "center", "center")
+            exports.aura_ui:uiDrawText("Nakit Çek", btnX, btnY + 28, btnX + colW, btnY + 48, isBtnHov and tocolor(15, 23, 42, math.floor(200 * alphaMult)) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "center", "center")
         end
 
     elseif activeTab == 2 then
@@ -349,13 +349,13 @@ addEventHandler("onClientRender", root, function()
             exports.gzl_ui:drawRoundedRectangle(cardX, cardY, cardW, cardH, 10, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
             exports.gzl_ui:drawRoundedBorder(cardX, cardY, cardW, cardH, 10, 1.0, tocolor(56, 189, 248, math.floor(90 * alphaMult)))
         else
-            dxDrawRectangle(cardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
         end
-        dxDrawText("ÇEKİLEBİLİR BANKA BAKİYESİ", cardX + 14, cardY + 12, cardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("$" .. formatMoney(atmData.bank), cardX + 14, cardY + 32, cardX + cardW - 14, cardY + 66, tocolor(56, 189, 248, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("ÇEKİLEBİLİR BANKA BAKİYESİ", cardX + 14, cardY + 12, cardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("$" .. formatMoney(atmData.bank), cardX + 14, cardY + 32, cardX + cardW - 14, cardY + 66, tocolor(56, 189, 248, globalAlpha), 1, fontLarge, "left", "center")
 
         local inputY = cardY + cardH + 24
-        dxDrawText("ÇEKİLECEK TUTAR ($)", cardX, inputY, cardX + cardW, inputY + 18, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
+        exports.aura_ui:uiDrawText("ÇEKİLECEK TUTAR ($)", cardX, inputY, cardX + cardW, inputY + 18, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
 
         local inputH = 46
         drawCustomEditBox("withdraw_amount", cardX, inputY + 24, cardW, inputH, "Tutar girin... (örn. 500)", fontMedium, fontSmall)
@@ -379,9 +379,9 @@ addEventHandler("onClientRender", root, function()
                 exports.gzl_ui:drawRoundedRectangle(pX, pctY, pctW, pctH, 6, pBg)
                 exports.gzl_ui:drawRoundedBorder(pX, pctY, pctW, pctH, 6, 1.0, tocolor(51, 65, 85, math.floor(120 * alphaMult)))
             else
-                dxDrawRectangle(pX, pctY, pctW, pctH, pBg)
+                exports.aura_ui:uiDrawRectangle(pX, pctY, pctW, pctH, pBg)
             end
-            dxDrawText(opt.label, pX, pctY, pX + pctW, pctY + pctH, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
+            exports.aura_ui:uiDrawText(opt.label, pX, pctY, pX + pctW, pctY + pctH, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
         end
 
         local actBtnY = pctY + pctH + 24
@@ -394,9 +394,9 @@ addEventHandler("onClientRender", root, function()
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(cardX, actBtnY, cardW, actBtnH, 8, actBg)
         else
-            dxDrawRectangle(cardX, actBtnY, cardW, actBtnH, actBg)
+            exports.aura_ui:uiDrawRectangle(cardX, actBtnY, cardW, actBtnH, actBg)
         end
-        dxDrawText("PARAYI ÇEK", cardX, actBtnY, cardX + cardW, actBtnY + actBtnH, canWithdraw and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
+        exports.aura_ui:uiDrawText("PARAYI ÇEK", cardX, actBtnY, cardX + cardW, actBtnY + actBtnH, canWithdraw and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
 
     elseif activeTab == 3 then
         local cardW = contentW - 28
@@ -408,13 +408,13 @@ addEventHandler("onClientRender", root, function()
             exports.gzl_ui:drawRoundedRectangle(cardX, cardY, cardW, cardH, 10, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
             exports.gzl_ui:drawRoundedBorder(cardX, cardY, cardW, cardH, 10, 1.0, tocolor(52, 211, 153, math.floor(90 * alphaMult)))
         else
-            dxDrawRectangle(cardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, cardH, tocolor(15, 23, 42, math.floor(200 * alphaMult)))
         end
-        dxDrawText("YATIRILABİLİR CÜZDAN NAKİTİ", cardX + 14, cardY + 12, cardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("$" .. formatMoney(atmData.cash), cardX + 14, cardY + 32, cardX + cardW - 14, cardY + 66, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("YATIRILABİLİR CÜZDAN NAKİTİ", cardX + 14, cardY + 12, cardX + cardW - 14, cardY + 28, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("$" .. formatMoney(atmData.cash), cardX + 14, cardY + 32, cardX + cardW - 14, cardY + 66, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
 
         local inputY = cardY + cardH + 24
-        dxDrawText("YATIRILACAK TUTAR ($)", cardX, inputY, cardX + cardW, inputY + 18, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
+        exports.aura_ui:uiDrawText("YATIRILACAK TUTAR ($)", cardX, inputY, cardX + cardW, inputY + 18, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "left", "center")
 
         local inputH = 46
         drawCustomEditBox("deposit_amount", cardX, inputY + 24, cardW, inputH, "Tutar girin... (örn. 500)", fontMedium, fontSmall)
@@ -438,9 +438,9 @@ addEventHandler("onClientRender", root, function()
                 exports.gzl_ui:drawRoundedRectangle(pX, pctY, pctW, pctH, 6, pBg)
                 exports.gzl_ui:drawRoundedBorder(pX, pctY, pctW, pctH, 6, 1.0, tocolor(51, 65, 85, math.floor(120 * alphaMult)))
             else
-                dxDrawRectangle(pX, pctY, pctW, pctH, pBg)
+                exports.aura_ui:uiDrawRectangle(pX, pctY, pctW, pctH, pBg)
             end
-            dxDrawText(opt.label, pX, pctY, pX + pctW, pctY + pctH, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
+            exports.aura_ui:uiDrawText(opt.label, pX, pctY, pX + pctW, pctY + pctH, tocolor(255, 255, 255, globalAlpha), 1, fontBold, "center", "center")
         end
 
         local actBtnY = pctY + pctH + 24
@@ -453,28 +453,28 @@ addEventHandler("onClientRender", root, function()
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(cardX, actBtnY, cardW, actBtnH, 8, actBg)
         else
-            dxDrawRectangle(cardX, actBtnY, cardW, actBtnH, actBg)
+            exports.aura_ui:uiDrawRectangle(cardX, actBtnY, cardW, actBtnH, actBg)
         end
-        dxDrawText("PARAYI YATIR", cardX, actBtnY, cardX + cardW, actBtnY + actBtnH, canDeposit and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
+        exports.aura_ui:uiDrawText("PARAYI YATIR", cardX, actBtnY, cardX + cardW, actBtnY + actBtnH, canDeposit and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
 
     elseif activeTab == 4 then
         local formW = contentW - 28
         local formX = contentX + 14
         local formY = contentY + 16
 
-        dxDrawText("HAVALE / EFT İŞLEMİ", formX, formY, formX + formW, formY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
-        dxDrawText("Banka bakiyeniz: $" .. formatMoney(atmData.bank), formX, formY + 20, formX + formW, formY + 36, tocolor(56, 189, 248, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("HAVALE / EFT İŞLEMİ", formX, formY, formX + formW, formY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Banka bakiyeniz: $" .. formatMoney(atmData.bank), formX, formY + 20, formX + formW, formY + 36, tocolor(56, 189, 248, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
 
         local f1Y = formY + 44
-        dxDrawText("ALICI HESAP (Karakter Adı veya Oyuncu ID)", formX, f1Y, formX + formW, f1Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("ALICI HESAP (Karakter Adı veya Oyuncu ID)", formX, f1Y, formX + formW, f1Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
         drawCustomEditBox("transfer_target", formX, f1Y + 20, formW, 42, "Örn: 1 veya Thommy_Souverain", fontMedium, fontSmall)
 
         local f2Y = f1Y + 70
-        dxDrawText("GÖNDERİLECEK TUTAR ($)", formX, f2Y, formX + formW, f2Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("GÖNDERİLECEK TUTAR ($)", formX, f2Y, formX + formW, f2Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
         drawCustomEditBox("transfer_amount", formX, f2Y + 20, formW, 42, "Örn: 1000", fontMedium, fontSmall)
 
         local f3Y = f2Y + 70
-        dxDrawText("AÇIKLAMA", formX, f3Y, formX + formW, f3Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("AÇIKLAMA", formX, f3Y, formX + formW, f3Y + 16, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
         drawCustomEditBox("transfer_note", formX, f3Y + 20, formW, 42, "Örn: Araç borcu / Ticaret", fontMedium, fontSmall)
 
         local sendBtnY = f3Y + 72
@@ -488,9 +488,9 @@ addEventHandler("onClientRender", root, function()
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(formX, sendBtnY, formW, sendBtnH, 8, sendBg)
         else
-            dxDrawRectangle(formX, sendBtnY, formW, sendBtnH, sendBg)
+            exports.aura_ui:uiDrawRectangle(formX, sendBtnY, formW, sendBtnH, sendBg)
         end
-        dxDrawText("HAVALEYİ ONAYLA VE GÖNDER", formX, sendBtnY, formX + formW, sendBtnY + sendBtnH, canSend and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
+        exports.aura_ui:uiDrawText("HAVALEYİ ONAYLA VE GÖNDER", formX, sendBtnY, formX + formW, sendBtnY + sendBtnH, canSend and tocolor(15, 23, 42, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontTitle, "center", "center")
 
     elseif activeTab == 5 then
         local listX = contentX + 14
@@ -498,21 +498,21 @@ addEventHandler("onClientRender", root, function()
         local listW = contentW - 28
         local listH = contentH - 32
 
-        dxDrawText("SON HESAP HAREKETLERİ", listX, listY, listX + listW, listY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
-        dxDrawText("Hesabınıza ait en son 10 adet dekont ve işlem kaydı.", listX, listY + 20, listX + listW, listY + 36, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("SON HESAP HAREKETLERİ", listX, listY, listX + listW, listY + 20, tocolor(255, 255, 255, globalAlpha), 1, fontTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Hesabınıza ait en son 10 adet dekont ve işlem kaydı.", listX, listY + 20, listX + listW, listY + 36, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local tableHeaderY = listY + 44
         local thH = 26
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(listX, tableHeaderY, listW, thH, 6, tocolor(15, 23, 42, math.floor(180 * alphaMult)))
         else
-            dxDrawRectangle(listX, tableHeaderY, listW, thH, tocolor(15, 23, 42, math.floor(180 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(listX, tableHeaderY, listW, thH, tocolor(15, 23, 42, math.floor(180 * alphaMult)))
         end
 
-        dxDrawText("TÜR", listX + 10, tableHeaderY, listX + 110, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("AÇIKLAMA", listX + 115, tableHeaderY, listX + listW - 190, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("TUTAR", listX + listW - 180, tableHeaderY, listX + listW - 90, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
-        dxDrawText("BAKİYE", listX + listW - 80, tableHeaderY, listX + listW - 10, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
+        exports.aura_ui:uiDrawText("TÜR", listX + 10, tableHeaderY, listX + 110, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("AÇIKLAMA", listX + 115, tableHeaderY, listX + listW - 190, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("TUTAR", listX + listW - 180, tableHeaderY, listX + listW - 90, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
+        exports.aura_ui:uiDrawText("BAKİYE", listX + listW - 80, tableHeaderY, listX + listW - 10, tableHeaderY + thH, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
 
         local rowStartY = tableHeaderY + thH + 6
         local rowH = 28
@@ -520,7 +520,7 @@ addEventHandler("onClientRender", root, function()
         local txs = atmData.transactions or {}
 
         if #txs == 0 then
-            dxDrawText("Henüz herhangi bir hesap hareketi bulunmuyor.", listX, rowStartY + 30, listX + listW, rowStartY + 60, tocolor(100, 116, 139, math.floor(180 * alphaMult)), 1, fontMedium, "center", "center")
+            exports.aura_ui:uiDrawText("Henüz herhangi bir hesap hareketi bulunmuyor.", listX, rowStartY + 30, listX + listW, rowStartY + 60, tocolor(100, 116, 139, math.floor(180 * alphaMult)), 1, fontMedium, "center", "center")
         else
             for idx, tx in ipairs(txs) do
                 local curRowY = rowStartY + (idx - 1) * (rowH + rowGap)
@@ -540,13 +540,13 @@ addEventHandler("onClientRender", root, function()
                     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                         exports.gzl_ui:drawRoundedRectangle(listX, curRowY, listW, rowH, 4, rBg)
                     else
-                        dxDrawRectangle(listX, curRowY, listW, rowH, rBg)
+                        exports.aura_ui:uiDrawRectangle(listX, curRowY, listW, rowH, rBg)
                     end
 
-                    dxDrawText(typeLabel, listX + 10, curRowY, listX + 110, curRowY + rowH, tocolor(255, 255, 255, math.floor(230 * alphaMult)), 1, fontSmall, "left", "center", true)
-                    dxDrawText(tostring(tx.note or "-"), listX + 115, curRowY, listX + listW - 190, curRowY + rowH, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center", true)
-                    dxDrawText(amountPrefix .. formatMoney(tx.amount), listX + listW - 180, curRowY, listX + listW - 90, curRowY + rowH, amountColor, 1, fontBold, "right", "center")
-                    dxDrawText("$" .. formatMoney(tx.balance_after), listX + listW - 80, curRowY, listX + listW - 10, curRowY + rowH, tocolor(203, 213, 225, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
+                    exports.aura_ui:uiDrawText(typeLabel, listX + 10, curRowY, listX + 110, curRowY + rowH, tocolor(255, 255, 255, math.floor(230 * alphaMult)), 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(tostring(tx.note or "-"), listX + 115, curRowY, listX + listW - 190, curRowY + rowH, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(amountPrefix .. formatMoney(tx.amount), listX + listW - 180, curRowY, listX + listW - 90, curRowY + rowH, amountColor, 1, fontBold, "right", "center")
+                    exports.aura_ui:uiDrawText("$" .. formatMoney(tx.balance_after), listX + listW - 80, curRowY, listX + listW - 10, curRowY + rowH, tocolor(203, 213, 225, math.floor(220 * alphaMult)), 1, fontSmall, "right", "center")
                 end
             end
         end

@@ -8,18 +8,18 @@ function FontManager.get(weight, size)
     local key = string.format("%s_%d", weight, size)
 
     if not loadedFonts[key] then
-        local fontFile = "assets/fonts/SFUIText-Regular.ttf"
+        local fontFile = ":aura_ui/assets/Manrope-Medium.ttf"
         local isBold = false
 
         if weight == "medium" then
-            fontFile = "assets/fonts/SFUIText-Medium.ttf"
+            fontFile = ":aura_ui/assets/Manrope-Medium.ttf"
         elseif weight == "semibold" then
-            fontFile = "assets/fonts/SFUIText-Semibold.ttf"
+            fontFile = ":aura_ui/assets/Manrope-Bold.ttf"
         elseif weight == "bold" then
-            fontFile = "assets/fonts/SFUIText-Bold.ttf"
+            fontFile = ":aura_ui/assets/Manrope-Bold.ttf"
             isBold = true
         elseif weight == "heavy" then
-            fontFile = "assets/fonts/SFUIText-Heavy.ttf"
+            fontFile = ":aura_ui/assets/Manrope-Bold.ttf"
             isBold = true
         end
 

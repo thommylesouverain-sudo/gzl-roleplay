@@ -94,7 +94,7 @@ CreatorConfig.Male = {
     },
 
     torso = {
-        [1] = { name = "Klasik Tişört", tex = "camisa.padrao", variants = 76, hide_body = { "body.torso", "body.meio" } },
+        [1] = { name = "Klasik Tişört", tex = "camisa.padrao", variants = 77, hide_body = { "body.torso", "body.meio" } },
         [2] = { name = "Uzun Kollu Tişört", tex = "mangalonga.stars", variants = 11, hide_body = { "body.torso", "body.arm1", "body.arm2", "body.meio" } },
         [3] = { name = "Takım Elbise Ceketi", tex = "terno.blusa", variants = 5, hide_body = { "body.torso", "body.arm1", "body.arm2", "body.meio" } },
         [4] = { name = "Polis Üniforması", tex = "camisapm.stars", variants = 1, hide_body = { "body.torso", "body.meio" } },
@@ -169,7 +169,7 @@ CreatorConfig.Female = {
     },
 
     torso = {
-        [1] = { name = "Klasik Kadın Tişörtü", tex = "camisa.padrao", variants = 19, hide_body = { "body.torso", "body.biquinicima" } },
+        [1] = { name = "Klasik Kadın Tişörtü", tex = "camisa.padrao", variants = 20, hide_body = { "body.torso", "body.biquinicima" } },
         [2] = { name = "Taktik Çelik Yelek", tex = "coletef.stars", variants = 5, hide_body = {} },
         [3] = { name = "Bikini Üstü", tex = "body.biquinicima", variants = 1, hide_body = {} }
     },

@@ -77,8 +77,8 @@ function resStatRender()
 					r,g,b,a = 255,255,0,255
 				end
 				local text = row[1]:sub(0,15)..": "..usedCPU.."%"
-				dxDrawText(text,x+1,y+1,150,15,tocolor(0,0,0,255),1,"default-bold")
-				dxDrawText(text,x,y,150,15,tocolor(r,g,b,a),1,"default-bold")
+				exports.aura_ui:uiDrawText(text,x+1,y+1,150,15,tocolor(0,0,0,255),1,"default-bold")
+				exports.aura_ui:uiDrawText(text,x,y,150,15,tocolor(r,g,b,a),1,"default-bold")
 				y = y + 15
 				totalCPUC = totalCPUC + usedCPU
 				newY = y
@@ -87,11 +87,11 @@ function resStatRender()
 		end
 		y = _y
 		if #serverRows == 0 then
-			dxDrawText("Client - %"..totalCPUC,sx-74,y-19,sx-74,y-19,tocolor(0,0,0,255),1, "default-bold","center")
-			dxDrawText("Client - %"..totalCPUC,sx-75,y-20,sx-75,y-20,tocolor(255,255,255,255),1, "default-bold","center")
+			exports.aura_ui:uiDrawText("Client - %"..totalCPUC,sx-74,y-19,sx-74,y-19,tocolor(0,0,0,255),1, "default-bold","center")
+			exports.aura_ui:uiDrawText("Client - %"..totalCPUC,sx-75,y-20,sx-75,y-20,tocolor(255,255,255,255),1, "default-bold","center")
 		else
-			dxDrawText("Client - %"..totalCPUC,sx-234,y-19,sx-234,y-19,tocolor(0,0,0,255),1, "default-bold","center")
-			dxDrawText("Client - %"..totalCPUC,sx-235,y-20,sx-235,y-20,tocolor(255,255,255,255),1, "default-bold","center")
+			exports.aura_ui:uiDrawText("Client - %"..totalCPUC,sx-234,y-19,sx-234,y-19,tocolor(0,0,0,255),1, "default-bold","center")
+			exports.aura_ui:uiDrawText("Client - %"..totalCPUC,sx-235,y-20,sx-235,y-20,tocolor(255,255,255,255),1, "default-bold","center")
 		end
 		y = newY
 	end
@@ -113,15 +113,15 @@ function resStatRender()
 					r,g,b,a = 255,255,0,255
 				end
 				local text = row[1]:sub(0,15)..": "..usedCPU.."%"
-				dxDrawText(text,x+1,y+1,150,15,tocolor(0,0,0,255),1,"default-bold")
-				dxDrawText(text,x,y,150,15,tocolor(r,g,b,a),1,"default-bold")
+				exports.aura_ui:uiDrawText(text,x+1,y+1,150,15,tocolor(0,0,0,255),1,"default-bold")
+				exports.aura_ui:uiDrawText(text,x,y,150,15,tocolor(r,g,b,a),1,"default-bold")
 				y = y + 15
 				totalCPUS = totalCPUS + usedCPU
 			end
 		end
 		y = _y
 
-		dxDrawText("Server - %"..totalCPUS,sx-74,y-19,sx-74,y-19,tocolor(0,0,0,255),1, "default-bold","center")
-		dxDrawText("Server - %"..totalCPUS,sx-75,y-20,sx-75,y-20,tocolor(255,255,255,255),1, "default-bold","center")
+		exports.aura_ui:uiDrawText("Server - %"..totalCPUS,sx-74,y-19,sx-74,y-19,tocolor(0,0,0,255),1, "default-bold","center")
+		exports.aura_ui:uiDrawText("Server - %"..totalCPUS,sx-75,y-20,sx-75,y-20,tocolor(255,255,255,255),1, "default-bold","center")
 	end
 end

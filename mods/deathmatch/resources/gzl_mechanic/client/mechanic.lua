@@ -46,27 +46,27 @@ local function renderStationMarkers()
                 local fontMedium = getMechanicFont("medium", math.max(7, math.floor(9.5 * scale)))
                 local fontRegular = getMechanicFont("regular", math.max(7, math.floor(9 * scale)))
 
-                dxDrawRectangle(cardX - 1, cardY - 1, cardW + 2, cardH + 2, tocolor(0, 0, 0, math.floor(alpha * 0.55)))
-                dxDrawRectangle(cardX, cardY, cardW, cardH, tocolor(12, 15, 22, math.floor(alpha * 0.94)))
-                dxDrawRectangle(cardX, cardY, cardW, 2, tocolor(245, 166, 35, alpha))
+                exports.aura_ui:uiDrawRectangle(cardX - 1, cardY - 1, cardW + 2, cardH + 2, tocolor(0, 0, 0, math.floor(alpha * 0.55)))
+                exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, cardH, tocolor(12, 15, 22, math.floor(alpha * 0.94)))
+                exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, 2, tocolor(245, 166, 35, alpha))
 
                 local iconBoxW = math.floor(46 * scale)
                 local iconBoxH = math.floor(46 * scale)
                 local iconX = cardX + math.floor(10 * scale)
                 local iconY = cardY + math.floor(10 * scale)
-                dxDrawRectangle(iconX, iconY, iconBoxW, iconBoxH, tocolor(245, 166, 35, math.floor(alpha * 0.15)))
-                dxDrawRectangle(iconX, iconY, iconBoxW, 1, tocolor(245, 166, 35, math.floor(alpha * 0.5)))
+                exports.aura_ui:uiDrawRectangle(iconX, iconY, iconBoxW, iconBoxH, tocolor(245, 166, 35, math.floor(alpha * 0.15)))
+                exports.aura_ui:uiDrawRectangle(iconX, iconY, iconBoxW, 1, tocolor(245, 166, 35, math.floor(alpha * 0.5)))
 
                 if markerLogoTexture and isElement(markerLogoTexture) then
                     dxDrawImage(iconX + 3 * scale, iconY + 11 * scale, iconBoxW - 6 * scale, (iconBoxW - 6 * scale) * 0.45, markerLogoTexture, 0, 0, 0, tocolor(255, 255, 255, alpha))
                 else
-                    dxDrawText("BENNY'S", iconX, iconY + 10 * scale, iconX + iconBoxW, iconY + 22 * scale, tocolor(245, 166, 35, alpha), 1.0, fontBold, "center", "center")
-                    dxDrawText("CUSTOMS", iconX, iconY + 22 * scale, iconX + iconBoxW, iconY + 34 * scale, tocolor(200, 205, 215, alpha), 1.0, fontRegular, "center", "center")
+                    exports.aura_ui:uiDrawText("BENNY'S", iconX, iconY + 10 * scale, iconX + iconBoxW, iconY + 22 * scale, tocolor(245, 166, 35, alpha), 1.0, fontBold, "center", "center")
+                    exports.aura_ui:uiDrawText("CUSTOMS", iconX, iconY + 22 * scale, iconX + iconBoxW, iconY + 34 * scale, tocolor(200, 205, 215, alpha), 1.0, fontRegular, "center", "center")
                 end
 
                 local textX = iconX + iconBoxW + math.floor(12 * scale)
                 local titleY = cardY + math.floor(11 * scale)
-                dxDrawText("BENNY'S ORIGINAL MOTOR WORKS", textX, titleY, cardX + cardW - 10 * scale, titleY + 18 * scale, tocolor(245, 166, 35, alpha), 1.0, fontHeavy, "left", "center", true, false, false)
+                exports.aura_ui:uiDrawText("BENNY'S ORIGINAL MOTOR WORKS", textX, titleY, cardX + cardW - 10 * scale, titleY + 18 * scale, tocolor(245, 166, 35, alpha), 1.0, fontHeavy, "left", "center", true, false, false)
 
                 local inRange = (dist <= station.radius + 0.5)
 
@@ -78,15 +78,15 @@ local function renderStationMarkers()
                     local keyY = cardY + math.floor(33 * scale)
 
                     local keyPulse = math.sin(getTickCount() / 220) * 0.5 + 0.5
-                    dxDrawRectangle(keyX - 1, keyY - 1, keyW + 2, keyH + 2, tocolor(245, 166, 35, math.floor(alpha * keyPulse * 0.85)))
-                    dxDrawRectangle(keyX, keyY + 2, keyW, keyH, tocolor(0, 0, 0, math.floor(alpha * 0.6)))
-                    dxDrawRectangle(keyX, keyY, keyW, keyH, tocolor(245, 248, 252, alpha))
-                    dxDrawText("E", keyX, keyY, keyX + keyW, keyY + keyH, tocolor(15, 18, 26, alpha), 1.0, fontHeavy, "center", "center")
+                    exports.aura_ui:uiDrawRectangle(keyX - 1, keyY - 1, keyW + 2, keyH + 2, tocolor(245, 166, 35, math.floor(alpha * keyPulse * 0.85)))
+                    exports.aura_ui:uiDrawRectangle(keyX, keyY + 2, keyW, keyH, tocolor(0, 0, 0, math.floor(alpha * 0.6)))
+                    exports.aura_ui:uiDrawRectangle(keyX, keyY, keyW, keyH, tocolor(245, 248, 252, alpha))
+                    exports.aura_ui:uiDrawText("E", keyX, keyY, keyX + keyW, keyY + keyH, tocolor(15, 18, 26, alpha), 1.0, fontHeavy, "center", "center")
 
                     local actionText = localVeh and "Modifiye Menüsünü Aç" or "Atölyeyi Aç"
-                    dxDrawText(actionText, keyX + keyW + math.floor(9 * scale), keyY, cardX + cardW - 10 * scale, keyY + keyH, tocolor(255, 255, 255, alpha), 1.0, fontBold, "left", "center", true, false, false)
+                    exports.aura_ui:uiDrawText(actionText, keyX + keyW + math.floor(9 * scale), keyY, cardX + cardW - 10 * scale, keyY + keyH, tocolor(255, 255, 255, alpha), 1.0, fontBold, "left", "center", true, false, false)
                 else
-                    dxDrawText("Özel Araç Modifiye & Mekanik Atölyesi", textX, cardY + math.floor(34 * scale), cardX + cardW - 10 * scale, cardY + cardH - 8 * scale, tocolor(175, 185, 200, math.floor(alpha * 0.85)), 1.0, fontMedium, "left", "center", true, false, false)
+                    exports.aura_ui:uiDrawText("Özel Araç Modifiye & Mekanik Atölyesi", textX, cardY + math.floor(34 * scale), cardX + cardW - 10 * scale, cardY + cardH - 8 * scale, tocolor(175, 185, 200, math.floor(alpha * 0.85)), 1.0, fontMedium, "left", "center", true, false, false)
                 end
             end
         end

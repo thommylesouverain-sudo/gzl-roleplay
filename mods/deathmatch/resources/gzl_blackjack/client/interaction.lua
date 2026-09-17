@@ -531,12 +531,12 @@ addEventHandler("onClientRender", root, function()
             drawGlassCard(cardX, cardY, cardW, cardH, 8, tocolor(10, 14, 24, 235), borderCol, accentCol)
 
             local titleText = string.format("♦ KOLTUK %d", bestSeatIdx)
-            dxDrawText(titleText, cardX + 14, cardY + 8, cardX + cardW - 8, cardY + 28,
+            exports.aura_ui:uiDrawText(titleText, cardX + 14, cardY + 8, cardX + cardW - 8, cardY + 28,
                 tocolor(212, 175, 55, 255), 1.0, fontTitle, "left", "center")
 
             local subText = isOcc and ("👤 " .. (occName or "Dolu")) or "✦ [Sol Tık] Masaya Otur"
             local subColor = isOcc and tocolor(248, 113, 113, 230) or tocolor(80, 220, 100, 255)
-            dxDrawText(subText, cardX + 14, cardY + 28, cardX + cardW - 8, cardY + 48,
+            exports.aura_ui:uiDrawText(subText, cardX + 14, cardY + 28, cardX + cardW - 8, cardY + 48,
                 subColor, 1.0, fontSub, "left", "center")
 
             if bestScreenX and bestScreenY then
@@ -562,7 +562,7 @@ addEventHandler("onClientRender", root, function()
             local hintY = screenH - 68
 
             drawGlassCard(hintX, hintY, hintW, hintH, 17, tocolor(10, 14, 24, 210), tocolor(212, 175, 55, 120), tocolor(212, 175, 55, 255))
-            dxDrawText("✦  [L-ALT] Masaya Bak & Koltuk Seç  •  [E] Hızlı Otur",
+            exports.aura_ui:uiDrawText("✦  [L-ALT] Masaya Bak & Koltuk Seç  •  [E] Hızlı Otur",
                 hintX, hintY, hintX + hintW, hintY + hintH,
                 tocolor(255, 255, 255, 230), 1.0, fontHint, "center", "center")
         end

@@ -68,9 +68,9 @@ local function createPromptTarget()
     local keyX = (promptW - keyW) / 2
     rounded(keyX, 0, keyW, keyH, 8, tocolor(244, 255, 40, 250))
     rounded(keyX + 3, 3, keyW - 6, keyH - 6, 6, tocolor(15, 16, 18, 235))
-    dxDrawText(string.upper(Config.OpenKey or "e"), keyX, 0, keyX + keyW, keyH, tocolor(244, 255, 40, 255), 1, promptFonts.key, "center", "center")
-    dxDrawText("E Tuşuna Bas", 0, 45, promptW, 70, tocolor(250, 250, 250, 255), 1, promptFonts.title, "center", "center")
-    dxDrawText("Açmak için E tuşuna bas.", 0, 73, promptW, 96, tocolor(215, 215, 218, 245), 1, promptFonts.hint, "center", "center")
+    exports.aura_ui:uiDrawText(string.upper(Config.OpenKey or "e"), keyX, 0, keyX + keyW, keyH, tocolor(244, 255, 40, 255), 1, promptFonts.key, "center", "center")
+    exports.aura_ui:uiDrawText("E Tuşuna Bas", 0, 45, promptW, 70, tocolor(250, 250, 250, 255), 1, promptFonts.title, "center", "center")
+    exports.aura_ui:uiDrawText("Açmak için E tuşuna bas.", 0, 73, promptW, 96, tocolor(215, 215, 218, 245), 1, promptFonts.hint, "center", "center")
     dxSetBlendMode("blend")
     dxSetRenderTarget()
     return true

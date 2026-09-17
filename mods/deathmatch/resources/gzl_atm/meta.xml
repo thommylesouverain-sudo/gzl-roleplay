@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="thommy" name="GZL Roleplay - ATM &amp; Banking DX System" type="script" version="1.0.0" />
 
     <min_mta_version client="1.6.0" server="1.6.0" />

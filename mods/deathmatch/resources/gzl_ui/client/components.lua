@@ -244,7 +244,18 @@ function setEditBoxText(id, text)
     end
 end
 
+local previousInputMode,previousInputEnabled
 function setActiveEditBox(id)
+    if not editBoxes[id] then id=nil end
+    if id then
+        triggerEvent("onAuraInputClaim",resourceRoot)
+        if not activeEditBox then
+            previousInputMode=guiGetInputMode()
+            previousInputEnabled=guiGetInputEnabled()
+        end
+    elseif not activeEditBox then
+        return
+    end
     activeEditBox = id
     if id and editBoxes[id] then
         local data = editBoxes[id]
@@ -255,10 +266,17 @@ function setActiveEditBox(id)
         pcall(guiSetInputMode, "no_binds")
         pcall(guiSetInputEnabled, true)
     else
-        pcall(guiSetInputMode, "allow_binds")
-        pcall(guiSetInputEnabled, false)
+        pcall(guiSetInputMode, previousInputMode or "allow_binds")
+        pcall(guiSetInputEnabled, previousInputEnabled==true)
+        previousInputMode,previousInputEnabled=nil,nil
     end
 end
+
+addEvent("onAuraInputClaim",false)
+addEventHandler("onAuraInputClaim",root,function()
+    if source~=resourceRoot then setActiveEditBox(nil) end
+end)
+addEventHandler("onClientResourceStop",resourceRoot,function() setActiveEditBox(nil) end)
 
 function getActiveEditBox()
     return activeEditBox

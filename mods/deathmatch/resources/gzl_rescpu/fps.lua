@@ -14,7 +14,7 @@ end
 
 local function draw()
     local sw = guiGetScreenSize()
-    dxDrawText(caption, sw / 2 - 80, 12, sw / 2 + 80, 38, white, 1.3, "default-bold", "center", "top", false, false, true)
+    exports.aura_ui:uiDrawText(caption, sw / 2 - 80, 12, sw / 2 + 80, 38, white, 1.3, "default-bold", "center", "top", false, false, true)
 end
 
 addCommandHandler("simplefps", function()

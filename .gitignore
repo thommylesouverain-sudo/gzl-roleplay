@@ -41,3 +41,6 @@ mods/deathmatch/resources/.performance/audit.json
 
 *.rar
 *.zip
+__pycache__/
+*.py[cod]
+

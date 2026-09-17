@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
     <info author="Antigravity" type="script" name="gzl_pd" version="1.0.0" description="GZL Roleplay - Polis Departmanı (MDC &amp; Tablet) Sistemi" />
     <min_mta_version client="1.6.0" server="1.6.0" />
 

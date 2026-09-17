@@ -3,9 +3,11 @@
     <min_mta_version client="1.6.0" server="1.6.0" />
     <oop>true</oop>
 
-    <script src="client/cef_diagnostics.lua" type="client" cache="false" />
+    <include resource="aura_ui" />
     <script src="data/items.lua" type="shared" cache="false" />
     <script src="server/main.lua" type="server" />
+    <script src="client/surfaces.lua" type="client" cache="false" />
+    <script src="client/dx.lua" type="client" cache="false" />
     <script src="client/main.lua" type="client" cache="false" />
 
     <!-- Server Exports -->
@@ -22,24 +24,6 @@
     <export function="isInventoryOpenState" type="client" />
     <export function="toggleHotbarDisplay" type="client" />
 
-    <file src="web/build/index.html" />
-    <file src="web/build/assets/index-323a8bdd.js" />
-    <file src="web/build/assets/index-ae037b2a.css" />
-    <file src="web/build/assets/SFUIText-Bold.ttf" />
-    <file src="web/build/assets/SFUIText-Medium.ttf" />
-    <file src="web/build/assets/SFUIText-Regular.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Bold.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-BoldItalic.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Heavy.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-HeavyItalic.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Light.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-LightItalic.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Medium.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-MediumItalic.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Regular.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-RegularItalic.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-Semibold.ttf" />
-    <file src="web/build/assets/fonts/SFUIText-SemiboldItalic.ttf" />
     <file src="web/build/images/10kgoldchain.png" />
     <file src="web/build/images/2k_hd_tv.png" />
     <file src="web/build/images/3310.png" />

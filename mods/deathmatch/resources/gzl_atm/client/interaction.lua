@@ -106,7 +106,7 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(badgeX, badgeY, badgeW, badgeH, 12, tocolor(10, 15, 26, 245))
     else
-        dxDrawRectangle(badgeX, badgeY, badgeW, badgeH, tocolor(10, 15, 26, 245))
+        exports.aura_ui:uiDrawRectangle(badgeX, badgeY, badgeW, badgeH, tocolor(10, 15, 26, 245))
     end
 
     local keyW = 28
@@ -117,14 +117,14 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(keyX, keyY, keyW, keyH, 6, tocolor(56, 189, 248, 255))
     else
-        dxDrawRectangle(keyX, keyY, keyW, keyH, tocolor(56, 189, 248, 255))
+        exports.aura_ui:uiDrawRectangle(keyX, keyY, keyW, keyH, tocolor(56, 189, 248, 255))
     end
-    dxDrawText("E", keyX, keyY, keyX + keyW, keyY + keyH, tocolor(10, 15, 26, 255), 1, fontTitle, "center", "center")
+    exports.aura_ui:uiDrawText("E", keyX, keyY, keyX + keyW, keyY + keyH, tocolor(10, 15, 26, 255), 1, fontTitle, "center", "center")
 
     local textX = keyX + keyW + 10
     local textMaxX = badgeX + badgeW - 10
-    dxDrawText("ATM'yi Kullan", textX, badgeY + 7, textMaxX, badgeY + 28, tocolor(255, 255, 255, 255), 1, fontTitle, "left", "center", true)
-    dxDrawText("Bank of San Andreas", textX, badgeY + 27, textMaxX, badgeY + 45, tocolor(56, 189, 248, 255), 1, fontDesc, "left", "center", true)
+    exports.aura_ui:uiDrawText("ATM'yi Kullan", textX, badgeY + 7, textMaxX, badgeY + 28, tocolor(255, 255, 255, 255), 1, fontTitle, "left", "center", true)
+    exports.aura_ui:uiDrawText("Bank of San Andreas", textX, badgeY + 27, textMaxX, badgeY + 45, tocolor(56, 189, 248, 255), 1, fontDesc, "left", "center", true)
 end)
 
 bindKey("e", "down", function()

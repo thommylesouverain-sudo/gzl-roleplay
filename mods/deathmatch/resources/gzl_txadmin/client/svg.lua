@@ -30,46 +30,12 @@ local function createCircleSVG(sd)
     return svgCreate(sd, sd, svgData)
 end
 
-function drawCircle(cx, cy, radius, color, postGUI)
-    if not radius or radius <= 0 then return end
-    local diameter = math.max(2, math.floor(radius * 2 + 0.5))
-    local scale = (diameter <= 64) and 4 or (diameter <= 256 and 2 or 1)
-    if diameter * scale > 4096 then
-        scale = 1
-    end
-    local sd = math.min(4096, math.max(1, diameter * scale))
-    local key = "circle_" .. sd
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        svgCache[key] = createCircleSVG(sd)
-    end
-    local drawX = math.floor(cx - diameter * 0.5)
-    local drawY = math.floor(cy - diameter * 0.5)
-    if svgCache[key] then
-        dxDrawImage(drawX, drawY, diameter, diameter, svgCache[key], 0, 0, 0, color or tocolor(255, 255, 255, 255), postGUI or false)
-    else
-        dxDrawRectangle(drawX, drawY, diameter, diameter, color or tocolor(255, 255, 255, 255), postGUI or false)
-    end
+function drawCircle(cx,cy,r,color,postGUI)
+    return exports.aura_ui:uiDrawRoundedRectangle(cx-r,cy-r,r*2,r*2,r,color,postGUI)
 end
 
-function drawRoundedRectangle(x, y, w, h, radius, color, postGUI)
-    w, h = math.max(1, math.floor(w)), math.max(1, math.floor(h))
-    radius = radius or 8
-
-    local isCircle = (math.abs(w - h) <= 1) and (radius >= (math.min(w, h) / 2 - 1))
-    if isCircle then
-        drawCircle(x + w * 0.5, y + h * 0.5, math.min(w, h) * 0.5, color, postGUI)
-        return
-    end
-
-    local key = "rect_" .. w .. "x" .. h .. "_r_" .. math.floor(radius)
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        svgCache[key] = createBasicFillSVG(w, h, radius)
-    end
-    if svgCache[key] then
-        dxDrawImage(x, y, w, h, svgCache[key], 0, 0, 0, color or tocolor(255, 255, 255, 255), postGUI or false)
-    else
-        dxDrawRectangle(x, y, w, h, color or tocolor(255, 255, 255, 255), postGUI or false)
-    end
+function drawRoundedRectangle(x,y,w,h,r,color,postGUI)
+    return exports.aura_ui:uiDrawRoundedRectangle(x,y,w,h,r,color,postGUI)
 end
 
 local function createBorderSVG(w, h, r, stroke)
@@ -88,17 +54,8 @@ local function createBorderSVG(w, h, r, stroke)
     return svgCreate(w, h, svgData)
 end
 
-function drawRoundedBorder(x, y, w, h, radius, color, stroke, postGUI)
-    w, h = math.max(1, math.floor(w)), math.max(1, math.floor(h))
-    radius = radius or 4
-    stroke = stroke or 1.2
-    local key = "border_" .. w .. "x" .. h .. "_r_" .. math.floor(radius) .. "_s_" .. math.floor(stroke * 10)
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        svgCache[key] = createBorderSVG(w, h, radius, stroke)
-    end
-    if svgCache[key] then
-        dxDrawImage(x, y, w, h, svgCache[key], 0, 0, 0, color or tocolor(0, 245, 160, 255), postGUI or false)
-    end
+function drawRoundedBorder(x,y,w,h,r,color,stroke,postGUI)
+    return exports.aura_ui:uiDrawBorder(x,y,w,h,r,stroke,color,postGUI)
 end
 
 local function createCardSVG(w, h, r)
@@ -124,18 +81,8 @@ local function createCardSVG(w, h, r)
     return svgCreate(w, h, svgData)
 end
 
-function drawTxAdminCard(x, y, w, h, radius, postGUI)
-    x, y, w, h = math.floor(x), math.floor(y), math.max(1, math.floor(w)), math.max(1, math.floor(h))
-    radius = math.max(4, math.floor(radius or 20))
-    local key = "txcard_" .. w .. "x" .. h .. "_r_" .. radius
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        svgCache[key] = createCardSVG(w, h, radius)
-    end
-    if svgCache[key] then
-        dxDrawImage(x, y, w, h, svgCache[key], 0, 0, 0, tocolor(255, 255, 255, 255), postGUI or false)
-    else
-        drawRoundedRectangle(x, y, w, h, radius, tocolor(15, 20, 28, 245), postGUI)
-    end
+function drawTxAdminCard(x,y,w,h,r,postGUI)
+    return exports.aura_ui:uiDrawPanel(x,y,w,h,r,postGUI)
 end
 
 local function createSelectedPillSVG(w, h, r)
@@ -156,18 +103,8 @@ local function createSelectedPillSVG(w, h, r)
     return svgCreate(w, h, svgData)
 end
 
-function drawSelectedPill(x, y, w, h, radius, postGUI)
-    x, y, w, h = math.floor(x), math.floor(y), math.max(1, math.floor(w)), math.max(1, math.floor(h))
-    radius = math.max(2, math.floor(radius or 14))
-    local key = "pill_" .. w .. "x" .. h .. "_r_" .. radius
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        svgCache[key] = createSelectedPillSVG(w, h, radius)
-    end
-    if svgCache[key] then
-        dxDrawImage(x, y, w, h, svgCache[key], 0, 0, 0, tocolor(255, 255, 255, 255), postGUI or false)
-    else
-        drawRoundedRectangle(x, y, w, h, radius, tocolor(36, 44, 59, 230), postGUI)
-    end
+function drawSelectedPill(x,y,w,h,r,postGUI)
+    return exports.aura_ui:uiDrawSurface(x,y,w,h,{token="surface",radius=r or 10,border=true},postGUI)
 end
 
 local iconPaths = {

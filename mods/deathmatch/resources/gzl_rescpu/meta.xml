@@ -1,4 +1,5 @@
 <meta>
+    <include resource="aura_ui" />
 	<script src="server.lua" type="server" />
 	<script src="client.lua" type="client" cache="false" />
 	<script src="probe.lua" type="client" cache="false" />

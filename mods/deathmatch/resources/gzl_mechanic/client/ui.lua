@@ -665,17 +665,17 @@ renderNativeBennyMenu = function()
     if logoTexture and isElement(logoTexture) then
         dxDrawImage(menuX, curY, menuW, logoH, logoTexture, 0, 0, 0, tocolor(255, 255, 255, 255), true)
     else
-        dxDrawRectangle(menuX, curY, menuW, logoH, tocolor(18, 20, 26, 255), true)
-        dxDrawText("BENNY'S ORIGINAL MOTOR WORKS", menuX, curY, menuX + menuW, curY + logoH, tocolor(245, 166, 35, 255), 1.0, fontLogo, "center", "center", false, false, true)
+        exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, logoH, tocolor(18, 20, 26, 255), true)
+        exports.aura_ui:uiDrawText("BENNY'S ORIGINAL MOTOR WORKS", menuX, curY, menuX + menuW, curY + logoH, tocolor(245, 166, 35, 255), 1.0, fontLogo, "center", "center", false, false, true)
     end
     curY = curY + logoH
 
-    dxDrawRectangle(menuX, curY, menuW, subheadH, tocolor(0, 0, 0, 245), true)
-    dxDrawText(subheading, menuX + 15, curY, menuX + menuW - 15, curY + subheadH, tocolor(236, 240, 241, 255), 1.0, fontSubheading, "left", "center", false, false, true)
-    dxDrawText(selectedIndex .. "/" .. totalItems, menuX + 15, curY, menuX + menuW - 15, curY + subheadH, tocolor(180, 180, 190, 255), 1.0, fontCounter, "right", "center", false, false, true)
+    exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, subheadH, tocolor(0, 0, 0, 245), true)
+    exports.aura_ui:uiDrawText(subheading, menuX + 15, curY, menuX + menuW - 15, curY + subheadH, tocolor(236, 240, 241, 255), 1.0, fontSubheading, "left", "center", false, false, true)
+    exports.aura_ui:uiDrawText(selectedIndex .. "/" .. totalItems, menuX + 15, curY, menuX + menuW - 15, curY + subheadH, tocolor(180, 180, 190, 255), 1.0, fontCounter, "right", "center", false, false, true)
     curY = curY + subheadH
 
-    dxDrawRectangle(menuX, curY, menuW, 1, tocolor(236, 240, 241, 140), true)
+    exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, 1, tocolor(236, 240, 241, 140), true)
     curY = curY + 1
 
     for i = 1, visibleCount do
@@ -695,28 +695,28 @@ renderNativeBennyMenu = function()
             local bgCol = isSelected and tocolor(236, 240, 241, 255) or ((i % 2 == 1) and tocolor(0, 0, 0, 165) or tocolor(0, 0, 0, 210))
             local textCol = isSelected and tocolor(0, 0, 0, 255) or tocolor(236, 240, 241, 255)
 
-            dxDrawRectangle(menuX, itemY, menuW, itemH, bgCol, true)
+            exports.aura_ui:uiDrawRectangle(menuX, itemY, menuW, itemH, bgCol, true)
 
-            dxDrawText(item.name, menuX + 15, itemY, menuX + menuW - 80, itemY + itemH, textCol, 1.0, fontItem, "left", "center", true, false, true)
+            exports.aura_ui:uiDrawText(item.name, menuX + 15, itemY, menuX + menuW - 80, itemY + itemH, textCol, 1.0, fontItem, "left", "center", true, false, true)
 
             if item.rightText then
-                dxDrawText(item.rightText, menuX + 80, itemY, menuX + menuW - 15, itemY + itemH, textCol, 1.0, fontRight, "right", "center", false, false, true)
+                exports.aura_ui:uiDrawText(item.rightText, menuX + 80, itemY, menuX + menuW - 15, itemY + itemH, textCol, 1.0, fontRight, "right", "center", false, false, true)
             end
         end
     end
     curY = curY + visibleCount * itemH
 
-    dxDrawRectangle(menuX, curY, menuW, 1, tocolor(236, 240, 241, 140), true)
+    exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, 1, tocolor(236, 240, 241, 140), true)
     curY = curY + 1
 
-    dxDrawRectangle(menuX, curY, menuW, directionH, tocolor(0, 0, 0, 230), true)
-    dxDrawText("▲▼ Gezin  |  ENTER / ► Seç  |  ◄ / BACKSPACE Geri", menuX, curY, menuX + menuW, curY + directionH, tocolor(200, 210, 220, 220), 1.0, fontNav, "center", "center", false, false, true)
+    exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, directionH, tocolor(0, 0, 0, 230), true)
+    exports.aura_ui:uiDrawText("▲▼ Gezin  |  ENTER / ► Seç  |  ◄ / BACKSPACE Geri", menuX, curY, menuX + menuW, curY + directionH, tocolor(200, 210, 220, 220), 1.0, fontNav, "center", "center", false, false, true)
     curY = curY + directionH
 
     local curItem = items[selectedIndex]
     local descText = statusMessage or (curItem and curItem.desc) or "Benny's Original Motor Works"
-    dxDrawRectangle(menuX, curY, menuW, statusH, tocolor(0, 0, 0, 235), true)
-    dxDrawText(descText, menuX + 15, curY, menuX + menuW - 15, curY + statusH, tocolor(236, 240, 241, 240), 1.0, fontDesc, "left", "center", true, true, true)
+    exports.aura_ui:uiDrawRectangle(menuX, curY, menuW, statusH, tocolor(0, 0, 0, 235), true)
+    exports.aura_ui:uiDrawText(descText, menuX + 15, curY, menuX + menuW - 15, curY + statusH, tocolor(236, 240, 241, 240), 1.0, fontDesc, "left", "center", true, true, true)
 end
 
 addEventHandler("onClientKey", root, function(button, press)

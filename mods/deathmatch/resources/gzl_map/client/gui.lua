@@ -84,10 +84,10 @@ local function initResources()
     mapTexture = dxCreateTexture("assets/map.jpg", "dxt5", true, "clamp")
     mapShader = dxCreateShader("client/map.fx")
 
-    fontTitle = dxCreateFont("assets/font_bold.ttf", 22, true) or "default-bold"
-    fontBold = dxCreateFont("assets/font_bold.ttf", 12, true) or "default-bold"
-    fontMedium = dxCreateFont("assets/font_medium.ttf", 11, false) or "default"
-    fontSmall = dxCreateFont("assets/font_medium.ttf", 9, false) or "default"
+    fontTitle = dxCreateFont(":aura_ui/assets/Manrope-Bold.ttf", 22, true) or "default-bold"
+    fontBold = dxCreateFont(":aura_ui/assets/Manrope-Bold.ttf", 12, true) or "default-bold"
+    fontMedium = dxCreateFont(":aura_ui/assets/Manrope-Medium.ttf", 11, false) or "default"
+    fontSmall = dxCreateFont(":aura_ui/assets/Manrope-Medium.ttf", 9, false) or "default"
 
     local arrowData = [[
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -362,7 +362,7 @@ addEventHandler("onClientRender", root, function()
 
     if not isOpen or not isElement(mapTexture) or not isElement(mapShader) then return end
 
-    dxDrawRectangle(0, 0, screenW, screenH, tocolor(8, 11, 16, 215))
+    exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(8, 11, 16, 215))
 
     local mapX, mapY, mapW, mapH = getMapRect()
 
@@ -376,20 +376,20 @@ addEventHandler("onClientRender", root, function()
     local dayName = days[realTime.weekday + 1] or "CUMA"
     local timeStr = string.format("%s %02d:%02d", dayName, realTime.hour, realTime.minute)
 
-    dxDrawText("GZL: ", mapX, 26, mapX + 60, 68, tocolor(255, 255, 255, 255), 1.0, fontTitle, "left", "top")
-    local prefixW = dxGetTextWidth("GZL: ", 1.0, fontTitle)
-    dxDrawText("Roleplay", mapX + prefixW, 26, mapX + 350, 68, tocolor(34, 197, 94, 255), 1.0, fontTitle, "left", "top")
-    local logoW = prefixW + dxGetTextWidth("Roleplay", 1.0, fontTitle)
-    dxDrawText(" | " .. string.upper(pName) .. " | Oyuncu ID: " .. tostring(pId), mapX + logoW, 26, screenW - 300, 68, tocolor(255, 255, 255, 240), 1.0, fontTitle, "left", "top")
+    exports.aura_ui:uiDrawText("GZL: ", mapX, 26, mapX + 60, 68, tocolor(255, 255, 255, 255), 1.0, fontTitle, "left", "top")
+    local prefixW = exports.aura_ui:uiTextWidth("GZL: ", 1.0, fontTitle)
+    exports.aura_ui:uiDrawText("Roleplay", mapX + prefixW, 26, mapX + 350, 68, tocolor(34, 197, 94, 255), 1.0, fontTitle, "left", "top")
+    local logoW = prefixW + exports.aura_ui:uiTextWidth("Roleplay", 1.0, fontTitle)
+    exports.aura_ui:uiDrawText(" | " .. string.upper(pName) .. " | Oyuncu ID: " .. tostring(pId), mapX + logoW, 26, screenW - 300, 68, tocolor(255, 255, 255, 240), 1.0, fontTitle, "left", "top")
 
     local metaRightX = screenW - mapX - 58
-    dxDrawText(string.upper(pName), mapX, 20, metaRightX, 36, tocolor(240, 245, 255, 255), 1.0, fontBold, "right", "top")
-    dxDrawText(timeStr, mapX, 36, metaRightX, 52, tocolor(175, 190, 205, 220), 1.0, fontMedium, "right", "top")
-    dxDrawText(string.format("BANKA $%s  NAKİT $%s", tostring(pBank), tostring(pCash)), mapX, 52, metaRightX, 70, tocolor(230, 240, 250, 245), 1.0, fontBold, "right", "top")
+    exports.aura_ui:uiDrawText(string.upper(pName), mapX, 20, metaRightX, 36, tocolor(240, 245, 255, 255), 1.0, fontBold, "right", "top")
+    exports.aura_ui:uiDrawText(timeStr, mapX, 36, metaRightX, 52, tocolor(175, 190, 205, 220), 1.0, fontMedium, "right", "top")
+    exports.aura_ui:uiDrawText(string.format("BANKA $%s  NAKİT $%s", tostring(pBank), tostring(pCash)), mapX, 52, metaRightX, 70, tocolor(230, 240, 250, 245), 1.0, fontBold, "right", "top")
 
     local avatarBoxX = screenW - mapX - 48
-    dxDrawRectangle(avatarBoxX, 20, 48, 50, tocolor(15, 20, 28, 240))
-    dxDrawRectangle(avatarBoxX, 20, 48, 50, tocolor(255, 255, 255, 35), false)
+    exports.aura_ui:uiDrawRectangle(avatarBoxX, 20, 48, 50, tocolor(15, 20, 28, 240))
+    exports.aura_ui:uiDrawRectangle(avatarBoxX, 20, 48, 50, tocolor(255, 255, 255, 35), false)
     if isElement(icons["user"]) then
         dxDrawImage(avatarBoxX + 12, 33, 24, 24, icons["user"], 0, 0, 0, tocolor(255, 255, 255, 230))
     end
@@ -402,12 +402,12 @@ addEventHandler("onClientRender", root, function()
         local tx = mapX + (i - 1) * tabW
         local isSelected = (currentTab == tab.id)
         if isSelected then
-            dxDrawRectangle(tx, tabStartY, tabW - 3, tabH, tocolor(255, 255, 255, 255))
-            dxDrawRectangle(tx, tabStartY, tabW - 3, 4, tocolor(234, 179, 8, 255))
-            dxDrawText(tab.label, tx, tabStartY + 4, tx + tabW - 3, tabStartY + tabH, tocolor(10, 14, 20, 255), 1.0, fontBold, "center", "center")
+            exports.aura_ui:uiDrawRectangle(tx, tabStartY, tabW - 3, tabH, tocolor(255, 255, 255, 255))
+            exports.aura_ui:uiDrawRectangle(tx, tabStartY, tabW - 3, 4, tocolor(234, 179, 8, 255))
+            exports.aura_ui:uiDrawText(tab.label, tx, tabStartY + 4, tx + tabW - 3, tabStartY + tabH, tocolor(10, 14, 20, 255), 1.0, fontBold, "center", "center")
         else
-            dxDrawRectangle(tx, tabStartY, tabW - 3, tabH, tocolor(15, 20, 28, 220))
-            dxDrawText(tab.label, tx, tabStartY + 4, tx + tabW - 3, tabStartY + tabH, tocolor(180, 195, 215, 200), 1.0, fontBold, "center", "center")
+            exports.aura_ui:uiDrawRectangle(tx, tabStartY, tabW - 3, tabH, tocolor(15, 20, 28, 220))
+            exports.aura_ui:uiDrawText(tab.label, tx, tabStartY + 4, tx + tabW - 3, tabStartY + tabH, tocolor(180, 195, 215, 200), 1.0, fontBold, "center", "center")
         end
     end
 
@@ -421,7 +421,7 @@ addEventHandler("onClientRender", root, function()
         dxSetShaderValue(mapShader, "gZoom", zoomLevel)
         dxSetShaderValue(mapShader, "gAspect", aspect)
 
-        dxDrawRectangle(mapX - 2, mapY - 2, mapW + 4, mapH + 4, tocolor(10, 14, 20, 255))
+        exports.aura_ui:uiDrawRectangle(mapX - 2, mapY - 2, mapW + 4, mapH + 4, tocolor(10, 14, 20, 255))
         dxDrawImage(mapX, mapY, mapW, mapH, mapShader, 0, 0, 0, tocolor(255, 255, 255, 255))
 
         local px, py, pz = getElementPosition(localPlayer)
@@ -461,11 +461,11 @@ addEventHandler("onClientRender", root, function()
             end
         end
 
-        dxDrawRectangle(mapX, mapY, mapW, mapH, tocolor(255, 255, 255, 25), false)
+        exports.aura_ui:uiDrawRectangle(mapX, mapY, mapW, mapH, tocolor(255, 255, 255, 25), false)
 
         local footerY = mapY + mapH + 12
         local footerText = "[SOL TIK] Haritada Gezin   |   [SAĞ TIK] Hedef Belirle / Kaldır   |   [TEKERLEK] Yakınlaş / Uzaklaş   |   [SPACE] Konumuma Git   |   [ESC] Kapat"
-        dxDrawText(footerText, mapX, footerY, mapX + mapW, footerY + 30, tocolor(175, 190, 210, 240), 1.0, fontMedium, "center")
+        exports.aura_ui:uiDrawText(footerText, mapX, footerY, mapX + mapW, footerY + 30, tocolor(175, 190, 210, 240), 1.0, fontMedium, "center")
     elseif currentTab == "GAME" or currentTab == "INFO" or currentTab == "STATS" then
         local listX = mapX
         local listY = mapY
@@ -483,22 +483,22 @@ addEventHandler("onClientRender", root, function()
             local isSel = (selectedGameMenuIndex == i)
 
             if isSel then
-                dxDrawRectangle(listX, iy, listW, itemH, tocolor(255, 255, 255, 255))
-                dxDrawRectangle(listX, iy, 5, itemH, tocolor(234, 179, 8, 255))
-                dxDrawText(item.title, listX + 20, iy + 10, listX + listW - 20, iy + 32, tocolor(10, 14, 20, 255), 1.0, fontBold)
-                dxDrawText(item.desc, listX + 20, iy + 32, listX + listW - 20, iy + itemH, tocolor(70, 85, 100, 240), 1.0, fontSmall, "left", "top", true)
+                exports.aura_ui:uiDrawRectangle(listX, iy, listW, itemH, tocolor(255, 255, 255, 255))
+                exports.aura_ui:uiDrawRectangle(listX, iy, 5, itemH, tocolor(234, 179, 8, 255))
+                exports.aura_ui:uiDrawText(item.title, listX + 20, iy + 10, listX + listW - 20, iy + 32, tocolor(10, 14, 20, 255), 1.0, fontBold)
+                exports.aura_ui:uiDrawText(item.desc, listX + 20, iy + 32, listX + listW - 20, iy + itemH, tocolor(70, 85, 100, 240), 1.0, fontSmall, "left", "top", true)
             else
-                dxDrawRectangle(listX, iy, listW, itemH, tocolor(15, 20, 28, 230))
-                dxDrawText(item.title, listX + 20, iy + 10, listX + listW - 20, iy + 32, tocolor(240, 245, 255, 240), 1.0, fontBold)
-                dxDrawText(item.desc, listX + 20, iy + 32, listX + listW - 20, iy + itemH, tocolor(140, 155, 175, 200), 1.0, fontSmall, "left", "top", true)
+                exports.aura_ui:uiDrawRectangle(listX, iy, listW, itemH, tocolor(15, 20, 28, 230))
+                exports.aura_ui:uiDrawText(item.title, listX + 20, iy + 10, listX + listW - 20, iy + 32, tocolor(240, 245, 255, 240), 1.0, fontBold)
+                exports.aura_ui:uiDrawText(item.desc, listX + 20, iy + 32, listX + listW - 20, iy + itemH, tocolor(140, 155, 175, 200), 1.0, fontSmall, "left", "top", true)
             end
         end
 
-        dxDrawRectangle(cardX, cardY, cardW, cardH, tocolor(12, 17, 24, 240))
-        dxDrawRectangle(cardX, cardY, cardW, 58, tocolor(16, 22, 32, 255))
+        exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, cardH, tocolor(12, 17, 24, 240))
+        exports.aura_ui:uiDrawRectangle(cardX, cardY, cardW, 58, tocolor(16, 22, 32, 255))
 
         local selectedTitle = gameMenuItems[selectedGameMenuIndex] and gameMenuItems[selectedGameMenuIndex].title or "Genel Bakış"
-        dxDrawText(string.upper(selectedTitle), cardX + 28, cardY + 16, cardX + cardW, cardY + 58, tocolor(255, 255, 255, 255), 1.0, fontTitle)
+        exports.aura_ui:uiDrawText(string.upper(selectedTitle), cardX + 28, cardY + 16, cardX + cardW, cardY + 58, tocolor(255, 255, 255, 255), 1.0, fontTitle)
 
         local pJob = getElementData(localPlayer, "char:job") or "Sivil - Freelancer"
         local infoRows = {}
@@ -543,9 +543,9 @@ addEventHandler("onClientRender", root, function()
 
         for i, row in ipairs(infoRows) do
             local iy = cardY + 76 + (i - 1) * 54
-            dxDrawRectangle(cardX + 28, iy, cardW - 56, 46, tocolor(18, 24, 34, 220))
-            dxDrawText(row[1], cardX + 44, iy + 13, cardX + 320, iy + 46, tocolor(150, 165, 185, 240), 1.0, fontBold)
-            dxDrawText(row[2], cardX + 320, iy + 13, cardX + cardW - 44, iy + 46, tocolor(255, 255, 255, 255), 1.0, fontBold, "right")
+            exports.aura_ui:uiDrawRectangle(cardX + 28, iy, cardW - 56, 46, tocolor(18, 24, 34, 220))
+            exports.aura_ui:uiDrawText(row[1], cardX + 44, iy + 13, cardX + 320, iy + 46, tocolor(150, 165, 185, 240), 1.0, fontBold)
+            exports.aura_ui:uiDrawText(row[2], cardX + 320, iy + 13, cardX + cardW - 44, iy + 46, tocolor(255, 255, 255, 255), 1.0, fontBold, "right")
         end
     end
 end)

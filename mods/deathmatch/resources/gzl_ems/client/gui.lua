@@ -4,30 +4,7 @@ local scale = math.max(0.85, math.min(screenW / baseW, screenH / baseH))
 
 local svgCache = {}
 
-local function getGlassSVG(w, h, r, bg1, bg2, strokeColor, strokeOpacity)
-    local key = string.format("%d_%d_%d_%s_%s", w, h, r, bg1 or "def", strokeColor or "def")
-    if not svgCache[key] or not isElement(svgCache[key]) then
-        bg1 = bg1 or "#0f172a"
-        bg2 = bg2 or "#090d16"
-        strokeColor = strokeColor or "#ffffff"
-        strokeOpacity = strokeOpacity or "0.12"
-
-        local svgXml = string.format([[
-            <svg width="%d" height="%d" viewBox="0 0 %d %d" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="bgGrad" x1="0%%" y1="0%%" x2="0%%" y2="100%%">
-                        <stop offset="0%%" stop-color="%s" stop-opacity="0.94"/>
-                        <stop offset="100%%" stop-color="%s" stop-opacity="0.98"/>
-                    </linearGradient>
-                </defs>
-                <rect x="0.5" y="0.5" width="%d" height="%d" rx="%d" ry="%d" fill="url(#bgGrad)" stroke="%s" stroke-opacity="%s" stroke-width="1"/>
-            </svg>
-        ]], w, h, w, h, bg1, bg2, w - 1, h - 1, r, r, strokeColor, strokeOpacity)
-
-        svgCache[key] = svgCreate(w, h, svgXml)
-    end
-    return svgCache[key]
-end
+-- Surfaces are rendered by AURA; ECG and medical state remain local.
 
 local fontTitle = nil
 local fontSub = nil
@@ -73,12 +50,12 @@ addEventHandler("onClientRender", root, function()
     local holdProg = getHoldProgress()
     local cooldownSec = getDistressCooldownRemaining()
 
-    dxDrawRectangle(0, 0, screenW, screenH, tocolor(5, 8, 14, 160))
+    exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(5, 8, 14, 160))
 
     local pulseRaw = math.sin(now / ((remSec > 0) and 400 or 800))
     local pulseAlpha = math.floor(math.max(0, pulseRaw) * 28)
     if pulseAlpha > 0 then
-        dxDrawRectangle(0, 0, screenW, screenH, tocolor(180, 20, 20, pulseAlpha))
+        exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(180, 20, 20, pulseAlpha))
     end
 
     local panelW = math.floor(540 * scale)
@@ -86,19 +63,14 @@ addEventHandler("onClientRender", root, function()
     local panelX = math.floor((screenW - panelW) / 2)
     local panelY = math.floor(screenH - panelH - (50 * scale))
 
-    local panelSvg = getGlassSVG(panelW, panelH, 12, "#0f172a", "#070b12", "#ffffff", "0.14")
-    if isElement(panelSvg) then
-        dxDrawImage(panelX, panelY, panelW, panelH, panelSvg, 0, 0, 0, tocolor(255, 255, 255, 255))
-    else
-        dxDrawRectangle(panelX, panelY, panelW, panelH, tocolor(15, 23, 42, 240))
-    end
+    exports.aura_ui:uiDrawPanel(panelX,panelY,panelW,panelH,12)
 
     local heartScale = 1.0 + (math.max(0, pulseRaw) * 0.15)
     local heartColor = (remSec > 0) and tocolor(239, 68, 68, 255) or tocolor(148, 163, 184, 180)
     local heartX = panelX + math.floor(20 * scale)
     local heartY = panelY + math.floor(16 * scale)
 
-    dxDrawText("♥", heartX, heartY, heartX + 22, heartY + 22, heartColor, 1.5 * scale * heartScale, "default-bold", "center", "center")
+    exports.aura_ui:uiDrawText("♥", heartX, heartY, heartX + 22, heartY + 22, heartColor, 1.5 * scale * heartScale, "default-bold", "center", "center")
 
     local titleX = panelX + math.floor(50 * scale)
     local titleY = panelY + math.floor(14 * scale)
@@ -106,8 +78,8 @@ addEventHandler("onClientRender", root, function()
     local subText = (remSec > 0) and "Nabız zayıf, kan kaybı devam ediyor... Tıbbi yardım bekleyin." or "Hayatta kalma süresi tükendi. Hastaneye sevk olabilirsiniz."
     local titleColor = (remSec > 0) and tocolor(248, 250, 252, 255) or tocolor(248, 113, 113, 255)
 
-    dxDrawText(titleText, titleX, titleY, panelX + panelW - 120, titleY + 18, titleColor, 1.0, fontTitle, "left", "center")
-    dxDrawText(subText, titleX, titleY + 18, panelX + panelW - 120, titleY + 34, tocolor(148, 163, 184, 210), 1.0, fontSub, "left", "center")
+    exports.aura_ui:uiDrawText(titleText, titleX, titleY, panelX + panelW - 120, titleY + 18, titleColor, 1.0, fontTitle, "left", "center")
+    exports.aura_ui:uiDrawText(subText, titleX, titleY + 18, panelX + panelW - 120, titleY + 34, tocolor(148, 163, 184, 210), 1.0, fontSub, "left", "center")
 
     local minutes = math.floor(remSec / 60)
     local seconds = remSec % 60
@@ -116,14 +88,14 @@ addEventHandler("onClientRender", root, function()
     local timerX = panelX + panelW - math.floor(95 * scale)
     local timerY = panelY + math.floor(14 * scale)
 
-    dxDrawText(timerStr, timerX, timerY, timerX + math.floor(75 * scale), timerY + math.floor(32 * scale), timerColor, 1.0, fontTimer, "right", "center")
+    exports.aura_ui:uiDrawText(timerStr, timerX, timerY, timerX + math.floor(75 * scale), timerY + math.floor(32 * scale), timerColor, 1.0, fontTimer, "right", "center")
 
     local ecgW = panelW - math.floor(40 * scale)
     local ecgH = math.floor(24 * scale)
     local ecgX = panelX + math.floor(20 * scale)
     local ecgMidY = panelY + math.floor(68 * scale)
 
-    dxDrawRectangle(ecgX, ecgMidY, ecgW, 1, tocolor(255, 255, 255, 25))
+    exports.aura_ui:uiDrawRectangle(ecgX, ecgMidY, ecgW, 1, tocolor(255, 255, 255, 25))
 
     if remSec > 0 then
         local step = 6
@@ -145,7 +117,7 @@ addEventHandler("onClientRender", root, function()
         end
     else
 
-        dxDrawRectangle(ecgX, ecgMidY, ecgW, 1, tocolor(239, 68, 68, 160))
+        exports.aura_ui:uiDrawRectangle(ecgX, ecgMidY, ecgW, 1, tocolor(239, 68, 68, 160))
     end
 
     local btnW = math.floor((panelW - math.floor(48 * scale)) / 2)
@@ -159,13 +131,8 @@ addEventHandler("onClientRender", root, function()
     local gStroke = (cooldownSec > 0) and "#334155" or "#0284c7"
     local gTextColor = (cooldownSec > 0) and tocolor(148, 163, 184, 190) or tocolor(56, 189, 248, 255)
 
-    local gSvg = getGlassSVG(btnW, btnH, 8, gBg1, gBg2, gStroke, (cooldownSec > 0) and "0.2" or "0.6")
-    if isElement(gSvg) then
-        dxDrawImage(btnGX, btnY, btnW, btnH, gSvg, 0, 0, 0, tocolor(255, 255, 255, 255))
-    else
-        dxDrawRectangle(btnGX, btnY, btnW, btnH, tocolor(20, 30, 48, 230))
-    end
-    dxDrawText(gText, btnGX, btnY, btnGX + btnW, btnY + btnH, gTextColor, 1.0, fontSub, "center", "center")
+    exports.aura_ui:uiDrawButtonSurface(btnGX,btnY,btnW,btnH,8,"info",cooldownSec > 0 and "normal" or "hover")
+    exports.aura_ui:uiDrawText(gText, btnGX, btnY, btnGX + btnW, btnY + btnH, gTextColor, 1.0, fontSub, "center", "center")
 
     local btnEX = btnGX + btnW + math.floor(8 * scale)
     local eText, eBg1, eBg2, eStroke, eTextColor
@@ -192,19 +159,14 @@ addEventHandler("onClientRender", root, function()
         end
     end
 
-    local eSvg = getGlassSVG(btnW, btnH, 8, eBg1, eBg2, eStroke, "0.5")
-    if isElement(eSvg) then
-        dxDrawImage(btnEX, btnY, btnW, btnH, eSvg, 0, 0, 0, tocolor(255, 255, 255, 255))
-    else
-        dxDrawRectangle(btnEX, btnY, btnW, btnH, tocolor(24, 32, 47, 230))
-    end
+    exports.aura_ui:uiDrawButtonSurface(btnEX,btnY,btnW,btnH,8,"danger","normal")
 
     if holdProg > 0 then
         local fillW = math.floor((btnW - 4) * holdProg)
-        dxDrawRectangle(btnEX + 2, btnY + 2, fillW, btnH - 4, tocolor(34, 197, 94, 160))
+        exports.aura_ui:uiDrawRectangle(btnEX + 2, btnY + 2, fillW, btnH - 4, tocolor(34, 197, 94, 160))
     end
 
-    dxDrawText(eText, btnEX, btnY, btnEX + btnW, btnY + btnH, eTextColor, 1.0, fontSub, "center", "center")
+    exports.aura_ui:uiDrawText(eText, btnEX, btnY, btnEX + btnW, btnY + btnH, eTextColor, 1.0, fontSub, "center", "center")
 end)
 
 addEventHandler("onClientResourceStop", resourceRoot, function()

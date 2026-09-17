@@ -18,6 +18,9 @@ addEventHandler("onResourceStop", resourceRoot, function()
         destroyElement(depotPedElement)
         depotPedElement = nil
     end
+    for _, ply in ipairs(getElementsByType("player")) do
+        JobServer.handlePlayerDisconnect(ply)
+    end
 end)
 
 addEventHandler("onPlayerQuit", root, function()

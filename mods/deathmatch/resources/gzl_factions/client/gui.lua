@@ -474,16 +474,16 @@ local function drawGlassCard(x, y, w, h, radius, alphaMult, strokeColor)
     if exports.gzl_ui and exports.gzl_ui.drawGlassPanel then
         exports.gzl_ui:drawGlassPanel(x, y, w, h, radius, tocolor(255, 255, 255, math.floor(255 * alphaMult)))
     else
-        dxDrawRectangle(x, y, w, h, tocolor(15, 23, 42, bgAlpha))
+        exports.aura_ui:uiDrawRectangle(x, y, w, h, tocolor(15, 23, 42, bgAlpha))
     end
     if strokeColor then
         if exports.gzl_ui and exports.gzl_ui.drawRoundedBorder then
             exports.gzl_ui:drawRoundedBorder(x, y, w, h, radius, 1.0, strokeColor)
         else
-            dxDrawRectangle(x, y, w, 1, strokeColor)
-            dxDrawRectangle(x, y + h - 1, w, 1, strokeColor)
-            dxDrawRectangle(x, y, 1, h, strokeColor)
-            dxDrawRectangle(x + w - 1, y, 1, h, strokeColor)
+            exports.aura_ui:uiDrawRectangle(x, y, w, 1, strokeColor)
+            exports.aura_ui:uiDrawRectangle(x, y + h - 1, w, 1, strokeColor)
+            exports.aura_ui:uiDrawRectangle(x, y, 1, h, strokeColor)
+            exports.aura_ui:uiDrawRectangle(x + w - 1, y, 1, h, strokeColor)
         end
     end
 end
@@ -497,7 +497,7 @@ local function drawSubPanel(x, y, w, h, radius, alphaMult, fillAlpha)
         exports.gzl_ui:drawRoundedRectangle(x, y, w, h, radius, c)
         exports.gzl_ui:drawRoundedBorder(x, y, w, h, radius, 1.0, borderC)
     else
-        dxDrawRectangle(x, y, w, h, c)
+        exports.aura_ui:uiDrawRectangle(x, y, w, h, c)
     end
 end
 
@@ -511,18 +511,18 @@ local function drawCustomInput(fieldId, x, y, w, h, placeholder, textVal, font, 
         exports.gzl_ui:drawRoundedRectangle(x, y, w, h, 8, tocolor(15, 23, 42, math.floor(bgAlpha * alphaMult)))
         exports.gzl_ui:drawRoundedBorder(x, y, w, h, 8, 1.0, borderC)
     else
-        dxDrawRectangle(x, y, w, h, tocolor(15, 23, 42, math.floor(bgAlpha * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(x, y, w, h, tocolor(15, 23, 42, math.floor(bgAlpha * alphaMult)))
     end
 
     local textToRender = textVal or ""
     if #textToRender == 0 and not isActive then
-        dxDrawText(placeholder, x + 10 * scale, y, x + w - 10 * scale, y + h, tocolor(148, 163, 184, math.floor(150 * alphaMult)), 1, font, "left", "center", true)
+        exports.aura_ui:uiDrawText(placeholder, x + 10 * scale, y, x + w - 10 * scale, y + h, tocolor(148, 163, 184, math.floor(150 * alphaMult)), 1, font, "left", "center", true)
     else
         local cursor = ""
         if isActive and (getTickCount() % 1000 < 500) then
             cursor = "|"
         end
-        dxDrawText(textToRender .. cursor, x + 10 * scale, y, x + w - 10 * scale, y + h, tocolor(255, 255, 255, math.floor(240 * alphaMult)), 1, font, "left", "center", true)
+        exports.aura_ui:uiDrawText(textToRender .. cursor, x + 10 * scale, y, x + w - 10 * scale, y + h, tocolor(255, 255, 255, math.floor(240 * alphaMult)), 1, font, "left", "center", true)
     end
 
     return isHov
@@ -536,7 +536,7 @@ local function drawScrollBar(x, y, w, h, totalItems, visibleItems, currentScroll
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(x, y, w, h, math.floor(w / 2), trackBg)
     else
-        dxDrawRectangle(x, y, w, h, trackBg)
+        exports.aura_ui:uiDrawRectangle(x, y, w, h, trackBg)
     end
 
     local thumbH = math.max(16 * scale, math.floor(h * (visibleItems / totalItems)))
@@ -546,7 +546,7 @@ local function drawScrollBar(x, y, w, h, totalItems, visibleItems, currentScroll
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(x, thumbY, w, thumbH, math.floor(w / 2), thumbColor)
     else
-        dxDrawRectangle(x, thumbY, w, thumbH, thumbColor)
+        exports.aura_ui:uiDrawRectangle(x, thumbY, w, thumbH, thumbColor)
     end
 end
 
@@ -582,11 +582,11 @@ local function drawActionButton(id, text, x, y, w, h, theme, alphaMult, font)
             exports.gzl_ui:drawRoundedRectangle(x, y, w, h, 8, bgC)
             exports.gzl_ui:drawRoundedBorder(x, y, w, h, 8, 1.0, borderC)
         else
-            dxDrawRectangle(x, y, w, h, bgC)
+            exports.aura_ui:uiDrawRectangle(x, y, w, h, bgC)
         end
     end
 
-    dxDrawText(text, x, y, x + w, y + h, tocolor(255, 255, 255, math.floor(255 * alphaMult)), 1, font, "center", "center", true)
+    exports.aura_ui:uiDrawText(text, x, y, x + w, y + h, tocolor(255, 255, 255, math.floor(255 * alphaMult)), 1, font, "center", "center", true)
     return isHov
 end
 
@@ -611,9 +611,9 @@ addEventHandler("onClientRender", root, function()
             local fontSub = getUIFont("regular", 10)
             local fontBold = getUIFont("bold", 10)
 
-            dxDrawText("BİRLİK DAVETİ ALINDI (" .. remTime .. "s)", cardX + 16 * scale, cardY + 12 * scale, cardX + cardW - 16 * scale, cardY + 28 * scale, tocolor(56, 189, 248, math.floor(255 * pAlpha)), 1, fontTitle, "left", "center")
+            exports.aura_ui:uiDrawText("BİRLİK DAVETİ ALINDI (" .. remTime .. "s)", cardX + 16 * scale, cardY + 12 * scale, cardX + cardW - 16 * scale, cardY + 28 * scale, tocolor(56, 189, 248, math.floor(255 * pAlpha)), 1, fontTitle, "left", "center")
             local desc = string.format("%s adlı yetkili sizi %s birliğine davet etti.\nTeklif Edilen Rütbe: %s", activeInvitePrompt.sender_name or "Yetkili", activeInvitePrompt.faction_name or "Birlik", activeInvitePrompt.rank_name or "Üye")
-            dxDrawText(desc, cardX + 16 * scale, cardY + 34 * scale, cardX + cardW - 16 * scale, cardY + 76 * scale, tocolor(241, 245, 249, math.floor(230 * pAlpha)), 1, fontSub, "left", "top")
+            exports.aura_ui:uiDrawText(desc, cardX + 16 * scale, cardY + 34 * scale, cardX + cardW - 16 * scale, cardY + 76 * scale, tocolor(241, 245, 249, math.floor(230 * pAlpha)), 1, fontSub, "left", "top")
 
             local btnW = math.floor((cardW - 40 * scale) / 2)
             local btnH = math.floor(34 * scale)
@@ -646,7 +646,7 @@ addEventHandler("onClientRender", root, function()
     local panelX = math.floor((screenW - panelW) / 2)
     local panelY = math.floor((screenH - panelH) / 2)
 
-    dxDrawRectangle(0, 0, screenW, screenH, tocolor(5, 8, 14, math.floor(140 * alphaMult)))
+    exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(5, 8, 14, math.floor(140 * alphaMult)))
 
     local fType = factionData and factionData.type or "default"
     local theme = FactionConfig and FactionConfig.getTypeTheme(fType) or { color = { 56, 189, 248 } }
@@ -658,10 +658,10 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, 14, tocolor(24, 34, 53, math.floor(180 * alphaMult)))
     else
-        dxDrawRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, tocolor(24, 34, 53, math.floor(180 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(panelX + 2, panelY + 2, panelW - 4, headerH, tocolor(24, 34, 53, math.floor(180 * alphaMult)))
     end
 
-    dxDrawRectangle(panelX + 30 * scale, panelY + 2, panelW - 60 * scale, 2, accentColor)
+    exports.aura_ui:uiDrawRectangle(panelX + 30 * scale, panelY + 2, panelW - 60 * scale, 2, accentColor)
 
     local logoSize = math.floor(46 * scale)
     local logoX = panelX + math.floor(20 * scale)
@@ -670,7 +670,7 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(logoX, logoY, logoSize, logoSize, 10, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(220 * alphaMult)))
     else
-        dxDrawRectangle(logoX, logoY, logoSize, logoSize, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(220 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(logoX, logoY, logoSize, logoSize, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(220 * alphaMult)))
     end
 
     local iconDrawn = false
@@ -683,13 +683,13 @@ addEventHandler("onClientRender", root, function()
     end
     if not iconDrawn then
         local emblemText = factionData and (factionData.short_name or "GZL") or "GZL"
-        dxDrawText(string.sub(emblemText, 1, 4), logoX, logoY, logoX + logoSize, logoY + logoSize, tocolor(15, 23, 42, globalAlpha), 1, fontTab, "center", "center")
+        exports.aura_ui:uiDrawText(string.sub(emblemText, 1, 4), logoX, logoY, logoX + logoSize, logoY + logoSize, tocolor(15, 23, 42, globalAlpha), 1, fontTab, "center", "center")
     end
 
     local fTitle = factionData and factionData.name or "Birlik Sistemi"
     local fSub = string.format("[%s] • %s • ÜYELER: %d/%d", factionData and factionData.short_name or "TAG", theme.title or "Teşkilat", onlineCount, totalCount)
-    dxDrawText(fTitle, logoX + logoSize + 14 * scale, panelY + 14 * scale, panelX + panelW - 240 * scale, panelY + 36 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontHeaderTitle, "left", "center", true)
-    dxDrawText(fSub, logoX + logoSize + 14 * scale, panelY + 38 * scale, panelX + panelW - 240 * scale, panelY + 56 * scale, tocolor(148, 163, 184, math.floor(210 * alphaMult)), 1, fontHeaderSub, "left", "center", true)
+    exports.aura_ui:uiDrawText(fTitle, logoX + logoSize + 14 * scale, panelY + 14 * scale, panelX + panelW - 240 * scale, panelY + 36 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontHeaderTitle, "left", "center", true)
+    exports.aura_ui:uiDrawText(fSub, logoX + logoSize + 14 * scale, panelY + 38 * scale, panelX + panelW - 240 * scale, panelY + 56 * scale, tocolor(148, 163, 184, math.floor(210 * alphaMult)), 1, fontHeaderSub, "left", "center", true)
 
     local closeSize = math.floor(34 * scale)
     local closeX = panelX + panelW - closeSize - 18 * scale
@@ -700,9 +700,9 @@ addEventHandler("onClientRender", root, function()
     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(closeX, closeY, closeSize, closeSize, 8, closeBg)
     else
-        dxDrawRectangle(closeX, closeY, closeSize, closeSize, closeBg)
+        exports.aura_ui:uiDrawRectangle(closeX, closeY, closeSize, closeSize, closeBg)
     end
-    dxDrawText("✕", closeX, closeY, closeX + closeSize, closeY + closeSize, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "center", "center")
+    exports.aura_ui:uiDrawText("✕", closeX, closeY, closeX + closeSize, closeY + closeSize, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "center", "center")
 
     local isOnDuty = playerData and (playerData.duty == true)
     local dutyBtnW = math.floor(140 * scale)
@@ -720,7 +720,7 @@ addEventHandler("onClientRender", root, function()
         exports.gzl_ui:drawRoundedRectangle(dutyBtnX, dutyBtnY, dutyBtnW, dutyBtnH, 8, dutyBgColor)
         exports.gzl_ui:drawRoundedBorder(dutyBtnX, dutyBtnY, dutyBtnW, dutyBtnH, 8, 1.0, dutyBorderColor)
     else
-        dxDrawRectangle(dutyBtnX, dutyBtnY, dutyBtnW, dutyBtnH, dutyBgColor)
+        exports.aura_ui:uiDrawRectangle(dutyBtnX, dutyBtnY, dutyBtnW, dutyBtnH, dutyBgColor)
     end
 
     local dDotSize = math.floor(8 * scale)
@@ -731,10 +731,10 @@ addEventHandler("onClientRender", root, function()
     elseif exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
         exports.gzl_ui:drawRoundedRectangle(dDotX, dDotY, dDotSize, dDotSize, math.floor(dDotSize / 2), dutyDotColor)
     else
-        dxDrawRectangle(dDotX, dDotY, dDotSize, dDotSize, dutyDotColor)
+        exports.aura_ui:uiDrawRectangle(dDotX, dDotY, dDotSize, dDotSize, dutyDotColor)
     end
     local dutyStr = isOnDuty and "MESAİDE [ON]" or "İZİNLİ [OFF]"
-    dxDrawText(dutyStr, dutyBtnX + 26 * scale, dutyBtnY, dutyBtnX + dutyBtnW - 6 * scale, dutyBtnY + dutyBtnH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "center", "center")
+    exports.aura_ui:uiDrawText(dutyStr, dutyBtnX + 26 * scale, dutyBtnY, dutyBtnX + dutyBtnW - 6 * scale, dutyBtnY + dutyBtnH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "center", "center")
 
     local tabBarY = panelY + headerH + math.floor(10 * scale)
     local tabH = math.floor(40 * scale)
@@ -762,10 +762,10 @@ addEventHandler("onClientRender", root, function()
                 exports.gzl_ui:drawRoundedBorder(tabX, tabBarY, tabW, tabH, 8, 1.0, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(80 * alphaMult)))
             end
         else
-            dxDrawRectangle(tabX, tabBarY, tabW, tabH, tabBg)
+            exports.aura_ui:uiDrawRectangle(tabX, tabBarY, tabW, tabH, tabBg)
         end
 
-        dxDrawText(tab.title, tabX, tabBarY, tabX + tabW, tabBarY + tabH, tabTextColor, 1, fontTab, "center", "center", true)
+        exports.aura_ui:uiDrawText(tab.title, tabX, tabBarY, tabX + tabW, tabBarY + tabH, tabTextColor, 1, fontTab, "center", "center", true)
     end
 
     local contentX = panelX + math.floor(20 * scale)
@@ -781,7 +781,7 @@ addEventHandler("onClientRender", root, function()
         local cardH1 = math.floor(130 * scale)
         drawSubPanel(contentX, contentY, leftW, cardH1, 12, alphaMult, 140)
 
-        dxDrawText("PERSONEL GÖREV KARTI & DURUM", contentX + 16 * scale, contentY + 12 * scale, contentX + leftW, contentY + 28 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("PERSONEL GÖREV KARTI & DURUM", contentX + 16 * scale, contentY + 12 * scale, contentX + leftW, contentY + 28 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local cName = playerData and playerData.character_name or "Giriş Yapılmadı"
         local rName = playerData and playerData.rank_name or "Rütbe Belirsiz"
@@ -791,13 +791,13 @@ addEventHandler("onClientRender", root, function()
             pSalary = factionData.ranks[rId].salary or 0
         end
 
-        dxDrawText(cName, contentX + 16 * scale, contentY + 32 * scale, contentX + leftW - 170 * scale, contentY + 56 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
+        exports.aura_ui:uiDrawText(cName, contentX + 16 * scale, contentY + 32 * scale, contentX + leftW - 170 * scale, contentY + 56 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
         local rankAndPay = string.format("%s (Derece %d) • %s / saat", rName, rId, formatCurrency(pSalary))
-        dxDrawText(rankAndPay, contentX + 16 * scale, contentY + 56 * scale, contentX + leftW - 170 * scale, contentY + 74 * scale, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(240 * alphaMult)), 1, fontBody, "left", "center", true)
+        exports.aura_ui:uiDrawText(rankAndPay, contentX + 16 * scale, contentY + 56 * scale, contentX + leftW - 170 * scale, contentY + 74 * scale, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(240 * alphaMult)), 1, fontBody, "left", "center", true)
 
         local dutyStatusStr = isOnDuty and "AKTİF MESAİDE (GÖREVDE)" or "İZİNLİ / PASİF DURUMDA"
         local dutyStatusCol = isOnDuty and tocolor(34, 197, 94, math.floor(240 * alphaMult)) or tocolor(148, 163, 184, math.floor(200 * alphaMult))
-        dxDrawText("VARDİYA: " .. dutyStatusStr, contentX + 16 * scale, contentY + 84 * scale, contentX + leftW - 170 * scale, contentY + 104 * scale, dutyStatusCol, 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("VARDİYA: " .. dutyStatusStr, contentX + 16 * scale, contentY + 84 * scale, contentX + leftW - 170 * scale, contentY + 104 * scale, dutyStatusCol, 1, fontSmall, "left", "center")
 
         local dutyToggleW = math.floor(140 * scale)
         local dutyToggleH = math.floor(38 * scale)
@@ -810,7 +810,7 @@ addEventHandler("onClientRender", root, function()
         local botCardH = contentH - cardH1 - math.floor(12 * scale)
         drawSubPanel(contentX, botCardY, leftW, botCardH, 12, alphaMult, 140)
 
-        dxDrawText("TAKTIK HABERLEŞME & TELSİZ SİSTEMİ", contentX + 16 * scale, botCardY + 14 * scale, contentX + leftW, botCardY + 32 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
+        exports.aura_ui:uiDrawText("TAKTIK HABERLEŞME & TELSİZ SİSTEMİ", contentX + 16 * scale, botCardY + 14 * scale, contentX + leftW, botCardY + 32 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
 
         local freqBoxW = leftW - 32 * scale
         local freqBoxH = math.floor(76 * scale)
@@ -821,18 +821,18 @@ addEventHandler("onClientRender", root, function()
             exports.gzl_ui:drawRoundedRectangle(freqBoxX, freqBoxY, freqBoxW, freqBoxH, 8, tocolor(12, 17, 29, math.floor(200 * alphaMult)))
             exports.gzl_ui:drawRoundedBorder(freqBoxX, freqBoxY, freqBoxW, freqBoxH, 8, 1.0, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(80 * alphaMult)))
         else
-            dxDrawRectangle(freqBoxX, freqBoxY, freqBoxW, freqBoxH, tocolor(12, 17, 29, math.floor(200 * alphaMult)))
+            exports.aura_ui:uiDrawRectangle(freqBoxX, freqBoxY, freqBoxW, freqBoxH, tocolor(12, 17, 29, math.floor(200 * alphaMult)))
         end
 
         local assignedFreq = theme.channel or "155.0"
         local channelTitle = theme.channelName or (assignedFreq .. " MHz Taktik Frekansı")
         local encryptionTxt = theme.encryption or "MIL-SPEC Şifreli Telsiz Ağı"
 
-        dxDrawText(assignedFreq, freqBoxX + 16 * scale, freqBoxY + 10 * scale, freqBoxX + 140 * scale, freqBoxY + 44 * scale, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontLarge, "left", "center")
-        dxDrawText("MHz", freqBoxX + 88 * scale, freqBoxY + 18 * scale, freqBoxX + 160 * scale, freqBoxY + 40 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText(assignedFreq, freqBoxX + 16 * scale, freqBoxY + 10 * scale, freqBoxX + 140 * scale, freqBoxY + 44 * scale, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("MHz", freqBoxX + 88 * scale, freqBoxY + 18 * scale, freqBoxX + 160 * scale, freqBoxY + 40 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
 
-        dxDrawText(channelTitle, freqBoxX + 140 * scale, freqBoxY + 12 * scale, freqBoxX + freqBoxW - 165 * scale, freqBoxY + 30 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
-        dxDrawText("🔒 " .. encryptionTxt .. " • [Sivillere Kapalı]", freqBoxX + 140 * scale, freqBoxY + 32 * scale, freqBoxX + freqBoxW - 165 * scale, freqBoxY + 50 * scale, tocolor(52, 211, 153, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center", true)
+        exports.aura_ui:uiDrawText(channelTitle, freqBoxX + 140 * scale, freqBoxY + 12 * scale, freqBoxX + freqBoxW - 165 * scale, freqBoxY + 30 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
+        exports.aura_ui:uiDrawText("🔒 " .. encryptionTxt .. " • [Sivillere Kapalı]", freqBoxX + 140 * scale, freqBoxY + 32 * scale, freqBoxX + freqBoxW - 165 * scale, freqBoxY + 50 * scale, tocolor(52, 211, 153, math.floor(220 * alphaMult)), 1, fontSmall, "left", "center", true)
 
         local rConnW = math.floor(150 * scale)
         local rConnH = math.floor(36 * scale)
@@ -842,7 +842,7 @@ addEventHandler("onClientRender", root, function()
         drawActionButton("dash_radio_connect", connBtnText, rConnX, rConnY, rConnW, rConnH, "blue", alphaMult, fontSmall)
 
         local guideY = freqBoxY + freqBoxH + math.floor(14 * scale)
-        dxDrawText("OPERASYONEL TELSİZ PROTOKOLÜ & TALİMATLAR", contentX + 16 * scale, guideY, contentX + leftW, guideY + 18 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("OPERASYONEL TELSİZ PROTOKOLÜ & TALİMATLAR", contentX + 16 * scale, guideY, contentX + leftW, guideY + 18 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local radioGuideTexts = {
             "• Teşkilat frekansına sivil telsizler erişemez; yetkisiz telsizler frekansa giremez.",
@@ -852,21 +852,21 @@ addEventHandler("onClientRender", root, function()
         }
         local rgY = guideY + math.floor(22 * scale)
         for _, rgt in ipairs(radioGuideTexts) do
-            dxDrawText(rgt, contentX + 16 * scale, rgY, contentX + leftW - 16 * scale, rgY + 18 * scale, tocolor(203, 213, 225, math.floor(210 * alphaMult)), 1, fontSmall, "left", "center", true)
+            exports.aura_ui:uiDrawText(rgt, contentX + 16 * scale, rgY, contentX + leftW - 16 * scale, rgY + 18 * scale, tocolor(203, 213, 225, math.floor(210 * alphaMult)), 1, fontSmall, "left", "center", true)
             rgY = rgY + 22 * scale
         end
 
         local rCardH1 = math.floor(175 * scale)
         drawSubPanel(rightX, contentY, rightW, rCardH1, 12, alphaMult, 140)
-        dxDrawText("BİRLİK KASASI & MALİ DURUM", rightX + 16 * scale, contentY + 14 * scale, rightX + rightW, contentY + 30 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText(formatCurrency(factionData and factionData.vault_balance or 0), rightX + 16 * scale, contentY + 34 * scale, rightX + rightW - 16 * scale, contentY + 70 * scale, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText("BİRLİK KASASI & MALİ DURUM", rightX + 16 * scale, contentY + 14 * scale, rightX + rightW, contentY + 30 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText(formatCurrency(factionData and factionData.vault_balance or 0), rightX + 16 * scale, contentY + 34 * scale, rightX + rightW - 16 * scale, contentY + 70 * scale, tocolor(52, 211, 153, globalAlpha), 1, fontLarge, "left", "center")
 
         local pCashStr = string.format("Cüzdanınızdaki Nakit: %s", formatCurrency(playerData and playerData.cash or 0))
-        dxDrawText(pCashStr, rightX + 16 * scale, contentY + 74 * scale, rightX + rightW - 16 * scale, contentY + 92 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontBody, "left", "center")
+        exports.aura_ui:uiDrawText(pCashStr, rightX + 16 * scale, contentY + 74 * scale, rightX + rightW - 16 * scale, contentY + 92 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontBody, "left", "center")
 
         local canWithStr = (playerData and playerData.canWithdraw) and "✓ Kasa Çekim Yetkiniz Var" or "✕ Para Çekme Yetkiniz Yok"
         local canWithCol = (playerData and playerData.canWithdraw) and tocolor(52, 211, 153, math.floor(200 * alphaMult)) or tocolor(239, 68, 68, math.floor(200 * alphaMult))
-        dxDrawText(canWithStr, rightX + 16 * scale, contentY + 96 * scale, rightX + rightW - 16 * scale, contentY + 114 * scale, canWithCol, 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText(canWithStr, rightX + 16 * scale, contentY + 96 * scale, rightX + rightW - 16 * scale, contentY + 114 * scale, canWithCol, 1, fontSmall, "left", "center")
 
         drawActionButton("dash_vault_jump", "Kasa İşlemlerini Aç →", rightX + 16 * scale, contentY + 124 * scale, rightW - 32 * scale, 34 * scale, "blue", alphaMult, fontBodyBold)
 
@@ -874,24 +874,24 @@ addEventHandler("onClientRender", root, function()
         local rCardY2 = contentY + rCardH1 + math.floor(12 * scale)
         drawSubPanel(rightX, rCardY2, rightW, rCardH2, 12, alphaMult, 140)
 
-        dxDrawText("DEPARTMAN KADROSU & KAPASİTE", rightX + 16 * scale, rCardY2 + 14 * scale, rightX + rightW, rCardY2 + 30 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
-        dxDrawText(string.format("%d Aktif Memur Çevrimiçi", onlineCount), rightX + 16 * scale, rCardY2 + 34 * scale, rightX + rightW, rCardY2 + 56 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontLarge, "left", "center")
-        dxDrawText(string.format("Toplam Kayıtlı Personel: %d / %d", totalCount, factionData and factionData.max_members or 50), rightX + 16 * scale, rCardY2 + 58 * scale, rightX + rightW, rCardY2 + 76 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontBody, "left", "center")
+        exports.aura_ui:uiDrawText("DEPARTMAN KADROSU & KAPASİTE", rightX + 16 * scale, rCardY2 + 14 * scale, rightX + rightW, rCardY2 + 30 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
+        exports.aura_ui:uiDrawText(string.format("%d Aktif Memur Çevrimiçi", onlineCount), rightX + 16 * scale, rCardY2 + 34 * scale, rightX + rightW, rCardY2 + 56 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontLarge, "left", "center")
+        exports.aura_ui:uiDrawText(string.format("Toplam Kayıtlı Personel: %d / %d", totalCount, factionData and factionData.max_members or 50), rightX + 16 * scale, rCardY2 + 58 * scale, rightX + rightW, rCardY2 + 76 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontBody, "left", "center")
 
         local maxM = factionData and factionData.max_members or 50
         local barProg = math.min(1, totalCount / maxM)
         local pBarW = rightW - 32 * scale
         local pBarH = 6 * scale
-        dxDrawRectangle(rightX + 16 * scale, rCardY2 + 84 * scale, pBarW, pBarH, tocolor(15, 23, 42, math.floor(220 * alphaMult)))
-        dxDrawRectangle(rightX + 16 * scale, rCardY2 + 84 * scale, math.floor(pBarW * barProg), pBarH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(240 * alphaMult)))
-        dxDrawText(string.format("Kadro Doluluk Oranı: %%%d", math.floor(barProg * 100)), rightX + 16 * scale, rCardY2 + 94 * scale, rightX + rightW, rCardY2 + 110 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawRectangle(rightX + 16 * scale, rCardY2 + 84 * scale, pBarW, pBarH, tocolor(15, 23, 42, math.floor(220 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(rightX + 16 * scale, rCardY2 + 84 * scale, math.floor(pBarW * barProg), pBarH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(240 * alphaMult)))
+        exports.aura_ui:uiDrawText(string.format("Kadro Doluluk Oranı: %%%d", math.floor(barProg * 100)), rightX + 16 * scale, rCardY2 + 94 * scale, rightX + rightW, rCardY2 + 110 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local fRoleDesc = string.format("Teşkilat Türü: %s\nYönetici Yetkisi: %s\nPanel Kısayolu: F6 Tuşu",
             theme.title or "Resmi Teşkilat",
             (playerData and playerData.canManage) and "Yetkili Komuta Kademesi" or "Standart Personel",
             "F6"
         )
-        dxDrawText(fRoleDesc, rightX + 16 * scale, rCardY2 + 120 * scale, rightX + rightW - 16 * scale, rCardY2 + rCardH2 - 12 * scale, tocolor(148, 163, 184, math.floor(190 * alphaMult)), 1, fontSmall, "left", "top")
+        exports.aura_ui:uiDrawText(fRoleDesc, rightX + 16 * scale, rCardY2 + 120 * scale, rightX + rightW - 16 * scale, rCardY2 + rCardH2 - 12 * scale, tocolor(148, 163, 184, math.floor(190 * alphaMult)), 1, fontSmall, "left", "top")
 
     elseif activeTab == 2 then
         local topH = math.floor(40 * scale)
@@ -914,9 +914,9 @@ addEventHandler("onClientRender", root, function()
             if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                 exports.gzl_ui:drawRoundedRectangle(fPillX, contentY, pillW, topH, 8, pBg)
             else
-                dxDrawRectangle(fPillX, contentY, pillW, topH, pBg)
+                exports.aura_ui:uiDrawRectangle(fPillX, contentY, pillW, topH, pBg)
             end
-            dxDrawText(p.title, fPillX, contentY, fPillX + pillW, contentY + topH, pTextColor, 1, fontSmall, "center", "center")
+            exports.aura_ui:uiDrawText(p.title, fPillX, contentY, fPillX + pillW, contentY + topH, pTextColor, 1, fontSmall, "center", "center")
             fPillX = fPillX + pillW + math.floor(8 * scale)
         end
 
@@ -931,7 +931,7 @@ addEventHandler("onClientRender", root, function()
         drawSubPanel(contentX, tableY, contentW, tableH, 12, alphaMult, 140)
 
         local thH = math.floor(32 * scale)
-        dxDrawRectangle(contentX, tableY, contentW, thH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(contentX, tableY, contentW, thH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
 
         local col1X = contentX + math.floor(16 * scale)
         local col2X = col1X + math.floor(90 * scale)
@@ -939,11 +939,11 @@ addEventHandler("onClientRender", root, function()
         local col4X = col3X + math.floor(180 * scale)
         local col5X = col4X + math.floor(120 * scale)
 
-        dxDrawText("DURUM", col1X, tableY, col2X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("ÜYE ADI & ID", col2X, tableY, col3X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("RÜTBE & DERECE", col3X, tableY, col4X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("GÖREV DURUMU", col4X, tableY, col5X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("İŞLEMLER", col5X, tableY, contentX + contentW - 16 * scale, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("DURUM", col1X, tableY, col2X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("ÜYE ADI & ID", col2X, tableY, col3X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("RÜTBE & DERECE", col3X, tableY, col4X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("GÖREV DURUMU", col4X, tableY, col5X, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("İŞLEMLER", col5X, tableY, contentX + contentW - 16 * scale, tableY + thH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local filteredMembers = {}
         local q = string.lower(rosterSearchText)
@@ -971,7 +971,7 @@ addEventHandler("onClientRender", root, function()
         end
 
         if #filteredMembers == 0 then
-            dxDrawText("Herhangi bir üye bulunamadı.", contentX, tableY + thH, contentX + contentW, tableY + tableH, tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontBody, "center", "center")
+            exports.aura_ui:uiDrawText("Herhangi bir üye bulunamadı.", contentX, tableY + thH, contentX + contentW, tableY + tableH, tocolor(148, 163, 184, math.floor(160 * alphaMult)), 1, fontBody, "center", "center")
         else
             for idx = 1, maxRows do
                 local itemIndex = rosterScroll + idx
@@ -984,7 +984,7 @@ addEventHandler("onClientRender", root, function()
                     if isRowHov then
                         rowBg = tocolor(30, 41, 59, math.floor(140 * alphaMult))
                     end
-                    dxDrawRectangle(contentX, rowY, contentW, rowH, rowBg)
+                    exports.aura_ui:uiDrawRectangle(contentX, rowY, contentW, rowH, rowBg)
 
                     local dotCol = m.is_online and tocolor(34, 197, 94, math.floor(240 * alphaMult)) or tocolor(100, 116, 139, math.floor(180 * alphaMult))
                     local dotTxt = m.is_online and "Çevrimiçi" or "Çevrimdışı"
@@ -995,20 +995,20 @@ addEventHandler("onClientRender", root, function()
                     elseif exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                         exports.gzl_ui:drawRoundedRectangle(col1X, sDotY, sDotSize, sDotSize, math.floor(sDotSize / 2), dotCol)
                     else
-                        dxDrawRectangle(col1X, sDotY, sDotSize, sDotSize, dotCol)
+                        exports.aura_ui:uiDrawRectangle(col1X, sDotY, sDotSize, sDotSize, dotCol)
                     end
-                    dxDrawText(dotTxt, col1X + 14 * scale, rowY, col2X, rowY + rowH, dotCol, 1, fontSmall, "left", "center")
+                    exports.aura_ui:uiDrawText(dotTxt, col1X + 14 * scale, rowY, col2X, rowY + rowH, dotCol, 1, fontSmall, "left", "center")
 
-                    dxDrawText(m.character_name or "N/A", col2X, rowY + 8 * scale, col3X, rowY + 26 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
+                    exports.aura_ui:uiDrawText(m.character_name or "N/A", col2X, rowY + 8 * scale, col3X, rowY + 26 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
                     local idInfo = string.format("Karakter ID: #%d%s", m.character_id or 0, (m.server_id and (" • ID: " .. m.server_id) or ""))
-                    dxDrawText(idInfo, col2X, rowY + 26 * scale, col3X, rowY + 42 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(idInfo, col2X, rowY + 26 * scale, col3X, rowY + 42 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center", true)
 
                     local rBadgeStr = string.format("%s (D-%d)", m.rank_name or "Üye", m.rank_id or 1)
-                    dxDrawText(rBadgeStr, col3X, rowY, col4X, rowY + rowH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(230 * alphaMult)), 1, fontBody, "left", "center", true)
+                    exports.aura_ui:uiDrawText(rBadgeStr, col3X, rowY, col4X, rowY + rowH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(230 * alphaMult)), 1, fontBody, "left", "center", true)
 
                     local dutyTag = m.duty_status and "MESAİDE" or "İZİNLİ"
                     local dutyCol = m.duty_status and tocolor(34, 197, 94, math.floor(220 * alphaMult)) or tocolor(148, 163, 184, math.floor(160 * alphaMult))
-                    dxDrawText(dutyTag, col4X, rowY, col5X, rowY + rowH, dutyCol, 1, fontSmall, "left", "center")
+                    exports.aura_ui:uiDrawText(dutyTag, col4X, rowY, col5X, rowY + rowH, dutyCol, 1, fontSmall, "left", "center")
 
                     if m.character_id == (playerData and playerData.character_id) then
                         local meW = math.floor(52 * scale)
@@ -1018,9 +1018,9 @@ addEventHandler("onClientRender", root, function()
                             exports.gzl_ui:drawRoundedRectangle(col5X, meY, meW, meH, 4, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
                             exports.gzl_ui:drawRoundedBorder(col5X, meY, meW, meH, 4, 1.0, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(140 * alphaMult)))
                         else
-                            dxDrawRectangle(col5X, meY, meW, meH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
+                            exports.aura_ui:uiDrawRectangle(col5X, meY, meW, meH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
                         end
-                        dxDrawText("(Siz)", col5X, meY, col5X + meW, meY + meH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontSmall, "center", "center")
+                        exports.aura_ui:uiDrawText("(Siz)", col5X, meY, col5X + meW, meY + meH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontSmall, "center", "center")
                     elseif playerData and playerData.canManage then
                         local myRank = playerData.rank_id or 1
                         local maxR = playerData.maxRank or 5
@@ -1035,8 +1035,8 @@ addEventHandler("onClientRender", root, function()
                             if canPromote then
                                 drawActionButton("prom_" .. m.character_id, "▲", promX, actY, actBtnSize, actBtnSize, "green", alphaMult, fontBodyBold)
                             else
-                                dxDrawRectangle(promX, actY, actBtnSize, actBtnSize, tocolor(30, 41, 59, math.floor(100 * alphaMult)))
-                                dxDrawText("▲", promX, actY, promX + actBtnSize, actY + actBtnSize, tocolor(100, 116, 139, math.floor(100 * alphaMult)), 1, fontBodyBold, "center", "center")
+                                exports.aura_ui:uiDrawRectangle(promX, actY, actBtnSize, actBtnSize, tocolor(30, 41, 59, math.floor(100 * alphaMult)))
+                                exports.aura_ui:uiDrawText("▲", promX, actY, promX + actBtnSize, actY + actBtnSize, tocolor(100, 116, 139, math.floor(100 * alphaMult)), 1, fontBodyBold, "center", "center")
                             end
 
                             local canDemote = (m.rank_id > 1)
@@ -1044,17 +1044,17 @@ addEventHandler("onClientRender", root, function()
                             if canDemote then
                                 drawActionButton("dem_" .. m.character_id, "▼", demX, actY, actBtnSize, actBtnSize, "amber", alphaMult, fontBodyBold)
                             else
-                                dxDrawRectangle(demX, actY, actBtnSize, actBtnSize, tocolor(30, 41, 59, math.floor(100 * alphaMult)))
-                                dxDrawText("▼", demX, actY, demX + actBtnSize, actY + actBtnSize, tocolor(100, 116, 139, math.floor(100 * alphaMult)), 1, fontBodyBold, "center", "center")
+                                exports.aura_ui:uiDrawRectangle(demX, actY, actBtnSize, actBtnSize, tocolor(30, 41, 59, math.floor(100 * alphaMult)))
+                                exports.aura_ui:uiDrawText("▼", demX, actY, demX + actBtnSize, actY + actBtnSize, tocolor(100, 116, 139, math.floor(100 * alphaMult)), 1, fontBodyBold, "center", "center")
                             end
 
                             local kickX = demX + actBtnSize + 6 * scale
                             drawActionButton("kick_" .. m.character_id, "✕", kickX, actY, actBtnSize, actBtnSize, "red", alphaMult, fontBodyBold)
                         else
-                            dxDrawText("Yetkisiz", col5X, rowY, contentX + contentW - 16 * scale, rowY + rowH, tocolor(100, 116, 139, math.floor(140 * alphaMult)), 1, fontSmall, "left", "center")
+                            exports.aura_ui:uiDrawText("Yetkisiz", col5X, rowY, contentX + contentW - 16 * scale, rowY + rowH, tocolor(100, 116, 139, math.floor(140 * alphaMult)), 1, fontSmall, "left", "center")
                         end
                     else
-                        dxDrawText("—", col5X, rowY, contentX + contentW - 16 * scale, rowY + rowH, tocolor(100, 116, 139, math.floor(140 * alphaMult)), 1, fontSmall, "left", "center")
+                        exports.aura_ui:uiDrawText("—", col5X, rowY, contentX + contentW - 16 * scale, rowY + rowH, tocolor(100, 116, 139, math.floor(140 * alphaMult)), 1, fontSmall, "left", "center")
                     end
                 end
             end
@@ -1071,7 +1071,7 @@ addEventHandler("onClientRender", root, function()
         local halfW = math.floor((contentW - 14 * scale) / 2)
 
         drawSubPanel(contentX, contentY, halfW, topH, 12, alphaMult, 140)
-        dxDrawText("KASAYA PARA YATIR", contentX + 16 * scale, contentY + 12 * scale, contentX + halfW, contentY + 28 * scale, tocolor(52, 211, 153, globalAlpha), 1, fontBodyBold, "left", "center")
+        exports.aura_ui:uiDrawText("KASAYA PARA YATIR", contentX + 16 * scale, contentY + 12 * scale, contentX + halfW, contentY + 28 * scale, tocolor(52, 211, 153, globalAlpha), 1, fontBodyBold, "left", "center")
 
         local inpW = halfW - 32 * scale
         local inpH = math.floor(34 * scale)
@@ -1087,9 +1087,9 @@ addEventHandler("onClientRender", root, function()
             if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                 exports.gzl_ui:drawRoundedRectangle(qX, qY, pillW, 24 * scale, 6, bgC)
             else
-                dxDrawRectangle(qX, qY, pillW, 24 * scale, bgC)
+                exports.aura_ui:uiDrawRectangle(qX, qY, pillW, 24 * scale, bgC)
             end
-            dxDrawText("+" .. formatCurrency(amt), qX, qY, qX + pillW, qY + 24 * scale, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "center", "center")
+            exports.aura_ui:uiDrawText("+" .. formatCurrency(amt), qX, qY, qX + pillW, qY + 24 * scale, tocolor(148, 163, 184, math.floor(220 * alphaMult)), 1, fontSmall, "center", "center")
             qX = qX + pillW + 6 * scale
         end
         local isAllHov = isMouseInPosition(qX, qY, pillW, 24 * scale)
@@ -1097,9 +1097,9 @@ addEventHandler("onClientRender", root, function()
         if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
             exports.gzl_ui:drawRoundedRectangle(qX, qY, pillW, 24 * scale, 6, allBg)
         else
-            dxDrawRectangle(qX, qY, pillW, 24 * scale, allBg)
+            exports.aura_ui:uiDrawRectangle(qX, qY, pillW, 24 * scale, allBg)
         end
-        dxDrawText("Tümü", qX, qY, qX + pillW, qY + 24 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontSmall, "center", "center")
+        exports.aura_ui:uiDrawText("Tümü", qX, qY, qX + pillW, qY + 24 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontSmall, "center", "center")
 
         drawCustomInput("vault_dep_reason", contentX + 16 * scale, qY + 30 * scale, math.floor(inpW * 0.62), inpH, "Açıklama (opsiyonel)...", vaultDepositReason, fontBody, alphaMult)
         local depBtnW = inpW - math.floor(inpW * 0.62) - 8 * scale
@@ -1109,7 +1109,7 @@ addEventHandler("onClientRender", root, function()
         drawSubPanel(withX, contentY, halfW, topH, 12, alphaMult, 140)
 
         if playerData and playerData.canWithdraw then
-            dxDrawText("KASADAN PARA ÇEK", withX + 16 * scale, contentY + 12 * scale, withX + halfW, contentY + 28 * scale, tocolor(248, 113, 113, globalAlpha), 1, fontBodyBold, "left", "center")
+            exports.aura_ui:uiDrawText("KASADAN PARA ÇEK", withX + 16 * scale, contentY + 12 * scale, withX + halfW, contentY + 28 * scale, tocolor(248, 113, 113, globalAlpha), 1, fontBodyBold, "left", "center")
             drawCustomInput("vault_with_amount", withX + 16 * scale, contentY + 34 * scale, inpW, inpH, "Çekilecek miktar ($)...", vaultWithdrawAmount, fontBody, alphaMult)
 
             local wqX = withX + 16 * scale
@@ -1119,9 +1119,9 @@ addEventHandler("onClientRender", root, function()
                 if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                     exports.gzl_ui:drawRoundedRectangle(wqX, qY, pillW, 24 * scale, 6, bgC)
                 else
-                    dxDrawRectangle(wqX, qY, pillW, 24 * scale, bgC)
+                    exports.aura_ui:uiDrawRectangle(wqX, qY, pillW, 24 * scale, bgC)
                 end
-                dxDrawText("-" .. formatCurrency(amt), wqX, qY, wqX + pillW, qY + 24 * scale, tocolor(248, 113, 113, math.floor(220 * alphaMult)), 1, fontSmall, "center", "center")
+                exports.aura_ui:uiDrawText("-" .. formatCurrency(amt), wqX, qY, wqX + pillW, qY + 24 * scale, tocolor(248, 113, 113, math.floor(220 * alphaMult)), 1, fontSmall, "center", "center")
                 wqX = wqX + pillW + 6 * scale
             end
             local isAllVaultHov = isMouseInPosition(wqX, qY, pillW, 24 * scale)
@@ -1129,17 +1129,17 @@ addEventHandler("onClientRender", root, function()
             if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                 exports.gzl_ui:drawRoundedRectangle(wqX, qY, pillW, 24 * scale, 6, allVaultBg)
             else
-                dxDrawRectangle(wqX, qY, pillW, 24 * scale, allVaultBg)
+                exports.aura_ui:uiDrawRectangle(wqX, qY, pillW, 24 * scale, allVaultBg)
             end
-            dxDrawText("Tüm Kasa", wqX, qY, wqX + pillW, qY + 24 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontSmall, "center", "center")
+            exports.aura_ui:uiDrawText("Tüm Kasa", wqX, qY, wqX + pillW, qY + 24 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontSmall, "center", "center")
 
             drawCustomInput("vault_with_reason", withX + 16 * scale, qY + 30 * scale, math.floor(inpW * 0.62), inpH, "Çekim gerekçesi...", vaultWithdrawReason, fontBody, alphaMult)
             local withBtnW = inpW - math.floor(inpW * 0.62) - 8 * scale
             drawActionButton("btn_vault_withdraw", "Kasadan Çek", withX + 16 * scale + math.floor(inpW * 0.62) + 8 * scale, qY + 30 * scale, withBtnW, inpH, "red", alphaMult, fontBodyBold)
         else
-            dxDrawText("KASADAN PARA ÇEK (YETKİ GEREKLİ)", withX + 16 * scale, contentY + 12 * scale, withX + halfW, contentY + 28 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "left", "center")
+            exports.aura_ui:uiDrawText("KASADAN PARA ÇEK (YETKİ GEREKLİ)", withX + 16 * scale, contentY + 12 * scale, withX + halfW, contentY + 28 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "left", "center")
             local lockNotice = "Bu işlem yetkili rütbelere sınırlandırılmıştır.\n\nKasadan para çekebilmek için birliğinizde yetkili lider veya kıdemli komuta kademesinde olmanız gerekmektedir."
-            dxDrawText(lockNotice, withX + 16 * scale, contentY + 44 * scale, withX + halfW - 16 * scale, contentY + topH - 16 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBody, "left", "top")
+            exports.aura_ui:uiDrawText(lockNotice, withX + 16 * scale, contentY + 44 * scale, withX + halfW - 16 * scale, contentY + topH - 16 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBody, "left", "top")
         end
 
         local botY = contentY + topH + math.floor(12 * scale)
@@ -1147,7 +1147,7 @@ addEventHandler("onClientRender", root, function()
         drawSubPanel(contentX, botY, contentW, botH, 12, alphaMult, 140)
 
         local logThH = math.floor(30 * scale)
-        dxDrawRectangle(contentX, botY, contentW, logThH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(contentX, botY, contentW, logThH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
 
         local lCol1 = contentX + 16 * scale
         local lCol2 = lCol1 + 160 * scale
@@ -1155,11 +1155,11 @@ addEventHandler("onClientRender", root, function()
         local lCol4 = lCol3 + 120 * scale
         local lCol5 = lCol4 + 140 * scale
 
-        dxDrawText("TARİH & SAAT", lCol1, botY, lCol2, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("İŞLEMİ YAPAN", lCol2, botY, lCol3, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("İŞLEM TÜRÜ", lCol3, botY, lCol4, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("MİKTAR", lCol4, botY, lCol5, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("AÇIKLAMA", lCol5, botY, contentX + contentW - 16 * scale, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("TARİH & SAAT", lCol1, botY, lCol2, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("İŞLEMİ YAPAN", lCol2, botY, lCol3, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("İŞLEM TÜRÜ", lCol3, botY, lCol4, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("MİKTAR", lCol4, botY, lCol5, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("AÇIKLAMA", lCol5, botY, contentX + contentW - 16 * scale, botY + logThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local logRowH = math.floor(36 * scale)
         local maxLogRows = math.floor((botH - logThH) / logRowH)
@@ -1169,7 +1169,7 @@ addEventHandler("onClientRender", root, function()
         end
 
         if #vaultLogs == 0 then
-            dxDrawText("Henüz kaydedilmiş bir kasa hareketi bulunmuyor.", contentX, botY + logThH, contentX + contentW, botY + botH, tocolor(148, 163, 184, math.floor(150 * alphaMult)), 1, fontBody, "center", "center")
+            exports.aura_ui:uiDrawText("Henüz kaydedilmiş bir kasa hareketi bulunmuyor.", contentX, botY + logThH, contentX + contentW, botY + botH, tocolor(148, 163, 184, math.floor(150 * alphaMult)), 1, fontBody, "center", "center")
         else
             for idx = 1, maxLogRows do
                 local lIdx = vaultScroll + idx
@@ -1177,18 +1177,18 @@ addEventHandler("onClientRender", root, function()
                 if log then
                     local lRowY = botY + logThH + (idx - 1) * logRowH
                     local rBg = (lIdx % 2 == 0) and tocolor(20, 29, 47, math.floor(70 * alphaMult)) or tocolor(15, 23, 42, math.floor(70 * alphaMult))
-                    dxDrawRectangle(contentX, lRowY, contentW, logRowH, rBg)
+                    exports.aura_ui:uiDrawRectangle(contentX, lRowY, contentW, logRowH, rBg)
 
                     local isDep = (log.action_type == "deposit")
                     local amtCol = isDep and tocolor(52, 211, 153, globalAlpha) or tocolor(248, 113, 113, globalAlpha)
                     local amtPrefix = isDep and "+" or "-"
                     local typeStr = isDep and "Yatırma" or "Çekme"
 
-                    dxDrawText(log.created_at or "N/A", lCol1, lRowY, lCol2, lRowY + logRowH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center", true)
-                    dxDrawText(log.character_name or "Sistem", lCol2, lRowY, lCol3, lRowY + logRowH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
-                    dxDrawText(typeStr, lCol3, lRowY, lCol4, lRowY + logRowH, tocolor(203, 213, 225, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
-                    dxDrawText(amtPrefix .. formatCurrency(log.amount or 0), lCol4, lRowY, lCol5, lRowY + logRowH, amtCol, 1, fontBodyBold, "left", "center")
-                    dxDrawText(log.reason or "—", lCol5, lRowY, contentX + contentW - 16 * scale, lRowY + logRowH, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(log.created_at or "N/A", lCol1, lRowY, lCol2, lRowY + logRowH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(log.character_name or "Sistem", lCol2, lRowY, lCol3, lRowY + logRowH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center", true)
+                    exports.aura_ui:uiDrawText(typeStr, lCol3, lRowY, lCol4, lRowY + logRowH, tocolor(203, 213, 225, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
+                    exports.aura_ui:uiDrawText(amtPrefix .. formatCurrency(log.amount or 0), lCol4, lRowY, lCol5, lRowY + logRowH, amtCol, 1, fontBodyBold, "left", "center")
+                    exports.aura_ui:uiDrawText(log.reason or "—", lCol5, lRowY, contentX + contentW - 16 * scale, lRowY + logRowH, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center", true)
                 end
             end
 
@@ -1203,7 +1203,7 @@ addEventHandler("onClientRender", root, function()
         drawSubPanel(contentX, contentY, contentW, contentH, 12, alphaMult, 140)
 
         local rThH = math.floor(34 * scale)
-        dxDrawRectangle(contentX, contentY, contentW, rThH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(contentX, contentY, contentW, rThH, tocolor(15, 23, 42, math.floor(160 * alphaMult)))
 
         local rCol1 = contentX + 16 * scale
         local rCol2 = rCol1 + 75 * scale
@@ -1211,11 +1211,11 @@ addEventHandler("onClientRender", root, function()
         local rCol4 = rCol3 + 140 * scale
         local rCol5 = rCol4 + 150 * scale
 
-        dxDrawText("DERECE", rCol1, contentY, rCol2, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("RÜTBE ÜNVANI", rCol2, contentY, rCol3, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("SAATLİK MAAŞ", rCol3, contentY, rCol4, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("ÜYE YÖNETİM YETKİSİ", rCol4, contentY, rCol5, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
-        dxDrawText("KASA ÇEKİM YETKİSİ", rCol5, contentY, contentX + contentW - 16 * scale, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("DERECE", rCol1, contentY, rCol2, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("RÜTBE ÜNVANI", rCol2, contentY, rCol3, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("SAATLİK MAAŞ", rCol3, contentY, rCol4, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("ÜYE YÖNETİM YETKİSİ", rCol4, contentY, rCol5, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("KASA ÇEKİM YETKİSİ", rCol5, contentY, contentX + contentW - 16 * scale, contentY + rThH, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
 
         local ranksList = {}
         if factionData and factionData.ranks then
@@ -1239,20 +1239,20 @@ addEventHandler("onClientRender", root, function()
                 local isMyRank = (playerData and playerData.rank_id == r.id)
 
                 local rBg = isMyRank and tocolor(30, 58, 100, math.floor(160 * alphaMult)) or ((rIdx % 2 == 0) and tocolor(20, 29, 47, math.floor(70 * alphaMult)) or tocolor(15, 23, 42, math.floor(70 * alphaMult)))
-                dxDrawRectangle(contentX, rY, contentW, rRowH, rBg)
+                exports.aura_ui:uiDrawRectangle(contentX, rY, contentW, rRowH, rBg)
 
                 if isMyRank then
-                    dxDrawRectangle(contentX, rY, 3 * scale, rRowH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha))
+                    exports.aura_ui:uiDrawRectangle(contentX, rY, 3 * scale, rRowH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha))
                 end
 
                 local canManageRank = FactionConfig and FactionConfig.canManageMembers(factionData and factionData.id, r.id)
                 local canWithRank = FactionConfig and FactionConfig.canWithdrawVault(factionData and factionData.id, r.id)
 
-                dxDrawText(string.format("D-%d", r.id), rCol1, rY, rCol2, rY + rRowH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
+                exports.aura_ui:uiDrawText(string.format("D-%d", r.id), rCol1, rY, rCol2, rY + rRowH, tocolor(255, 255, 255, globalAlpha), 1, fontBodyBold, "left", "center")
 
                 local rTitleCol = isMyRank and tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha) or tocolor(241, 245, 249, globalAlpha)
                 local rankNameMaxW = 180 * scale
-                dxDrawText(r.name, rCol2, rY, rCol2 + rankNameMaxW, rY + rRowH, rTitleCol, 1, fontBodyBold, "left", "center", true)
+                exports.aura_ui:uiDrawText(r.name, rCol2, rY, rCol2 + rankNameMaxW, rY + rRowH, rTitleCol, 1, fontBodyBold, "left", "center", true)
 
                 if isMyRank then
                     local myPillW = math.floor(75 * scale)
@@ -1263,20 +1263,20 @@ addEventHandler("onClientRender", root, function()
                         exports.gzl_ui:drawRoundedRectangle(myPillX, myPillY, myPillW, myPillH, 4, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
                         exports.gzl_ui:drawRoundedBorder(myPillX, myPillY, myPillW, myPillH, 4, 1.0, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(180 * alphaMult)))
                     else
-                        dxDrawRectangle(myPillX, myPillY, myPillW, myPillH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
+                        exports.aura_ui:uiDrawRectangle(myPillX, myPillY, myPillW, myPillH, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(35 * alphaMult)))
                     end
-                    dxDrawText("MEVCUT", myPillX, myPillY, myPillX + myPillW, myPillY + myPillH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontSmall, "center", "center")
+                    exports.aura_ui:uiDrawText("MEVCUT", myPillX, myPillY, myPillX + myPillW, myPillY + myPillH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontSmall, "center", "center")
                 end
 
-                dxDrawText(formatCurrency(r.salary or 0) .. " / saat", rCol3, rY, rCol4, rY + rRowH, tocolor(52, 211, 153, globalAlpha), 1, fontBody, "left", "center")
+                exports.aura_ui:uiDrawText(formatCurrency(r.salary or 0) .. " / saat", rCol3, rY, rCol4, rY + rRowH, tocolor(52, 211, 153, globalAlpha), 1, fontBody, "left", "center")
 
                 local manStr = canManageRank and "✓ Yetkili" or "✕ Yetkisiz"
                 local manCol = canManageRank and tocolor(52, 211, 153, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult))
-                dxDrawText(manStr, rCol4, rY, rCol5, rY + rRowH, manCol, 1, fontSmall, "left", "center")
+                exports.aura_ui:uiDrawText(manStr, rCol4, rY, rCol5, rY + rRowH, manCol, 1, fontSmall, "left", "center")
 
                 local withStr = canWithRank and "✓ Yetkili" or "✕ Yetkisiz"
                 local withCol = canWithRank and tocolor(52, 211, 153, globalAlpha) or tocolor(148, 163, 184, math.floor(160 * alphaMult))
-                dxDrawText(withStr, rCol5, rY, contentX + contentW - 16 * scale, rY + rRowH, withCol, 1, fontSmall, "left", "center")
+                exports.aura_ui:uiDrawText(withStr, rCol5, rY, contentX + contentW - 16 * scale, rY + rRowH, withCol, 1, fontSmall, "left", "center")
             end
         end
 
@@ -1288,7 +1288,7 @@ addEventHandler("onClientRender", root, function()
     end
 
     if isInviteModalOpen then
-        dxDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, math.floor(160 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, math.floor(160 * alphaMult)))
 
         local modalW = math.floor(460 * scale)
         local modalH = math.floor(400 * scale)
@@ -1297,15 +1297,15 @@ addEventHandler("onClientRender", root, function()
 
         drawGlassCard(modalX, modalY, modalW, modalH, 16, alphaMult, tocolor(theme.color[1], theme.color[2], theme.color[3], math.floor(200 * alphaMult)))
 
-        dxDrawText("BİRLİĞE ÜYE DAVET ET", modalX + 20 * scale, modalY + 16 * scale, modalX + modalW - 20 * scale, modalY + 36 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontHeaderTitle, "left", "center")
-        dxDrawText("Yakındaki vatandaşlardan birini seçin veya Karakter / Oyuncu ID girin.", modalX + 20 * scale, modalY + 38 * scale, modalX + modalW - 20 * scale, modalY + 56 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("BİRLİĞE ÜYE DAVET ET", modalX + 20 * scale, modalY + 16 * scale, modalX + modalW - 20 * scale, modalY + 36 * scale, tocolor(255, 255, 255, globalAlpha), 1, fontHeaderTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Yakındaki vatandaşlardan birini seçin veya Karakter / Oyuncu ID girin.", modalX + 20 * scale, modalY + 38 * scale, modalX + modalW - 20 * scale, modalY + 56 * scale, tocolor(148, 163, 184, math.floor(200 * alphaMult)), 1, fontSmall, "left", "center")
 
-        dxDrawText("YAKINDAKİ VATANDAŞLAR (15M)", modalX + 20 * scale, modalY + 68 * scale, modalX + modalW, modalY + 84 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("YAKINDAKİ VATANDAŞLAR (15M)", modalX + 20 * scale, modalY + 68 * scale, modalX + modalW, modalY + 84 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
         local nearBoxH = math.floor(75 * scale)
         drawSubPanel(modalX + 20 * scale, modalY + 86 * scale, modalW - 40 * scale, nearBoxH, 8, alphaMult, 120)
 
         if #nearbyPlayers == 0 then
-            dxDrawText("Yakında birliksiz vatandaş bulunamadı.", modalX + 20 * scale, modalY + 86 * scale, modalX + modalW - 20 * scale, modalY + 86 * scale + nearBoxH, tocolor(100, 116, 139, math.floor(160 * alphaMult)), 1, fontSmall, "center", "center")
+            exports.aura_ui:uiDrawText("Yakında birliksiz vatandaş bulunamadı.", modalX + 20 * scale, modalY + 86 * scale, modalX + modalW - 20 * scale, modalY + 86 * scale + nearBoxH, tocolor(100, 116, 139, math.floor(160 * alphaMult)), 1, fontSmall, "center", "center")
         else
             local pItemW = math.floor((modalW - 56 * scale) / 2)
             local pItemH = math.floor(28 * scale)
@@ -1324,18 +1324,18 @@ addEventHandler("onClientRender", root, function()
                     if exports.gzl_ui and exports.gzl_ui.drawRoundedRectangle then
                         exports.gzl_ui:drawRoundedRectangle(pX, pY, pItemW, pItemH, 6, pBg)
                     else
-                        dxDrawRectangle(pX, pY, pItemW, pItemH, pBg)
+                        exports.aura_ui:uiDrawRectangle(pX, pY, pItemW, pItemH, pBg)
                     end
                     local dispStr = string.format("%s (#%d)", nPlayer.name or "Vatandaş", nPlayer.server_id or 0)
-                    dxDrawText(dispStr, pX + 6 * scale, pY, pX + pItemW - 6 * scale, pY + pItemH, pTxtCol, 1, fontSmall, "left", "center", true)
+                    exports.aura_ui:uiDrawText(dispStr, pX + 6 * scale, pY, pX + pItemW - 6 * scale, pY + pItemH, pTxtCol, 1, fontSmall, "left", "center", true)
                 end
             end
         end
 
-        dxDrawText("HEDEF OYUNCU (ID VEYA İSİM)", modalX + 20 * scale, modalY + 172 * scale, modalX + modalW, modalY + 188 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("HEDEF OYUNCU (ID VEYA İSİM)", modalX + 20 * scale, modalY + 172 * scale, modalX + modalW, modalY + 188 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
         drawCustomInput("invite_target", modalX + 20 * scale, modalY + 192 * scale, modalW - 40 * scale, 36 * scale, "Oyuncu ID veya isim...", inviteTargetInput, fontBody, alphaMult)
 
-        dxDrawText("BAŞLANGIÇ RÜTBESİ", modalX + 20 * scale, modalY + 238 * scale, modalX + modalW, modalY + 254 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
+        exports.aura_ui:uiDrawText("BAŞLANGIÇ RÜTBESİ", modalX + 20 * scale, modalY + 238 * scale, modalX + modalW, modalY + 254 * scale, tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontSmall, "left", "center")
         local maxInvRank = math.max(1, (playerData and playerData.rank_id or 2) - 1)
         local rankSelectorW = modalW - 40 * scale
         local rankSelectorH = math.floor(36 * scale)
@@ -1345,12 +1345,12 @@ addEventHandler("onClientRender", root, function()
         local isPrevHov = isMouseInPosition(modalX + 20 * scale, modalY + 258 * scale, prevBtnW, rankSelectorH)
         local isNextHov = isMouseInPosition(modalX + 20 * scale + rankSelectorW - prevBtnW, modalY + 258 * scale, prevBtnW, rankSelectorH)
 
-        dxDrawText("◀", modalX + 20 * scale, modalY + 258 * scale, modalX + 20 * scale + prevBtnW, modalY + 258 * scale + rankSelectorH, isPrevHov and tocolor(255, 255, 255, globalAlpha) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "center", "center")
-        dxDrawText("▶", modalX + 20 * scale + rankSelectorW - prevBtnW, modalY + 258 * scale, modalX + 20 * scale + rankSelectorW, modalY + 258 * scale + rankSelectorH, isNextHov and tocolor(255, 255, 255, globalAlpha) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "center", "center")
+        exports.aura_ui:uiDrawText("◀", modalX + 20 * scale, modalY + 258 * scale, modalX + 20 * scale + prevBtnW, modalY + 258 * scale + rankSelectorH, isPrevHov and tocolor(255, 255, 255, globalAlpha) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "center", "center")
+        exports.aura_ui:uiDrawText("▶", modalX + 20 * scale + rankSelectorW - prevBtnW, modalY + 258 * scale, modalX + 20 * scale + rankSelectorW, modalY + 258 * scale + rankSelectorH, isNextHov and tocolor(255, 255, 255, globalAlpha) or tocolor(148, 163, 184, math.floor(180 * alphaMult)), 1, fontBodyBold, "center", "center")
 
         local rInfo = factionData and factionData.ranks and factionData.ranks[inviteSelectedRank]
         local rNameStr = string.format("%s (Derece %d)", (rInfo and rInfo.name or "Rütbe"), inviteSelectedRank)
-        dxDrawText(rNameStr, modalX + 20 * scale + prevBtnW, modalY + 258 * scale, modalX + 20 * scale + rankSelectorW - prevBtnW, modalY + 258 * scale + rankSelectorH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontBodyBold, "center", "center")
+        exports.aura_ui:uiDrawText(rNameStr, modalX + 20 * scale + prevBtnW, modalY + 258 * scale, modalX + 20 * scale + rankSelectorW - prevBtnW, modalY + 258 * scale + rankSelectorH, tocolor(theme.color[1], theme.color[2], theme.color[3], globalAlpha), 1, fontBodyBold, "center", "center")
 
         local mBtnW = math.floor((modalW - 50 * scale) / 2)
         local mBtnH = math.floor(38 * scale)
@@ -1361,7 +1361,7 @@ addEventHandler("onClientRender", root, function()
     end
 
     if kickConfirmTarget then
-        dxDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, math.floor(170 * alphaMult)))
+        exports.aura_ui:uiDrawRectangle(0, 0, screenW, screenH, tocolor(0, 0, 0, math.floor(170 * alphaMult)))
 
         local kW = math.floor(400 * scale)
         local kH = math.floor(180 * scale)
@@ -1370,9 +1370,9 @@ addEventHandler("onClientRender", root, function()
 
         drawGlassCard(kX, kY, kW, kH, 14, alphaMult, tocolor(239, 68, 68, math.floor(200 * alphaMult)))
 
-        dxDrawText("ÜYEYİ İHRAÇ ET", kX + 20 * scale, kY + 16 * scale, kX + kW - 20 * scale, kY + 34 * scale, tocolor(239, 68, 68, globalAlpha), 1, fontHeaderTitle, "left", "center")
+        exports.aura_ui:uiDrawText("ÜYEYİ İHRAÇ ET", kX + 20 * scale, kY + 16 * scale, kX + kW - 20 * scale, kY + 34 * scale, tocolor(239, 68, 68, globalAlpha), 1, fontHeaderTitle, "left", "center")
         local kickDesc = string.format("%s adlı üyeyi birliğinizden ihraç etmek istediğinize emin misiniz?", kickConfirmTarget.name or "Üye")
-        dxDrawText(kickDesc, kX + 20 * scale, kY + 44 * scale, kX + kW - 20 * scale, kY + 100 * scale, tocolor(241, 245, 249, math.floor(220 * alphaMult)), 1, fontBody, "left", "top")
+        exports.aura_ui:uiDrawText(kickDesc, kX + 20 * scale, kY + 44 * scale, kX + kW - 20 * scale, kY + 100 * scale, tocolor(241, 245, 249, math.floor(220 * alphaMult)), 1, fontBody, "left", "top")
 
         local kBtnW = math.floor((kW - 50 * scale) / 2)
         local kBtnH = math.floor(36 * scale)

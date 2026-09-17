@@ -193,8 +193,8 @@ local function drawBrand(x, y, alpha)
     local markW = 5 * scale
     local markH = 52 * scale
     exports.gzl_ui:drawRoundedRectangle(x, y, markW, markH, 3 * scale, tocolor(95, 168, 255, math.floor(245 * alpha)))
-    dxDrawText("#5FA8FFKARAKTER", x + 24 * scale, y - 7 * scale, x + layout.leftW, y + 29 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.display, "left", "center", false, false, false, true)
-    dxDrawText("S E Ç İ M İ", x + 26 * scale, y + 29 * scale, x + layout.leftW, y + 52 * scale, tocolor(225, 232, 243, math.floor(235 * alpha)), 1, fonts.displaySub, "left", "center")
+    exports.aura_ui:uiDrawText("#5FA8FFKARAKTER", x + 24 * scale, y - 7 * scale, x + layout.leftW, y + 29 * scale, tocolor(244, 247, 252, math.floor(255 * alpha)), 1, fonts.display, "left", "center", false, false, false, true)
+    exports.aura_ui:uiDrawText("S E Ç İ M İ", x + 26 * scale, y + 29 * scale, x + layout.leftW, y + 52 * scale, tocolor(225, 232, 243, math.floor(235 * alpha)), 1, fonts.displaySub, "left", "center")
 end
 
 local function drawSlotRow(slot, x, y, alpha)
@@ -231,15 +231,15 @@ local function drawSlotRow(slot, x, y, alpha)
         local cleanName = tostring(charData.name or "Karakter"):gsub("_", " ")
         local genderText = tonumber(charData.gender) == 2 and "Kadın" or "Erkek"
         local metaText = tostring(charData.age or 24) .. " yaş  " .. genderText
-        dxDrawText(cleanName, x + 62 * scale, y + 9 * scale, x + rowW - 38 * scale, y + 31 * scale, tocolor(238, 243, 251, math.floor(250 * alpha)), 1, fonts.rowTitle, "left", "center", true)
-        dxDrawText(metaText, x + 62 * scale, y + 31 * scale, x + rowW - 38 * scale, y + 49 * scale, tocolor(142, 159, 181, math.floor(220 * alpha)), 1, fonts.rowMeta, "left", "center", true)
+        exports.aura_ui:uiDrawText(cleanName, x + 62 * scale, y + 9 * scale, x + rowW - 38 * scale, y + 31 * scale, tocolor(238, 243, 251, math.floor(250 * alpha)), 1, fonts.rowTitle, "left", "center", true)
+        exports.aura_ui:uiDrawText(metaText, x + 62 * scale, y + 31 * scale, x + rowW - 38 * scale, y + 49 * scale, tocolor(142, 159, 181, math.floor(220 * alpha)), 1, fonts.rowMeta, "left", "center", true)
         if selected then
             exports.gzl_ui:drawIconSVG("check", x + rowW - 26 * scale, y + (rowH - 14 * scale) / 2, 14 * scale, tocolor(95, 168, 255, math.floor(255 * alpha)))
         end
     else
-        dxDrawText("+", iconX, iconY - 1 * scale, iconX + iconBox, iconY + iconBox, selected and tocolor(95, 168, 255, math.floor(255 * alpha)) or tocolor(127, 146, 170, math.floor(220 * alpha)), 1, fonts.displaySub, "center", "center")
-        dxDrawText("BOŞ SLOT", x + 62 * scale, y + 8 * scale, x + rowW - 18 * scale, y + 31 * scale, tocolor(208, 219, 234, math.floor(235 * alpha)), 1, fonts.rowTitle, "left", "center")
-        dxDrawText("Yeni karakter oluştur", x + 62 * scale, y + 31 * scale, x + rowW - 18 * scale, y + 49 * scale, tocolor(134, 151, 175, math.floor(205 * alpha)), 1, fonts.rowMeta, "left", "center")
+        exports.aura_ui:uiDrawText("+", iconX, iconY - 1 * scale, iconX + iconBox, iconY + iconBox, selected and tocolor(95, 168, 255, math.floor(255 * alpha)) or tocolor(127, 146, 170, math.floor(220 * alpha)), 1, fonts.displaySub, "center", "center")
+        exports.aura_ui:uiDrawText("BOŞ SLOT", x + 62 * scale, y + 8 * scale, x + rowW - 18 * scale, y + 31 * scale, tocolor(208, 219, 234, math.floor(235 * alpha)), 1, fonts.rowTitle, "left", "center")
+        exports.aura_ui:uiDrawText("Yeni karakter oluştur", x + 62 * scale, y + 31 * scale, x + rowW - 18 * scale, y + 49 * scale, tocolor(134, 151, 175, math.floor(205 * alpha)), 1, fonts.rowMeta, "left", "center")
     end
 end
 
@@ -250,7 +250,7 @@ local function drawSelection(alpha)
     local rowX = x + 30 * scale
 
     drawBrand(x, y, alpha)
-    dxDrawText("KARAKTERLERİN", rowX, y + 112 * scale, rowX + layout.rowW, y + 134 * scale, tocolor(229, 236, 246, math.floor(245 * alpha)), 1, fonts.section, "left", "center")
+    exports.aura_ui:uiDrawText("KARAKTERLERİN", rowX, y + 112 * scale, rowX + layout.rowW, y + 134 * scale, tocolor(229, 236, 246, math.floor(245 * alpha)), 1, fonts.section, "left", "center")
 
     for slot = 1, 5 do
         drawSlotRow(slot, rowX, layout.rowY + (slot - 1) * (layout.rowH + layout.rowGap), alpha)
@@ -266,11 +266,11 @@ local function drawSelection(alpha)
 
     if selectedCharacter then
         local cleanName = tostring(selectedCharacter.name or "Karakter"):gsub("_", " ")
-        dxDrawText(cleanName, layout.actionX, layout.actionY - 48 * scale, layout.actionX + layout.actionW, layout.actionY - 24 * scale, tocolor(239, 245, 253, math.floor(250 * alpha)), 1, fonts.rowTitle, "right", "center")
-        dxDrawText("Seçili karakter", layout.actionX, layout.actionY - 27 * scale, layout.actionX + layout.actionW, layout.actionY - 8 * scale, tocolor(147, 164, 187, math.floor(215 * alpha)), 1, fonts.rowMeta, "right", "center")
+        exports.aura_ui:uiDrawText(cleanName, layout.actionX, layout.actionY - 48 * scale, layout.actionX + layout.actionW, layout.actionY - 24 * scale, tocolor(239, 245, 253, math.floor(250 * alpha)), 1, fonts.rowTitle, "right", "center")
+        exports.aura_ui:uiDrawText("Seçili karakter", layout.actionX, layout.actionY - 27 * scale, layout.actionX + layout.actionW, layout.actionY - 8 * scale, tocolor(147, 164, 187, math.floor(215 * alpha)), 1, fonts.rowMeta, "right", "center")
     else
-        dxDrawText("Slot " .. tostring(selectedSlot or 1), layout.actionX, layout.actionY - 48 * scale, layout.actionX + layout.actionW, layout.actionY - 24 * scale, tocolor(239, 245, 253, math.floor(250 * alpha)), 1, fonts.rowTitle, "right", "center")
-        dxDrawText("Yeni bir hikâye başlat", layout.actionX, layout.actionY - 27 * scale, layout.actionX + layout.actionW, layout.actionY - 8 * scale, tocolor(147, 164, 187, math.floor(215 * alpha)), 1, fonts.rowMeta, "right", "center")
+        exports.aura_ui:uiDrawText("Slot " .. tostring(selectedSlot or 1), layout.actionX, layout.actionY - 48 * scale, layout.actionX + layout.actionW, layout.actionY - 24 * scale, tocolor(239, 245, 253, math.floor(250 * alpha)), 1, fonts.rowTitle, "right", "center")
+        exports.aura_ui:uiDrawText("Yeni bir hikâye başlat", layout.actionX, layout.actionY - 27 * scale, layout.actionX + layout.actionW, layout.actionY - 8 * scale, tocolor(147, 164, 187, math.floor(215 * alpha)), 1, fonts.rowMeta, "right", "center")
     end
 end
 
@@ -291,25 +291,25 @@ local function drawCreator(alpha)
     exports.gzl_ui:drawRoundedRectangle(x, y + panelH - railW, hookW, railW, 2 * scale, tocolor(95, 168, 255, math.floor(235 * alpha)))
 
     exports.gzl_ui:drawIconSVG("badge", formX, y + 28 * scale, 34 * scale, tocolor(95, 168, 255, math.floor(250 * alpha)))
-    dxDrawText("YENİ KARAKTER", formX, y + 76 * scale, formX + formW, y + 110 * scale, tocolor(243, 247, 253, math.floor(255 * alpha)), 1, fonts.creatorTitle, "left", "center")
-    dxDrawText("Slot " .. targetSlot .. " için karakterini hazırla", formX, y + 109 * scale, formX + formW, y + 132 * scale, tocolor(150, 167, 189, math.floor(220 * alpha)), 1, fonts.body, "left", "center")
+    exports.aura_ui:uiDrawText("YENİ KARAKTER", formX, y + 76 * scale, formX + formW, y + 110 * scale, tocolor(243, 247, 253, math.floor(255 * alpha)), 1, fonts.creatorTitle, "left", "center")
+    exports.aura_ui:uiDrawText("Slot " .. targetSlot .. " için karakterini hazırla", formX, y + 109 * scale, formX + formW, y + 132 * scale, tocolor(150, 167, 189, math.floor(220 * alpha)), 1, fonts.body, "left", "center")
 
-    dxDrawText("AD VE SOYAD", formX, layout.nameLabelY, formX + formW, layout.nameLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("AD VE SOYAD", formX, layout.nameLabelY, formX + formW, layout.nameLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     exports.gzl_ui:drawGlassEditBox("create_char_name", formX, layout.nameBoxY, formW, 44 * scale, nameOptions)
 
-    dxDrawText("CİNSİYET", formX, layout.genderLabelY, formX + formW, layout.genderLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("CİNSİYET", formX, layout.genderLabelY, formX + formW, layout.genderLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     local genderHalfW = formW * 0.5
     local activeGender = createGender == 1 and "login" or "register"
     exports.gzl_ui:drawDiagonalTabBarSVG(formX, layout.genderTabY, formW, 40 * scale, 9 * scale, activeGender)
-    dxDrawText("ERKEK", formX, layout.genderTabY, formX + genderHalfW - 5 * scale, layout.genderTabY + 40 * scale, createGender == 1 and tocolor(248, 251, 255, 255) or tocolor(146, 162, 184, 190), 1, fonts.button, "center", "center")
-    dxDrawText("KADIN", formX + genderHalfW + 5 * scale, layout.genderTabY, formX + formW, layout.genderTabY + 40 * scale, createGender == 2 and tocolor(248, 251, 255, 255) or tocolor(146, 162, 184, 190), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("ERKEK", formX, layout.genderTabY, formX + genderHalfW - 5 * scale, layout.genderTabY + 40 * scale, createGender == 1 and tocolor(248, 251, 255, 255) or tocolor(146, 162, 184, 190), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("KADIN", formX + genderHalfW + 5 * scale, layout.genderTabY, formX + formW, layout.genderTabY + 40 * scale, createGender == 2 and tocolor(248, 251, 255, 255) or tocolor(146, 162, 184, 190), 1, fonts.button, "center", "center")
 
     local minAge = type(CharConfig) == "table" and tonumber(CharConfig.MinAge) or 18
     local maxAge = type(CharConfig) == "table" and tonumber(CharConfig.MaxAge) or 80
-    dxDrawText("YAŞ  " .. minAge .. "-" .. maxAge, formX, layout.ageLabelY, formX + formW, layout.ageLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("YAŞ  " .. minAge .. "-" .. maxAge, formX, layout.ageLabelY, formX + formW, layout.ageLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     exports.gzl_ui:drawGlassEditBox("create_char_age", formX, layout.ageBoxY, formW, 44 * scale, ageOptions)
 
-    dxDrawText("GÖRÜNÜM", formX, layout.skinLabelY, formX + formW, layout.skinLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
+    exports.aura_ui:uiDrawText("GÖRÜNÜM", formX, layout.skinLabelY, formX + formW, layout.skinLabelY + 18 * scale, tocolor(181, 195, 214, math.floor(230 * alpha)), 1, fonts.label, "left", "top")
     local selectorH = 44 * scale
     local arrowW = 46 * scale
     local skins = getSkinList(createGender)
@@ -319,9 +319,9 @@ local function drawCreator(alpha)
     exports.gzl_ui:drawRoundedRectangle(formX, layout.skinSelectorY, formW, selectorH, 9 * scale, tocolor(13, 19, 29, math.floor(225 * alpha)))
     exports.gzl_ui:drawRoundedRectangle(formX + 2 * scale, layout.skinSelectorY + 2 * scale, arrowW - 4 * scale, selectorH - 4 * scale, 7 * scale, leftHover and tocolor(42, 104, 177, 190) or tocolor(255, 255, 255, 12))
     exports.gzl_ui:drawRoundedRectangle(formX + formW - arrowW + 2 * scale, layout.skinSelectorY + 2 * scale, arrowW - 4 * scale, selectorH - 4 * scale, 7 * scale, rightHover and tocolor(42, 104, 177, 190) or tocolor(255, 255, 255, 12))
-    dxDrawText("<", formX, layout.skinSelectorY, formX + arrowW, layout.skinSelectorY + selectorH, tocolor(230, 238, 249, 245), 1, fonts.button, "center", "center")
-    dxDrawText(">", formX + formW - arrowW, layout.skinSelectorY, formX + formW, layout.skinSelectorY + selectorH, tocolor(230, 238, 249, 245), 1, fonts.button, "center", "center")
-    dxDrawText("MODEL " .. skinId .. "   " .. createSkinIndex .. "/" .. #skins, formX + arrowW, layout.skinSelectorY, formX + formW - arrowW, layout.skinSelectorY + selectorH, tocolor(229, 237, 248, 245), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("<", formX, layout.skinSelectorY, formX + arrowW, layout.skinSelectorY + selectorH, tocolor(230, 238, 249, 245), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText(">", formX + formW - arrowW, layout.skinSelectorY, formX + formW, layout.skinSelectorY + selectorH, tocolor(230, 238, 249, 245), 1, fonts.button, "center", "center")
+    exports.aura_ui:uiDrawText("MODEL " .. skinId .. "   " .. createSkinIndex .. "/" .. #skins, formX + arrowW, layout.skinSelectorY, formX + formW - arrowW, layout.skinSelectorY + selectorH, tocolor(229, 237, 248, 245), 1, fonts.button, "center", "center")
 
     createActionOptions.disabled = isProcessing
     exports.gzl_ui:drawGlassButton("creator_submit", isProcessing and "OLUŞTURULUYOR" or "KARAKTERİ OLUŞTUR", formX, layout.submitY, formW, 46 * scale, createActionOptions)
@@ -333,7 +333,7 @@ local function drawCreator(alpha)
     local hintY = screenH - hintH - 38 * scale
     exports.gzl_ui:drawGlassPanel(hintX, hintY, hintW, hintH, 10 * scale)
     exports.gzl_ui:drawIconSVG("swap", hintX + 14 * scale, hintY + 11 * scale, 20 * scale, tocolor(95, 168, 255, 240))
-    dxDrawText("Karakteri döndürmek için fareyle sağa veya sola sürükle", hintX + 44 * scale, hintY, hintX + hintW - 12 * scale, hintY + hintH, tocolor(191, 204, 222, 225), 1, fonts.rowMeta, "left", "center")
+    exports.aura_ui:uiDrawText("Karakteri döndürmek için fareyle sağa veya sola sürükle", hintX + 44 * scale, hintY, hintX + hintW - 12 * scale, hintY + hintH, tocolor(191, 204, 222, 225), 1, fonts.rowMeta, "left", "center")
 end
 
 local function renderCharacterGUI()
